@@ -25,7 +25,9 @@ public partial class LoginPage : ContentPage
 		}
 
 		User user = new User(email, password);
-		bool correctCredentials = user.ValidateCredentials();
+		SupabaseService supabase = new SupabaseService();
+		bool correctCredentials = await supabase.ValidateCredentialsAsync(user);
+
 		if (correctCredentials)
 		{
 			await DisplayAlert("Inloggen", "Je bent succesvol ingelogd!", "OK");

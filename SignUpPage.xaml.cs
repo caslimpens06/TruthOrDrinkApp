@@ -8,11 +8,16 @@ public partial class SignUpPage : ContentPage
 	}
 	private async void CreateAccount(object sender, EventArgs e)
 	{
+		string name = NameEntry.Text;
 		string email = EmailEntry.Text;
 		string password = PasswordEntry.Text;
 		string confirmPassword = ConfirmPasswordEntry.Text;
 
-		// Valideer email format
+		if (string.IsNullOrEmpty(name))
+		{
+			await DisplayAlert("Onjuiste invoer", "Geef een geldige naam.", "OK");
+			return;
+		}
 		if (string.IsNullOrWhiteSpace(email) || !IsValidEmail(email))
 		{
 			await DisplayAlert("Onjuiste invoer", "Geef een geldig emailadres.", "OK");
@@ -30,7 +35,8 @@ public partial class SignUpPage : ContentPage
 			await DisplayAlert("Wachtwoord Mismatch", "Wachtwoorden komen niet overeen.", "OK");
 			return;
 		}
-
+		SupabaseService supabaseService = new SupabaseService();
+		await supabaseService.AddPlayerAsync(new User(name, email, password));
 		await DisplayAlert("Account", "Je account is gemaakt! Je wordt teruggestuurd naar het menu.", "OK");
 		await Navigation.PopModalAsync();
 	}
