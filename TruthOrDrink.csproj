@@ -65,25 +65,28 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Game1.xaml">
+	  <MauiXaml Update="Games\Game1.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Game2.xaml">
+	  <MauiXaml Update="Games\Game2.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Game3.xaml">
+	  <MauiXaml Update="Games\Game3.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Game4.xaml">
+	  <MauiXaml Update="Games\Game4.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="GameCustom.xaml">
+	  <MauiXaml Update="Games\GameCustom.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="GameHostPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="GamePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="GuestIdentifierPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="GuestPage.xaml">

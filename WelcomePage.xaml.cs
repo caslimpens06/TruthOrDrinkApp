@@ -19,6 +19,6 @@ public partial class WelcomePage : ContentPage
 
 	private async void NavigateToParticipant(object sender, EventArgs e)
 	{
-		await Navigation.PushModalAsync(new GuestPage());
+		await Navigation.PushModalAsync(new GuestIdentifierPage());
 	}
 }
