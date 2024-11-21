@@ -8,29 +8,30 @@ public partial class GamePage : ContentPage
 
 	}
 
+
 	private async void NavigateTo1(object sender, EventArgs e)
 	{
-		await Navigation.PushModalAsync(new GameCustom());
+		await Navigation.PushModalAsync(new GameHostPage());
 	}
 
 	private async void NavigateTo2(object sender, EventArgs e)
 	{
-		await Navigation.PushModalAsync(new Game1());
+		await Navigation.PushModalAsync(new GameHostPage());
 	}
 
 	private async void NavigateTo3(object sender, EventArgs e)
 	{
-		await Navigation.PushModalAsync(new Game2());
+		await Navigation.PushModalAsync(new GameHostPage());
 	}
 
 	private async void NavigateTo4(object sender, EventArgs e)
 	{
-		await Navigation.PushModalAsync(new Game3());
+		await Navigation.PushModalAsync(new GameHostPage());
 	}
 
 	private async void NavigateTo5(object sender, EventArgs e)
 	{
-		await Navigation.PushModalAsync(new Game4());
+		await Navigation.PushModalAsync(new GameHostPage());
 	}
 
 	private void LeaveGame(object sender, EventArgs e)
