@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TruthOrDrink.Game4"
+             NavigationPage.HasNavigationBar="False"
+             NavigationPage.HasBackButton="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="CenterAndExpand">
+
+            <Label Text="Truth or Drink" 
+                   FontSize="30" 
+                   FontAttributes="Bold" 
+                   HorizontalTextAlignment="Center" 
+                   TextColor="Black" />
+
+            <Label Text="Geld" 
+                   FontSize="24" 
+                   FontAttributes="Bold" 
+                   HorizontalTextAlignment="Center" 
+                   TextColor="Black" />
+
+            <Label x:Name="QuestionLabel5"
+                   Text="Here comes the question"
+                   FontSize="20" 
+                   TextColor="Black" 
+                   HorizontalTextAlignment="Center"
+                   VerticalOptions="StartAndExpand" 
+                   Padding="10" />
+
+            <Button x:Name="TruthButton5"
+                    Text="Truth"
+                    BackgroundColor="Green" 
+                    TextColor="White" 
+                    HeightRequest="50" 
+                    CornerRadius="10"
+                    Clicked="OnTruthClicked" />
+
+            <Button x:Name="DrinkButton5"
+                    Text="Drink"
+                    BackgroundColor="Red" 
+                    TextColor="White" 
+                    HeightRequest="50" 
+                    CornerRadius="10"
+                    Clicked="OnDrinkClicked" />
+
+            <Button x:Name="NextButton5"
+                    Text="Volgende"
+                    BackgroundColor="Black" 
+                    TextColor="White" 
+                    HeightRequest="50" 
+                    Margin="0,10" 
+                    Clicked="OnNextClicked" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

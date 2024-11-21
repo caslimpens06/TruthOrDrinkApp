@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TruthOrDrink.GuestPage"
+             NavigationPage.HasNavigationBar="False">
+    
+    <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
+
+        <Image
+            x:Name="LogoImage"
+            Source="logo.jpg"
+            HorizontalOptions="Center"
+            HeightRequest="200"
+            WidthRequest="200" />
+        <Label 
+            Text="Scan de QR-Code"
+            FontAttributes="Bold"
+            FontSize="24"
+            HorizontalOptions="Center" />
+
+        <Button 
+            Text="Open QR-Scanner" 
+            BackgroundColor="Black" 
+            TextColor="White" 
+            HeightRequest="50" 
+            Margin="0,10" 
+            Clicked="QR_Clicked" />
+        
+        <Entry x:Name="GameCodeEntry" 
+           Placeholder="Of typ de gamecode hier handmatig." 
+           Keyboard="Numeric" 
+           HeightRequest="50" 
+           Margin="0,10" />
+
+        <Button Text="Verbind" 
+            BackgroundColor="Black" 
+            TextColor="White" 
+            HeightRequest="50" 
+            Margin="0,10" 
+            Clicked="Connect_Clicked" />
+
+        <Label Text="De QR-code of de spelcode is te zien op het hostapparaat." 
+           TextColor="Gray" 
+           HorizontalOptions="Center" 
+           FontSize="12" />
+    </VerticalStackLayout>
+</ContentPage>
