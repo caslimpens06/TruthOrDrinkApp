@@ -3,19 +3,24 @@ using Camera.MAUI;
 using System.Runtime.CompilerServices;
 using ZXing.Net.Maui.Controls;
 using ZXing.Net.Maui;
+using Microsoft.IdentityModel.Tokens;
+
 
 namespace TruthOrDrink
 {
 	public partial class QRScanner : ContentPage
 	{
-		public QRScanner()
+		private int _participantid;
+
+		public QRScanner(int participantid)
 		{
 			InitializeComponent();
+			_participantid = participantid;
 			BarcodeReader.Options = new ZXing.Net.Maui.BarcodeReaderOptions
 			{
 				Formats = ZXing.Net.Maui.BarcodeFormat.QrCode,
 				AutoRotate = true,
-				Multiple = true
+				Multiple = true,
 			};
 		}
 
@@ -35,8 +40,19 @@ namespace TruthOrDrink
 
 			Dispatcher.DispatchAsync(async () =>
 			{
-				await DisplayAlert("Barcode gedetecteerd", "Spelcode: " + first.Value, "Ok");
-				//await Navigation.PushAsync(new GamePage());
+			int gamecode = Int32.Parse(first.Value);
+			SupabaseService supabaseService = new SupabaseService();
+			bool gameExists = await supabaseService.CheckIfGameExistsAsync(gamecode);
+
+			if (gameExists)
+			{
+				await supabaseService.JoinParticipantToGame(_participantid, gamecode);
+				await Navigation.PushModalAsync(new GamePage());
+			}
+			else 
+			{
+				await DisplayAlert("Ongeldige gamecode", "Verifiëer of de host al een spel heeft gemaakt.", "OK");
+			}
 			});
 		}
 

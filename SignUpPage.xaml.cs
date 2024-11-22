@@ -1,3 +1,5 @@
+using TruthOrDrink.Model;
+
 namespace TruthOrDrink;
 
 public partial class SignUpPage : ContentPage
@@ -36,8 +38,17 @@ public partial class SignUpPage : ContentPage
 			return;
 		}
 		SupabaseService supabaseService = new SupabaseService();
-		await supabaseService.AddPlayerAsync(new User(name, email, password));
-		await DisplayAlert("Account", "Je account is gemaakt! Je wordt teruggestuurd naar het menu.", "OK");
+		Host user = new Host(name, email, password);
+		bool exists = await supabaseService.CheckIfUserExistsAsync(user.Email);
+		if (exists)
+		{
+			await DisplayAlert("Account maken mislukt", "Dit emailadres bestaat al. Log in met je account.", "OK");
+		}
+		else 
+		{
+			await supabaseService.AddPlayerAsync(user);
+			await DisplayAlert("Account", "Je account is gemaakt! Je wordt teruggestuurd naar het menu.", "OK");
+		}
 		await Navigation.PopModalAsync();
 	}
 

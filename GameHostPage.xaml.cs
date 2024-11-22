@@ -43,7 +43,7 @@ namespace TruthOrDrink
 
 		private void ButtonPlay_Clicked(object sender, EventArgs e)
 		{
-			
+			// Start game
 		}
 	}
 }

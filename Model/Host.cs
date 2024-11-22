@@ -1,6 +1,6 @@
-﻿namespace TruthOrDrink
+﻿namespace TruthOrDrink.Model
 {
-	public class User
+	public class Host
 	{
 		private string _name;
 		private string _email;
@@ -22,7 +22,7 @@
 			get { return _password; }
 		}
 
-		public User(string name, string email, string password)
+		public Host(string name, string email, string password)
 		{
 			_name = name;
 			_email = email;
@@ -30,7 +30,7 @@
 		}
 
 
-		public User(string email, string password)
+		public Host(string email, string password)
 		{
 			_email = email;
 			_password = password;

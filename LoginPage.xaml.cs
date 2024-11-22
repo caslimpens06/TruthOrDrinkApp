@@ -1,3 +1,5 @@
+using TruthOrDrink.Model;
+
 namespace TruthOrDrink;
 
 public partial class LoginPage : ContentPage
@@ -24,9 +26,9 @@ public partial class LoginPage : ContentPage
 			return;
 		}
 
-		User user = new User(email, password);
+		Host host = new Host(email, password);
 		SupabaseService supabase = new SupabaseService();
-		bool correctCredentials = await supabase.ValidateCredentialsAsync(user);
+		bool correctCredentials = await supabase.ValidateCredentialsAsync(host);
 
 		if (correctCredentials)
 		{
