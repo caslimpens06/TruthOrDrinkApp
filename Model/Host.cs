@@ -2,11 +2,16 @@
 {
 	public class Host
 	{
+		private int _hostid;
 		private string _name;
 		private string _email;
 		private string _password;
 
-		// Public properties
+		public int HostId
+		{
+			get { return _hostid; }
+		}
+
 		public string Name
 		{
 			get { return _name; }
@@ -29,23 +34,20 @@
 			_password = password;
 		}
 
-
-		public Host(string email, string password)
+		public Host(int hostid, string email, string password)
 		{
+			_hostid = hostid;
+			_name = "";
 			_email = email;
 			_password = password;
 		}
 
-
-		public bool ValidateCredentials()
+		public Host(string email, string password)
 		{
-
-			if (!string.IsNullOrEmpty(_email) && !string.IsNullOrEmpty(_password))
-			{
-
-				return true;
-			}
-			return false;
+			_hostid = 0;
+			_name = "";
+			_email = email;
+			_password = password;
 		}
 	}
 }

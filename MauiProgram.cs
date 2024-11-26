@@ -1,5 +1,6 @@
 ﻿using Camera.MAUI;
 using ZXing.Net.Maui.Controls;
+using Supabase;
 
 namespace TruthOrDrink
 {
@@ -13,7 +14,7 @@ namespace TruthOrDrink
 				.UseMauiApp<App>()
 				.UseMauiCameraView()
 				.UseBarcodeReader();
-
+				
 			return builder.Build();
 		}
     }

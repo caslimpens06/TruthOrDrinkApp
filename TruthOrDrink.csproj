@@ -67,6 +67,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="GameJoinPage.xaml.cs">
+	    <DependentUpon>GameJoinPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="HostControlGamePage.xaml.cs">
+	    <DependentUpon>HostControlGamePage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="HostChooseGamePage.xaml.cs">
+	    <DependentUpon>HostChooseGamePage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="ParticipantGamePage.xaml.cs">
+	    <DependentUpon>ParticipantGamePage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
 	  <MauiXaml Update="Games\Game1.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -82,16 +97,22 @@
 	  <MauiXaml Update="Games\GameCustom.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="GameHostPage.xaml">
+	  <MauiXaml Update="GameJoinPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="GamePage.xaml">
+	  <MauiXaml Update="HostControlGamePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="ParticipantGamePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="GuestIdentifierPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="GuestPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="HostChooseGamePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="LoginPage.xaml">

@@ -22,14 +22,14 @@ public partial class GuestPage : ContentPage
 		}
 		else 
 		{
-			int gamecode = Int32.Parse(gameCode);
+			int parsedGameCode = Int32.Parse(gameCode);
 			SupabaseService supabaseService = new SupabaseService();
-			bool gameExists = await supabaseService.CheckIfGameExistsAsync(gamecode);
 
-			if (gameExists)
+			if (await supabaseService.CheckIfGameExistsAsync(parsedGameCode))
 			{
-				await supabaseService.JoinParticipantToGame(_participantid, gamecode);
-				await Navigation.PushModalAsync(new GamePage());
+				Participant participant = new Participant(_participantid, parsedGameCode);
+				await supabaseService.JoinParticipantToGame(participant);
+				await Navigation.PushModalAsync(new ParticipantGamePage(participant));
 			}
 			else 
 			{

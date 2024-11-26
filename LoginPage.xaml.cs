@@ -26,18 +26,25 @@ public partial class LoginPage : ContentPage
 			return;
 		}
 
-		Host host = new Host(email, password);
-		SupabaseService supabase = new SupabaseService();
-		bool correctCredentials = await supabase.ValidateCredentialsAsync(host);
+		if (IsValidEmail(email) && !string.IsNullOrWhiteSpace(password))
+		{
+			Host host = new Host(email, password);
+			SupabaseService supabase = new SupabaseService();
+			bool correctCredentials = true;
+		
+			await supabase.ValidateCredentialsAsync(host, LoginButton);
 
-		if (correctCredentials)
-		{
-			await DisplayAlert("Inloggen", "Je bent succesvol ingelogd!", "OK");
-			await Navigation.PushModalAsync(new GamePage());
-		}
-		else
-		{
-			await DisplayAlert("Inloggen mislukt", "E-mailadres of wachtwoord is onjuist.", "OK");
+			if (correctCredentials)
+			{
+				int hostid = await supabase.GetHostPrimaryKey(host);
+				Host newHost = new Host(hostid, email, password);
+				await Navigation.PushModalAsync(new HostChooseGamePage(newHost));
+			}
+			else
+			{
+				await DisplayAlert("Inloggen mislukt", "E-mailadres of wachtwoord is onjuist.", "OK");
+				return;
+			}
 		}
 	}
 
