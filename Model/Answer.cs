@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace TruthOrDrink.Model
 {
-	public class Question
-	{
+    public class Answer
+    {
 		private int _id;
-		private string _text;
-		private int _gameId;
+		private int _questionId;
+		private string _response;
 
 		public int Id
 		{
@@ -18,16 +18,16 @@ namespace TruthOrDrink.Model
 			set { _id = value; }
 		}
 
-		public string Text
+		public int QuestionId
 		{
-			get { return _text; }
-			set { _text = value; }
+			get { return _questionId; }
+			set { _questionId = value; }
 		}
 
-		public int GameId
+		public string Response
 		{
-			get { return _gameId; }
-			set { _gameId = value; }
+			get { return _response; }
+			set { _response = value; }
 		}
 	}
 }

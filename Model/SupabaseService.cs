@@ -221,7 +221,7 @@ public class SupabaseService
 
 	public async Task AddGameToDatabaseAsync(Game game)
 	{
-		const string query = "INSERT INTO \"Game\" (\"GameId\", \"HostId\") VALUES (@GameId, @HostId)";
+		string query = "INSERT INTO \"Game\" (\"GameId\", \"HostId\") VALUES (@GameId, @HostId)";
 
 		await using var connection = new NpgsqlConnection(connectionString);
 
@@ -294,7 +294,7 @@ public class SupabaseService
 			await connection.OpenAsync();
 
 			await using var command = new NpgsqlCommand(query, connection);
-			command.Parameters.AddWithValue("@GameId", game.GameId); // GAMEID is NULL
+			command.Parameters.AddWithValue("@GameId", game.GameId);
 
 			await using var reader = await command.ExecuteReaderAsync();
 			while (await reader.ReadAsync())
@@ -312,6 +312,38 @@ public class SupabaseService
 			}
 
 			return participants;
+		}
+	}
+
+	public async Task<bool> CheckIfGameHasStarted(int gameCode)
+	{
+		try
+		{
+
+			string query = "SELECT \"GameHasStarted\" FROM \"Game\" WHERE \"GameId\" = @GameId";
+
+			await using var connection = new NpgsqlConnection(connectionString);
+
+			await connection.OpenAsync();
+
+			await using var command = new NpgsqlCommand(query, connection);
+
+			command.Parameters.AddWithValue("@GameId", gameCode);
+
+			var result = await command.ExecuteScalarAsync();
+
+			if (result is bool gameHasStarted)
+			{
+				return gameHasStarted;
+			}
+			else
+			{
+				return true;
+			}
+		}
+		catch (Exception)
+		{
+			return true;
 		}
 	}
 }

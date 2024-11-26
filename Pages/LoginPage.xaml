@@ -4,6 +4,7 @@
              x:Class="TruthOrDrink.LoginPage"
              NavigationPage.HasNavigationBar="False">
 
+    
     <ScrollView>
         <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
 
@@ -28,10 +29,7 @@
 
             <Button x:Name="LoginButton" 
                     Text="Inloggen" 
-                    BackgroundColor="Black" 
-                    TextColor="White" 
-                    HeightRequest="50" 
-                    Margin="0,10" 
+                    Style="{StaticResource SelectButtonStyle}" 
                     Clicked="Login" />
 
             <Label Text="Wachtwoord vergeten?" 

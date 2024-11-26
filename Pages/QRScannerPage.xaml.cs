@@ -9,11 +9,11 @@ using TruthOrDrink.Model;
 
 namespace TruthOrDrink
 {
-	public partial class QRScanner : ContentPage
+	public partial class QRScannerPage : ContentPage
 	{
 		private int _participantid;
 
-		public QRScanner(int participantid)
+		public QRScannerPage(int participantid)
 		{
 			InitializeComponent();
 			_participantid = participantid;

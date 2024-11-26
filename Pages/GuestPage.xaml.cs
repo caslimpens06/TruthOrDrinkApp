@@ -26,10 +26,18 @@ public partial class GuestPage : ContentPage
 			SupabaseService supabaseService = new SupabaseService();
 
 			if (await supabaseService.CheckIfGameExistsAsync(parsedGameCode))
-			{
-				Participant participant = new Participant(_participantid, parsedGameCode);
-				await supabaseService.JoinParticipantToGame(participant);
-				await Navigation.PushModalAsync(new ParticipantGamePage(participant));
+			{	
+				bool hasStarted = await supabaseService.CheckIfGameHasStarted(parsedGameCode);
+				if (!hasStarted)
+				{
+					Participant participant = new Participant(_participantid, parsedGameCode);
+					await supabaseService.JoinParticipantToGame(participant);
+					await Navigation.PushModalAsync(new ParticipantGamePage(participant));
+				}
+				else 
+				{
+					await DisplayAlert("Foutmelding", "Helaas, je kan niet meer deelnemen.", "Ok");
+				}
 			}
 			else 
 			{
@@ -40,6 +48,6 @@ public partial class GuestPage : ContentPage
 
 	private void QR_Clicked(object sender, EventArgs e)
 	{
-		Navigation.PushModalAsync(new QRScanner(_participantid));
+		Navigation.PushModalAsync(new QRScannerPage(_participantid));
 	}
 }

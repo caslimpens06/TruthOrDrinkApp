@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TruthOrDrink.SignUpPage"
              NavigationPage.HasNavigationBar="False">
-
+    
+    
     <ScrollView>
         <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
             <Image
@@ -42,12 +43,11 @@
                 HeightRequest="50" 
                 Margin="0,10" />
 
-            <Button Text="Maak Account" 
-                    BackgroundColor="Black" 
-                    TextColor="White" 
-                    HeightRequest="50" 
-                    Margin="0,10" 
-                    Clicked="CreateAccount" />
+            <Button 
+                Text="Maak Account" 
+                Style="{StaticResource SelectButtonStyle}"
+                Clicked="CreateAccount" />
+            
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

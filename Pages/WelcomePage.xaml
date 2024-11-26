@@ -4,9 +4,11 @@
              x:Class="TruthOrDrink.WelcomePage"
              NavigationPage.HasNavigationBar="False">
 
+
+
     <ScrollView>
         <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
-            <!-- Logo -->
+
             <Image
                 x:Name="LogoImage"
                 Source="logo.jpg"
@@ -14,16 +16,26 @@
                 HeightRequest="200"
                 WidthRequest="200" />
 
-            <!-- Welcome label -->
             <Label Text="Welkom bij Truth Or Drink"
                    FontAttributes="Bold"
                    FontSize="24"
                    HorizontalOptions="Center" />
 
-            <!-- Buttons -->
-            <Button Text="Maak Account" BackgroundColor="Black" TextColor="White" HeightRequest="50" Margin="0,10" Clicked="NavigateToSignup" />
-            <Button Text="Speel als Host" BackgroundColor="Black" TextColor="White" HeightRequest="50" Margin="0,10" Clicked="NavigateToHost" />
-            <Button Text="Speel als Deelnemer" BackgroundColor="Black" TextColor="White" HeightRequest="50" Margin="0,10" Clicked="NavigateToParticipant" />
+            <Button 
+                Text="Maak Account" 
+                Style="{StaticResource SelectButtonStyle}" 
+                Clicked="NavigateToSignup" />
+
+            <Button 
+                Text="Speel als Host" 
+                Style="{StaticResource SelectButtonStyle}" 
+                Clicked="NavigateToHost" />
+
+            <Button 
+                Text="Speel als Deelnemer" 
+                Style="{StaticResource SelectButtonStyle}" 
+                Clicked="NavigateToParticipant" />
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

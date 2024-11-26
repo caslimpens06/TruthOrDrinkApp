@@ -4,6 +4,8 @@
              x:Class="TruthOrDrink.GuestIdentifierPage"
              NavigationPage.HasNavigationBar="False">
 
+
+    
     <VerticalStackLayout Padding="30" Spacing="25" VerticalOptions="Center">
 
         <Image
@@ -54,10 +56,7 @@
         
         <Button 
             Text="Ga verder" 
-            BackgroundColor="Black" 
-            TextColor="White" 
-            HeightRequest="50" 
-            Margin="0,10" 
+            Style="{StaticResource SelectButtonStyle}"  
             Clicked="Continue_Clicked" />
 
         <Label Text="Je naam en geslacht worden gebruikt in het spel." 

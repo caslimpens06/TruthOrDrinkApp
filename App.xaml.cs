@@ -33,7 +33,7 @@
 				CloseApp();
 			}
 		}
-		public void CloseApp()
+		public static void CloseApp()
 		{
 			Environment.Exit(0);
 		}
