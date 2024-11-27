@@ -5,6 +5,7 @@ using ZXing.Net.Maui.Controls;
 using ZXing.Net.Maui;
 using Microsoft.IdentityModel.Tokens;
 using TruthOrDrink.Model;
+using TruthOrDrink.Pages;
 
 
 namespace TruthOrDrink
@@ -47,9 +48,9 @@ namespace TruthOrDrink
 
 			if (gameExists)
 			{
-				Participant participant = new Participant(_participantid, gamecode);
-				await supabaseService.JoinParticipantToSession(participant);
-				await Navigation.PushModalAsync(new ParticipantGamePage(participant));
+					Participant participant = new Participant(_participantid, gamecode);
+					await supabaseService.JoinParticipantToSession(participant);
+					await Navigation.PushModalAsync(new WaitOnHostPage(participant));
 			}
 			else 
 			{

@@ -1,15 +1,15 @@
 using System.Collections.ObjectModel;
 using TruthOrDrink.Model;
+using TruthOrDrink.Pages;
 
 namespace TruthOrDrink;
 
-public partial class HostControlGamePage : ContentPage
+public partial class HostJoinParticipantPage : ContentPage
 {
 	private ObservableCollection<Participant> _participants = new ObservableCollection<Participant>();
-	private Game _game;
 	private Session _session;
 
-	public HostControlGamePage(Session session)
+	public HostJoinParticipantPage(Session session)
 	{
 		InitializeComponent();
 		_session = session;
@@ -47,5 +47,6 @@ public partial class HostControlGamePage : ContentPage
 	private void StartButtonClicked(object sender, EventArgs e) 
 	{
 		_session.StartGame();
+		Navigation.PushModalAsync(new HostControlsGamePage(_session));
 	}
 }

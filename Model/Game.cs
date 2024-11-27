@@ -49,6 +49,10 @@ namespace TruthOrDrink.Model
 			_gameid = gameid;
 			_name = name;
 		}
+		public Game(int gameid)
+		{
+			_gameid = gameid;
+		}
 
 
 		// Verkrijg alle vragen voor dit spel
@@ -56,5 +60,6 @@ namespace TruthOrDrink.Model
 		{
 			return await _supabaseService.GetQuestionsByGameIdAsync(this);
 		}
+
 	}
 }

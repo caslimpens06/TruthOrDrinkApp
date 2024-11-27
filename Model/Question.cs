@@ -8,14 +8,14 @@ namespace TruthOrDrink.Model
 {
 	public class Question
 	{
-		private int _id;
+		private int _questionid;
 		private string _text;
 		private int _gameId;
 
-		public int Id
+		public int QuestionId
 		{
-			get { return _id; }
-			set { _id = value; }
+			get { return _questionid; }
+			set { _questionid = value; }
 		}
 
 		public string Text
@@ -30,18 +30,32 @@ namespace TruthOrDrink.Model
 			set { _gameId = value; }
 		}
 		
-		private readonly SupabaseService _supabaseService;
+		private readonly SupabaseService _supabaseService = new SupabaseService();
 
 		// Constructor voor Question klasse
-		public Question(SupabaseService supabaseService)
+		public Question(int questionid, string text, int gameid)
 		{
-			_supabaseService = supabaseService;
+			_questionid = questionid;
+			_text = text;
+			_gameId = gameid;
 		}
 
-		// Verkrijg alle vragen voor dit specifieke Game
-		public async Task<List<Question>> GetQuestionsForGameAsync(Game game)
+		public Question(int questionid, string text)
 		{
-			return await _supabaseService.GetQuestionsByGameIdAsync(game);
+			_questionid = questionid;
+			_text = text;
 		}
+
+		public Question(int questionid)
+		{
+			_questionid = questionid;
+		}
+
+		public async void SetCurrentQuestion(Session session)
+		{
+			_supabaseService.SetCurrentQuestion(this, session);
+		}
+
+
 	}
 }

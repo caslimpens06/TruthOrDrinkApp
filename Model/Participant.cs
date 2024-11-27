@@ -56,5 +56,10 @@ namespace TruthOrDrink.Model
 		{
 			return await _supabaseService.GetGameBySessionId(this);
 		}
+
+		public async Task<Question> GetCurrentQuestionAsync()
+		{
+			return await _supabaseService.GetCurrentQuestionAsync(this);
+		}
 	}
 }

@@ -60,7 +60,7 @@ namespace TruthOrDrink
 
 		private void Play(object sender, EventArgs e)
 		{
-			Navigation.PushModalAsync(new HostControlGamePage(_session));
+			Navigation.PushModalAsync(new HostJoinParticipantPage(_session));
 		}
 		
 		

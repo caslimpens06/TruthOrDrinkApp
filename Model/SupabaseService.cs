@@ -429,12 +429,7 @@ public class SupabaseService
 				{
 					while (await reader.ReadAsync())
 					{
-						var question = new Question(this)
-						{
-							Id = Convert.ToInt32(reader["QuestionId"]),
-							Text = reader["QuestionText"].ToString(),
-							GameId = Convert.ToInt32(reader["GameId"])
-						};
+						Question question = new Question(Convert.ToInt32(reader["QuestionId"]),reader["QuestionText"].ToString(), Convert.ToInt32(reader["GameId"]));
 
 						questions.Add(question);
 					}
@@ -546,6 +541,52 @@ public class SupabaseService
 		}
 	}
 
+
+
+	public async Task<Question> GetCurrentQuestionAsync(Participant participant)
+	{
+		Question question = null;
+
+		using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string query = "SELECT s.\"CurrentQuestionId\", q.\"QuestionText\" FROM public.\"Session\" s JOIN public.\"Question\" q ON s.\"CurrentQuestionId\" = q.\"QuestionId\" WHERE s.\"SessionId\" = @SessionCode";
+
+			using (var command = new NpgsqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@SessionCode", participant.SessionCode);
+
+				using (var reader = await command.ExecuteReaderAsync())
+				{
+					if (await reader.ReadAsync())
+					{
+						question = new Question(reader.GetInt32(reader.GetOrdinal("CurrentQuestionId")), reader.GetString(reader.GetOrdinal("QuestionText")));
+					}
+				}
+			}
+		}
+
+		return question;
+	}
+
+	public async void SetCurrentQuestion(Question question, Session session)
+	{
+		using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string query = "UPDATE public.\"Session\" SET \"CurrentQuestionId\" = @QuestionId WHERE \"SessionId\" = @SessionId";
+
+			using (var command = new NpgsqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@QuestionId", question.QuestionId);
+				command.Parameters.AddWithValue("@SessionId", session.SessionCode);
+
+				await command.ExecuteNonQueryAsync();
+			}
+		}
+	}
 
 }
 

@@ -41,7 +41,7 @@ public partial class ParticipantGamePage : ContentPage
 
 		if (game == null)
 		{
-			await DisplayAlert("Error", "Game not found. Please check the game code.", "OK");
+			await DisplayAlert("Error", "Game niet gevonden.", "OK");
 			Application.Current.MainPage = new WelcomePage(); // Navigate back
 			return;
 		}
@@ -67,28 +67,78 @@ public partial class ParticipantGamePage : ContentPage
 		}
 
 		_currentQuestionIndex = 0;
-		SetNextQuestion();
+		await SetNextQuestion();
 	}
 
-	private void SetNextQuestion()
+	private async Task SetNextQuestion()
 	{
+		// Check if there are questions left to display
 		if (_questions != null && _currentQuestionIndex < _questions.Count)
 		{
-			QuestionLabel.Text = _questions[_currentQuestionIndex].Text;
-			QuestionLabel.TextColor = Colors.Black;
+			// Disable answer buttons until the question is ready
+			TruthButton.IsEnabled = false;
+			DrinkButton.IsEnabled = false;
 
-			TruthButton.IsVisible = true;
-			DrinkButton.IsVisible = true;
-			NextButton.IsVisible = false;
+			// Call GetCurrentQuestionWithRetryAsync to keep checking every 3 seconds until we get a valid question
+			var currentQuestion = await GetCurrentQuestionWithRetryAsync();
+
+			// Check if a valid question was found
+			if (currentQuestion != null)
+			{
+				// Display the question text
+				QuestionLabel.Text = currentQuestion.Text;
+				QuestionLabel.TextColor = Colors.Black;
+
+				// Enable answer buttons after the question is displayed
+				TruthButton.IsEnabled = true;
+				DrinkButton.IsEnabled = true;
+				NextButton.IsVisible = false;
+			}
+			else
+			{
+				// If no valid question is found after retries, display end game message
+				QuestionLabel.Text = "Het spel is afgelopen.";
+				TruthButton.IsVisible = false;
+				DrinkButton.IsVisible = false;
+				NextButton.IsVisible = false;
+			}
 		}
 		else
 		{
+			// End the game if no questions remain
 			QuestionLabel.Text = "Het spel is afgelopen.";
 			TruthButton.IsVisible = false;
 			DrinkButton.IsVisible = false;
 			NextButton.IsVisible = false;
 		}
 	}
+
+	private async Task<Question> GetCurrentQuestionWithRetryAsync()
+	{
+		Question currentQuestion = null;
+
+		// Keep checking for a valid question every 3 seconds until one is found
+		while (currentQuestion == null)
+		{
+			// Call the method to fetch the current question
+			currentQuestion = await _participant.GetCurrentQuestionAsync();
+
+			// If a valid question is found, break the loop
+			if (currentQuestion != null)
+			{
+				break;
+			}
+
+			// Wait for 3 seconds before trying again
+			await Task.Delay(3000);
+		}
+
+		// Return the found question (or null if it wasn't found)
+		return currentQuestion;
+	}
+
+	
+
 
 	private async void LeaveGame(object sender, EventArgs e)
 	{
@@ -132,7 +182,7 @@ public partial class ParticipantGamePage : ContentPage
 		try
 		{
 			var question = _questions[_currentQuestionIndex];
-			Answer answer = new Answer(question.Id, response, _participant.ParticipantId);
+			Answer answer = new Answer(question.QuestionId, response, _participant.ParticipantId);
 
 			await answer.SaveAnswerAsync();
 
