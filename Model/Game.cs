@@ -10,6 +10,9 @@ namespace TruthOrDrink.Model
 	{
 		private int _gameid;
 		private int _hostid;
+		private string _name;
+		private readonly SupabaseService _supabaseService = new SupabaseService();
+		private Host _host;
 
 		public int GameId
 		{
@@ -23,10 +26,35 @@ namespace TruthOrDrink.Model
 			set { _hostid = value; }
 		}
 
+		public string Name 
+		{
+			get { return _name; }
+			set { _name = value; }
+		}
+
 		public Game(int gameid, int hostid)
 		{
 			_gameid = gameid;
 			_hostid = hostid;
+		}
+		public Game(Host host, int GameId) 
+		{
+			_host = host;
+			_gameid = GameId;
+
+		}
+
+		public Game(int gameid, string name)
+		{
+			_gameid = gameid;
+			_name = name;
+		}
+
+
+		// Verkrijg alle vragen voor dit spel
+		public async Task<List<Question>> GetQuestionsAsync()
+		{
+			return await _supabaseService.GetQuestionsByGameIdAsync(this);
 		}
 	}
 }

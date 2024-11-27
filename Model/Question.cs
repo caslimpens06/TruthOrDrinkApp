@@ -29,5 +29,19 @@ namespace TruthOrDrink.Model
 			get { return _gameId; }
 			set { _gameId = value; }
 		}
+		
+		private readonly SupabaseService _supabaseService;
+
+		// Constructor voor Question klasse
+		public Question(SupabaseService supabaseService)
+		{
+			_supabaseService = supabaseService;
+		}
+
+		// Verkrijg alle vragen voor dit specifieke Game
+		public async Task<List<Question>> GetQuestionsForGameAsync(Game game)
+		{
+			return await _supabaseService.GetQuestionsByGameIdAsync(game);
+		}
 	}
 }

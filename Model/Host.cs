@@ -6,6 +6,7 @@
 		private string _name;
 		private string _email;
 		private string _password;
+		private int _gameid; // 0 t/m 5
 
 		public int HostId
 		{
@@ -25,6 +26,11 @@
 		public string Password
 		{
 			get { return _password; }
+		}
+
+		public int GameId
+		{
+			get { return _gameid; }
 		}
 
 		public Host(string name, string email, string password)
@@ -48,6 +54,10 @@
 			_name = "";
 			_email = email;
 			_password = password;
+		}
+		public Host(int hostid) 
+		{
+			_hostid = hostid;
 		}
 	}
 }

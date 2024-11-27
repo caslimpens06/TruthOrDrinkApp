@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using TruthOrDrink.Model;
+using TruthOrDrink.Pages;
 
 namespace TruthOrDrink;
 
@@ -14,25 +15,25 @@ public partial class GuestPage : ContentPage
 
 	private async void Connect_Clicked(object sender, EventArgs e)
 	{
-		string gameCode = GameCodeEntry.Text;
-		if (string.IsNullOrWhiteSpace(gameCode) || gameCode.Length != 6)
+		string sessionCode = SessionCodeEntry.Text;
+		if (string.IsNullOrWhiteSpace(sessionCode) || sessionCode.Length != 6)
 		{
 			await DisplayAlert("Ongeldige gamecode", "Voer de gamecode in die op het hostapparaat staat. Dit is een 6-cijferige code.", "OK");
 			return;
 		}
 		else 
 		{
-			int parsedGameCode = Int32.Parse(gameCode);
+			int parsedSessionCode = Int32.Parse(sessionCode);
 			SupabaseService supabaseService = new SupabaseService();
 
-			if (await supabaseService.CheckIfGameExistsAsync(parsedGameCode))
+			if (await supabaseService.CheckIfSessionExistsAsync(parsedSessionCode))
 			{	
-				bool hasStarted = await supabaseService.CheckIfGameHasStarted(parsedGameCode);
+				bool hasStarted = await supabaseService.CheckIfSessionHasStarted(parsedSessionCode);
 				if (!hasStarted)
 				{
-					Participant participant = new Participant(_participantid, parsedGameCode);
-					await supabaseService.JoinParticipantToGame(participant);
-					await Navigation.PushModalAsync(new ParticipantGamePage(participant));
+					Participant participant = new Participant(_participantid, parsedSessionCode);
+					await supabaseService.JoinParticipantToSession(participant);
+					await Navigation.PushModalAsync(new WaitOnHostPage(participant));
 				}
 				else 
 				{

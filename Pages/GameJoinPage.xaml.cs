@@ -6,14 +6,16 @@ namespace TruthOrDrink
 {
 	public partial class GameJoinPage : ContentPage
 	{
-		private Host _host;
-		private Game _game;
+		private int _hostid;
 		private int NewCodeFor;
+		private int _gameid;
+		private Session _session;
 
-		public GameJoinPage(Host host)
+		public GameJoinPage(Session session)
 		{
 			InitializeComponent();
-			_host = host;
+			_hostid = session.SessionCode;
+			_gameid = session.GameId;
 			GenerateGameCode();
 
 		}
@@ -23,8 +25,11 @@ namespace TruthOrDrink
 			int newCode = await GenerateUniqueGameCode();
 			NewCodeFor = newCode;
 			SupabaseService supabaseService = new SupabaseService();
-			Game _game = new Game(newCode, _host.HostId);
-			await supabaseService.AddGameToDatabaseAsync(_game);
+			
+			Session session = new Session(newCode, _hostid, _gameid);
+			_session = session;
+
+			session.AddSessionToDatabase();
 			
 			GameCodeLabel.Text = $"Gamecode: {newCode.ToString()}";
 
@@ -36,12 +41,12 @@ namespace TruthOrDrink
 			PlayButton.IsEnabled = true;
 		}
 
-		private async Task<int> GenerateUniqueGameCode()
+		private static async Task<int> GenerateUniqueGameCode()
 		{
 			int newCode;
 			SupabaseService supabaseService = new SupabaseService();
 
-			var existingGameIds = await supabaseService.GetExistingGameIdsAsync();
+			List<int> existingGameIds = await supabaseService.GetExistingSessionIdsAsync();
 
 			do
 			{
@@ -55,8 +60,7 @@ namespace TruthOrDrink
 
 		private void Play(object sender, EventArgs e)
 		{
-			Game game = new Game(NewCodeFor, _host.HostId);
-			Navigation.PushModalAsync(new HostControlGamePage(game));
+			Navigation.PushModalAsync(new HostControlGamePage(_session));
 		}
 		
 		

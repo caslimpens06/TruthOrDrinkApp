@@ -26,8 +26,8 @@
             Clicked="QR_Clicked" />
         
         <Entry 
-            x:Name="GameCodeEntry" 
-           Placeholder="Of typ de gamecode hier handmatig." 
+            x:Name="SessionCodeEntry" 
+           Placeholder="Of typ de sessiecode hier handmatig." 
            Keyboard="Numeric" 
            HeightRequest="50" 
            Margin="0,10" />
@@ -38,7 +38,7 @@
             Clicked="Connect_Clicked" />
 
         <Label 
-           Text="De QR-code of de spelcode is te zien op het hostapparaat." 
+           Text="De QR-code of de sessiecode is te zien op het hostapparaat." 
            TextColor="Gray" 
            HorizontalOptions="Center" 
            FontSize="12" />

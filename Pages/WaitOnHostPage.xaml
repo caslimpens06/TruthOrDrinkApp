@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TruthOrDrink.Pages.WaitOnHostPage"
+             Title="WaitOnHostPage">
+    <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <Label
+            x:Name="WaitingLabel"
+            Text="Wachten totdat de host het spel start..."
+            FontAttributes="Bold"
+            FontSize="18"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Style="{StaticResource SelectButtonStyle}"/>
+    </Grid>
+</ContentPage>

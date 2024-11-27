@@ -7,10 +7,12 @@ public partial class HostControlGamePage : ContentPage
 {
 	private ObservableCollection<Participant> _participants = new ObservableCollection<Participant>();
 	private Game _game;
-	public HostControlGamePage(Game game)
+	private Session _session;
+
+	public HostControlGamePage(Session session)
 	{
 		InitializeComponent();
-		_game = game;
+		_session = session;
 		UserList.ItemsSource = _participants;
 		RefreshContent();
 	}
@@ -28,22 +30,22 @@ public partial class HostControlGamePage : ContentPage
 
 	private async Task RefreshContent()
 	{
-			SupabaseService supabaseService = new SupabaseService();
+		SupabaseService supabaseService = new SupabaseService();
 
-			// Fetch participants from the Supabase service
-			List<Participant> participants = await supabaseService.GetParticipantsByGame(_game);
+		// Fetch participants from the Supabase service
+		List<Participant> participants = await _session.GetParticipantsBySession();
 
-			// Clear and re-populate the ObservableCollection
-			_participants.Clear();
-			foreach (var participant in participants)
-			{
-				Console.WriteLine($"Participant: {participant.Name}, Gender: {participant.Gender}");
-				_participants.Add(participant);
-			}
+		// Clear and re-populate the ObservableCollection
+		_participants.Clear();
+		foreach (var participant in participants)
+		{
+			Console.WriteLine($"Participant: {participant.Name}, Gender: {participant.Gender}");
+			_participants.Add(participant);
+		}
 	}
 
 	private void StartButtonClicked(object sender, EventArgs e) 
 	{
-		DisplayAlert("Klik", "Start Game", "Ok");
+		_session.StartGame();
 	}
 }

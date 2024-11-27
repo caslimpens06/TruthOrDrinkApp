@@ -14,11 +14,13 @@
                    HorizontalTextAlignment="Center" 
                    TextColor="Black" />
 
-            <Label Text="Hier komt de spelnaam" 
-                   FontSize="24" 
-                   FontAttributes="Bold" 
-                   HorizontalTextAlignment="Center" 
+            <Label x:Name="GameNameLabel"
+                   Text="Hier komt de spelnaam"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
                    TextColor="Black" />
+
 
             <Label x:Name="QuestionLabel"
                    Text="Hier komt de vraag"

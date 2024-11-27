@@ -10,6 +10,7 @@ using System.Net.Http.Json;
 using Microsoft.Maui.ApplicationModel.DataTransfer;
 using Microsoft.Maui.Controls;
 using System.Xml.Linq;
+using Npgsql.Replication.PgOutput.Messages;
 
 namespace TruthOrDrink;
 public class SupabaseService
@@ -124,16 +125,16 @@ public class SupabaseService
 		}
 	}
 
-	public async Task<bool> JoinParticipantToGame(Participant participant)
+	public async Task<bool> JoinParticipantToSession(Participant participant)
 	{
-		bool gameExists = await CheckIfGameExistsAsync(participant.Gamecode);
+		bool gameExists = await CheckIfSessionExistsAsync(participant.SessionCode);
 
 		if (!gameExists)
 		{
 			return false;
 		}
 
-		string sqlQuery = "INSERT INTO \"JoinedParticipants\" (\"ParticipantId\", \"GameId\") VALUES (@participantId, @gameId);";
+		string sqlQuery = "INSERT INTO \"JoinedParticipant\" (\"ParticipantId\", \"SessionId\") VALUES (@ParticipantId, @SessionId);";
 
 		await using (var connection = new NpgsqlConnection(connectionString))
 		{
@@ -141,8 +142,8 @@ public class SupabaseService
 
 			using (var command = new NpgsqlCommand(sqlQuery, connection))
 			{
-				command.Parameters.AddWithValue("@participantId", participant.ParticipantId);
-				command.Parameters.AddWithValue("@gameId", participant.Gamecode);
+				command.Parameters.AddWithValue("@ParticipantId", participant.ParticipantId);
+				command.Parameters.AddWithValue("@SessionId", participant.SessionCode);
 
 				await command.ExecuteNonQueryAsync();
 			}
@@ -150,17 +151,17 @@ public class SupabaseService
 		return true;
 	}
 
-	public async Task<bool> CheckIfGameExistsAsync(int gamecode)
+	public async Task<bool> CheckIfSessionExistsAsync(int sessioncode)
 	{
-		string sqlQuery = "SELECT 1 FROM \"Game\" WHERE \"GameId\" = @gamecode LIMIT 1;";
+		string query = "SELECT 1 FROM \"Session\" WHERE \"SessionId\" = @SessionCode LIMIT 1;";
 
 		await using (var connection = new NpgsqlConnection(connectionString))
 		{
 			await connection.OpenAsync();
 
-			using (var command = new NpgsqlCommand(sqlQuery, connection))
+			using (var command = new NpgsqlCommand(query, connection))
 			{
-				command.Parameters.AddWithValue("@gamecode", gamecode);
+				command.Parameters.AddWithValue("@SessionCode", sessioncode);
 
 				var result = await command.ExecuteScalarAsync();
 
@@ -196,9 +197,10 @@ public class SupabaseService
 		}
 	}
 
-	public async Task<List<int>> GetExistingGameIdsAsync()
+	public async Task<List<int>> GetExistingSessionIdsAsync()
 	{
-		const string query = "SELECT \"Game\".\"GameId\" FROM \"Game\"";
+		string query = "SELECT \"Session\".\"SessionId\" FROM \"Session\";";
+
 		var existingGameIds = new List<int>();
 
 		await using (var connection = new NpgsqlConnection(connectionString))
@@ -210,7 +212,7 @@ public class SupabaseService
 			await using var reader = await command.ExecuteReaderAsync();
 			while (await reader.ReadAsync())
 			{
-				existingGameIds.Add(reader.GetInt32(0)); // Assuming GameId is an integer
+				existingGameIds.Add(reader.GetInt32(0));
 			}
 			
 
@@ -219,22 +221,28 @@ public class SupabaseService
 		}
 	}
 
-	public async Task AddGameToDatabaseAsync(Game game)
+	public async Task AddSessionToDatabase(Session session)
 	{
-		string query = "INSERT INTO \"Game\" (\"GameId\", \"HostId\") VALUES (@GameId, @HostId)";
+		Console.WriteLine($"{session.SessionCode} {session.HostId} {session.GameId}");
+
+		// Modify your query to include GameId as well
+		string query = "INSERT INTO \"Session\" (\"SessionId\", \"HostId\", \"GameId\") VALUES (@SessionId, @HostId, @GameId)";
 
 		await using var connection = new NpgsqlConnection(connectionString);
+		await connection.OpenAsync();
 
-			await connection.OpenAsync();
+		await using var command = new NpgsqlCommand(query, connection);
 
-			await using var command = new NpgsqlCommand(query, connection);
-			command.Parameters.AddWithValue("@GameId", game.GameId);   // Pass GameId as an integer
-			command.Parameters.AddWithValue("@HostId", game.HostId);  // Pass HostId as an integer
+		// Assuming session.GameId and session.HostId are integers
+		command.Parameters.AddWithValue("@SessionId", session.SessionCode);  // Use GameId for SessionId if that's the logic
+		command.Parameters.AddWithValue("@HostId", session.HostId);     // Pass HostId
+		command.Parameters.AddWithValue("@GameId", session.GameId);     // Add GameId as a new parameter
 
-			await command.ExecuteNonQueryAsync();
+		await command.ExecuteNonQueryAsync();
 	}
 
-	public async void RemoveParticipant(Participant participant)
+
+	public async void RemoveParticipantAsync(Participant participant)
 	{
 		await using (var connection = new NpgsqlConnection(connectionString))
 		{
@@ -282,9 +290,9 @@ public class SupabaseService
 		}
 	}
 
-	public async Task<List<Participant>> GetParticipantsByGame(Game game)
+	public async Task<List<Participant>> GetParticipantsBySession(Session session)
 	{
-		string query = "SELECT p.\"ParticipantId\", p.\"Name\", p.\"Gender\", jp.\"GameId\" FROM \"JoinedParticipants\" jp JOIN \"Participant\" p ON jp.\"ParticipantId\" = p.\"ParticipantId\" WHERE jp.\"GameId\" = @GameId";
+		string query = "SELECT p.\"ParticipantId\", p.\"Name\", p.\"Gender\", jp.\"SessionId\" FROM \"JoinedParticipant\" jp JOIN \"Participant\" p ON jp.\"ParticipantId\" = p.\"ParticipantId\" WHERE jp.\"SessionId\" = @SessionId";
 
 
 		var participants = new List<Participant>();
@@ -294,7 +302,7 @@ public class SupabaseService
 			await connection.OpenAsync();
 
 			await using var command = new NpgsqlCommand(query, connection);
-			command.Parameters.AddWithValue("@GameId", game.GameId);
+			command.Parameters.AddWithValue("@SessionId", session.SessionCode);
 
 			await using var reader = await command.ExecuteReaderAsync();
 			while (await reader.ReadAsync())
@@ -315,12 +323,11 @@ public class SupabaseService
 		}
 	}
 
-	public async Task<bool> CheckIfGameHasStarted(int gameCode)
+	public async Task<bool> CheckIfSessionHasStarted(int gameCode)
 	{
 		try
 		{
-
-			string query = "SELECT \"GameHasStarted\" FROM \"Game\" WHERE \"GameId\" = @GameId";
+			string query = "SELECT \"SessionHasStarted\" FROM \"Session\" WHERE \"SessionId\" = @sessionId;";
 
 			await using var connection = new NpgsqlConnection(connectionString);
 
@@ -328,7 +335,7 @@ public class SupabaseService
 
 			await using var command = new NpgsqlCommand(query, connection);
 
-			command.Parameters.AddWithValue("@GameId", gameCode);
+			command.Parameters.AddWithValue("@sessionId", gameCode);
 
 			var result = await command.ExecuteScalarAsync();
 
@@ -346,5 +353,199 @@ public class SupabaseService
 			return true;
 		}
 	}
+
+
+	/////
+	/////
+	/////
+	//Logica voor gamequestionanswer
+
+
+
+	public async Task<Game> GetGameBySessionId(Participant participant)
+	{
+		using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			// Define the SQL query with JOIN to get GameId and GameName
+			string query = "SELECT \"Game\".\"GameId\", \"Game\".\"Name\" FROM \"Session\" JOIN \"Game\" ON \"Session\".\"GameId\" = \"Game\".\"GameId\" WHERE \"Session\".\"SessionId\" = @SessionCode;";
+
+			try
+			{
+				// Create the command
+				using (var command = new NpgsqlCommand(query, connection))
+				{
+					// Add the parameter for SessionId
+					command.Parameters.AddWithValue("@SessionCode", participant.SessionCode);
+
+					// Execute the query and read the result
+					using (var reader = await command.ExecuteReaderAsync())
+					{
+						if (await reader.ReadAsync())
+						{
+							// Read values and return Game object
+							return new Game(
+								reader.GetInt32(reader.GetOrdinal("GameId")),
+								reader.GetString(reader.GetOrdinal("Name"))
+							);
+						}
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				// Log the exception and rethrow or handle as needed
+				Console.WriteLine($"Error retrieving game: {ex.Message}");
+				throw;
+			}
+		}
+
+		// Return null if no game is found for the given SessionId
+		return new Game(0, "");
+	}
+
+
+
+
+
+
+
+	public async Task<List<Question>> GetQuestionsByGameIdAsync(Game game)
+	{
+		var questions = new List<Question>();
+
+		await using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string sqlQuery = "SELECT \"QuestionId\", \"QuestionText\", \"GameId\" FROM \"Question\" WHERE \"GameId\" = @GameId;";
+
+			await using (var command = new NpgsqlCommand(sqlQuery, connection))
+			{
+				command.Parameters.AddWithValue("@GameId", game.GameId);
+
+				await using (var reader = await command.ExecuteReaderAsync())
+				{
+					while (await reader.ReadAsync())
+					{
+						var question = new Question(this)
+						{
+							Id = Convert.ToInt32(reader["QuestionId"]),
+							Text = reader["QuestionText"].ToString(),
+							GameId = Convert.ToInt32(reader["GameId"])
+						};
+
+						questions.Add(question);
+					}
+				}
+			}
+		}
+
+		return questions;
+	}
+
+	public async Task SaveAnswerAsync(Answer answer)
+	{
+		await using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			// Single long query to insert a new answer into the Answer table
+			string sqlQuery = "INSERT INTO \"Answer\" (\"QuestionId\", \"Response\", \"ParticipantId\") VALUES (@QuestionId, @Response, @ParticipantId);";
+
+			await using (var command = new NpgsqlCommand(sqlQuery, connection))
+			{
+				command.Parameters.AddWithValue("@QuestionId", answer.QuestionId);
+				command.Parameters.AddWithValue("@Response", answer.Response);
+				command.Parameters.AddWithValue("@ParticipantId", answer.ParticipantId);
+
+				await command.ExecuteNonQueryAsync();
+			}
+		}
+
+		// Optional: Log or display the saved answer
+		Console.WriteLine($"Answer saved: {answer.Response} for Question {answer.QuestionId} (Participant {answer.ParticipantId})");
+	}
+
+	public async Task<bool> CheckIfSessionHasStartedAsync(Participant participant) 
+	{
+		// The SQL query to check the "SessionHasStarted" status for a specific session
+		string query = "SELECT \"SessionHasStarted\" FROM \"Session\" WHERE \"SessionId\" = @sessionId";
+
+		using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			using (var command = new NpgsqlCommand(query, connection))
+			{
+				// Add the GameId parameter to the SQL query
+				command.Parameters.AddWithValue("@sessionId", participant.SessionCode);
+
+				// Execute the query and get the result
+				var result = await command.ExecuteScalarAsync();
+
+				// If result is null or DBNull, return false (session has not started)
+				if (result == null || DBNull.Value.Equals(result))
+				{
+					return false;
+				}
+
+				// Return the value as a boolean
+				return Convert.ToBoolean(result);
+			}
+		}
+	}
+
+	public async Task<Session> GetGameId(Session session)
+	{
+		using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string query = "SELECT \"GameId\" FROM \"Session\" WHERE \"Session\".\"SessionId\" = @SessionCode";
+
+			using (var command = new NpgsqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@SessionCode", session.SessionCode);
+
+				using (var reader = await command.ExecuteReaderAsync())
+				{
+					if (await reader.ReadAsync())
+					{
+						session.GameId = reader.GetInt32(reader.GetOrdinal("GameId"));
+					}
+				}
+			}
+		}
+
+		return session;
+	}
+
+	public async void StartGame(Session session)
+	{
+		using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string query = "UPDATE \"Session\" SET \"SessionHasStarted\" = TRUE WHERE \"SessionId\" = @SessionCode";
+
+			using (var command = new NpgsqlCommand(query, connection))
+			{
+				Console.WriteLine(session.SessionCode);
+				command.Parameters.AddWithValue("@SessionCode", session.SessionCode);
+
+				using (var reader = await command.ExecuteReaderAsync())
+				{
+					if (await reader.ReadAsync())
+					{
+						session.GameId = reader.GetInt32(reader.GetOrdinal("GameId"));
+					}
+				}
+			}
+		}
+	}
+
+
 }
 

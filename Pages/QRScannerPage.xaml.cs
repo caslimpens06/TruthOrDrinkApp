@@ -43,12 +43,12 @@ namespace TruthOrDrink
 			{
 			int gamecode = Int32.Parse(first.Value);
 			SupabaseService supabaseService = new SupabaseService();
-			bool gameExists = await supabaseService.CheckIfGameExistsAsync(gamecode);
+			bool gameExists = await supabaseService.CheckIfSessionExistsAsync(gamecode);
 
 			if (gameExists)
 			{
 				Participant participant = new Participant(_participantid, gamecode);
-				await supabaseService.JoinParticipantToGame(participant);
+				await supabaseService.JoinParticipantToSession(participant);
 				await Navigation.PushModalAsync(new ParticipantGamePage(participant));
 			}
 			else 
