@@ -588,5 +588,111 @@ public class SupabaseService
 		}
 	}
 
+	public async void SetAllQuestionsToAnswered(Participant participant)
+	{
+		using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string query = "UPDATE public.\"JoinedParticipant\" SET \"AnsweredAllQuestions\" = TRUE WHERE \"ParticipantId\" = @ParticipantId";
+
+			using (var command = new NpgsqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@ParticipantId", participant.ParticipantId);
+
+				await command.ExecuteNonQueryAsync();
+			}
+		}
+	}
+
+	public async Task<bool> CheckIfAllQuestionsAnswered(Participant participant)
+	{
+		using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string query = "SELECT CASE WHEN COUNT(*) = COUNT(CASE WHEN \"AnsweredAllQuestions\" = TRUE THEN 1 END) THEN TRUE ELSE FALSE END AS all_questions_answered FROM public.\"JoinedParticipant\" WHERE \"SessionId\" = @SessionId";
+
+			using (var command = new NpgsqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@SessionId", participant.SessionCode);
+
+				return (bool)await command.ExecuteScalarAsync();
+			}
+		}
+	}
+
+
+
+	public async Task<Participant> GetTopDrinker(Participant participant)
+	{
+		using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string query = "SELECT p.\"Name\", p.\"Gender\", COUNT(a.\"Response\") AS drink_count FROM public.\"Answer\" a JOIN public.\"JoinedParticipant\" jp ON a.\"ParticipantId\" = jp.\"ParticipantId\" JOIN public.\"Participant\" p ON jp.\"ParticipantId\" = p.\"ParticipantId\" WHERE a.\"Response\" = 'Drink' AND jp.\"SessionId\" = @SessionId GROUP BY p.\"Name\", p.\"Gender\" ORDER BY drink_count DESC LIMIT 1;";
+
+			using (var command = new NpgsqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@SessionId", participant.SessionCode);
+
+				using (var reader = await command.ExecuteReaderAsync())
+				{
+					if (await reader.ReadAsync())
+					{
+						return new Participant(reader.GetString(0), reader.GetString(1), reader.GetInt32(2));
+						
+					}
+				}
+			}
+		}
+
+		return null; // Return null if no participant found
+	}
+
+	public async Task<Participant> GetTopTruth(Participant participant)
+	{
+		using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string query = "SELECT p.\"Name\", p.\"Gender\", COUNT(a.\"Response\") AS truth_count FROM public.\"Answer\" a JOIN public.\"JoinedParticipant\" jp ON a.\"ParticipantId\" = jp.\"ParticipantId\" JOIN public.\"Participant\" p ON jp.\"ParticipantId\" = p.\"ParticipantId\" WHERE a.\"Response\" = 'Truth' AND jp.\"SessionId\" = @SessionId GROUP BY p.\"Name\", p.\"Gender\" ORDER BY truth_count DESC LIMIT 1;";
+
+			using (var command = new NpgsqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@SessionId", participant.SessionCode);
+
+				using (var reader = await command.ExecuteReaderAsync())
+				{
+					if (await reader.ReadAsync())
+					{
+						return new Participant(reader.GetString(0), reader.GetString(1), reader.GetInt32(2));
+					}
+				}
+			}
+		}
+
+		return null; // Return null if no participant found
+	}
+
+	public async Task<bool> CheckIfAnswerHasBeenGiven(Question question, Session session)
+	{
+		using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string query = "SELECT CASE WHEN COUNT(DISTINCT \"ParticipantId\") = (SELECT COUNT(DISTINCT \"ParticipantId\") FROM public.\"JoinedParticipant\" WHERE \"SessionId\" = @SessionId) THEN TRUE ELSE FALSE END AS all_participants_answered FROM public.\"Answer\" WHERE \"QuestionId\" = @QuestionId AND \"ParticipantId\" IN (SELECT \"ParticipantId\" FROM public.\"JoinedParticipant\" WHERE \"SessionId\" = @SessionId)";
+
+			using (var command = new NpgsqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@QuestionId", question.QuestionId);
+				command.Parameters.AddWithValue("@SessionId", session.SessionCode);
+				return (bool)await command.ExecuteScalarAsync();
+			}
+		}
+	}
+
+
+
 }
 

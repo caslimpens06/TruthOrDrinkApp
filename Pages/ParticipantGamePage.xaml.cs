@@ -1,4 +1,5 @@
 using TruthOrDrink.Model;
+using TruthOrDrink.Pages;
 
 namespace TruthOrDrink;
 
@@ -6,7 +7,8 @@ public partial class ParticipantGamePage : ContentPage
 {
 	private Participant _participant;
 	private List<Question> _questions;
-	private int _currentQuestionIndex;
+	private List<Question> _answeredquestions = new List<Question>();
+	private Question _currentquestion;
 	private Game _game;
 	private readonly SupabaseService _supabaseService;
 
@@ -16,13 +18,10 @@ public partial class ParticipantGamePage : ContentPage
 		_participant = participant;
 		_supabaseService = new SupabaseService();
 	}
-	
-	// Called when the page is displayed
+
 	protected override async void OnAppearing()
 	{
 		base.OnAppearing();
-
-		// Initialize game and questions when the page appears
 		await InitializePageAsync();
 	}
 
@@ -30,26 +29,13 @@ public partial class ParticipantGamePage : ContentPage
 	{
 		await InitializeGameAsync();
 		await LoadQuestionsAsync();
-		
 	}
 
 	private async Task InitializeGameAsync()
 	{
-
 		Participant participant = new Participant(_participant.SessionCode);
 		Game game = await participant.GetGameBySessionId();
-
-		if (game == null)
-		{
-			await DisplayAlert("Error", "Game niet gevonden.", "OK");
-			Application.Current.MainPage = new WelcomePage(); // Navigate back
-			return;
-		}
-
-		if (GameNameLabel != null)
-		{
-			GameNameLabel.Text = game.Name;
-		}
+		GameNameLabel.Text = game.Name;
 		_game = game;
 	}
 
@@ -62,144 +48,155 @@ public partial class ParticipantGamePage : ContentPage
 			QuestionLabel.Text = "Het spel is afgelopen.";
 			TruthButton.IsVisible = false;
 			DrinkButton.IsVisible = false;
-			NextButton.IsVisible = false;
 			return;
 		}
 
-		_currentQuestionIndex = 0;
+
 		await SetNextQuestion();
 	}
 
 	private async Task SetNextQuestion()
 	{
-		// Check if there are questions left to display
-		if (_questions != null && _currentQuestionIndex < _questions.Count)
+		if (_questions != null && _answeredquestions.Count == _questions.Count)
 		{
-			// Disable answer buttons until the question is ready
+			// Verwijder navigatie hier naar GameStatisticsPage
+			QuestionLabel.Text = "Het spel is afgelopen. Wachten op antwoorden...";
+			return; // Wacht tot antwoorden zijn verzonden.
+		}
+
+		// Standaard logica voor het instellen van de volgende vraag
+		if (_questions != null && _questions.Count > 0)
+		{
+			TruthButton.IsVisible = false;
+			DrinkButton.IsVisible = false;
 			TruthButton.IsEnabled = false;
 			DrinkButton.IsEnabled = false;
 
-			// Call GetCurrentQuestionWithRetryAsync to keep checking every 3 seconds until we get a valid question
-			var currentQuestion = await GetCurrentQuestionWithRetryAsync();
+			Question currentQuestion = await GetCurrentQuestionWithRetryAsync();
+			_currentquestion = currentQuestion;
 
-			// Check if a valid question was found
-			if (currentQuestion != null)
+			bool isQuestionAnswered = _answeredquestions.Any(q => q.QuestionId == currentQuestion?.QuestionId);
+
+			if (currentQuestion != null && !isQuestionAnswered)
 			{
-				// Display the question text
+				_answeredquestions.Add(currentQuestion);
 				QuestionLabel.Text = currentQuestion.Text;
 				QuestionLabel.TextColor = Colors.Black;
 
-				// Enable answer buttons after the question is displayed
+				TruthButton.IsVisible = true;
+				DrinkButton.IsVisible = true;
 				TruthButton.IsEnabled = true;
 				DrinkButton.IsEnabled = true;
-				NextButton.IsVisible = false;
 			}
 			else
 			{
-				// If no valid question is found after retries, display end game message
 				QuestionLabel.Text = "Het spel is afgelopen.";
 				TruthButton.IsVisible = false;
 				DrinkButton.IsVisible = false;
-				NextButton.IsVisible = false;
 			}
 		}
 		else
 		{
-			// End the game if no questions remain
 			QuestionLabel.Text = "Het spel is afgelopen.";
 			TruthButton.IsVisible = false;
 			DrinkButton.IsVisible = false;
-			NextButton.IsVisible = false;
 		}
+	}
+
+	private async Task<bool> CheckIfSessionDone()
+	{
+		bool checking = true;
+		bool done = false;
+		QuestionLabel.Text = "Het spel is afgelopen. Wachten op statistieken...";
+
+		while (checking)
+		{
+			if(await _participant.CheckIfAllQuestionsAnswered())
+			{
+				done = true;
+				checking = false;
+			}
+			await Task.Delay(1000);
+		}
+		return done;
 	}
 
 	private async Task<Question> GetCurrentQuestionWithRetryAsync()
 	{
 		Question currentQuestion = null;
+		bool checking = true;
+		QuestionLabel.Text = "Wachten op vraag...";
 
-		// Keep checking for a valid question every 3 seconds until one is found
-		while (currentQuestion == null)
+		while (checking)
 		{
-			// Call the method to fetch the current question
 			currentQuestion = await _participant.GetCurrentQuestionAsync();
 
-			// If a valid question is found, break the loop
-			if (currentQuestion != null)
+			// Ensure the current question has not been answered already
+			if (currentQuestion != null && !_answeredquestions.Any(q => q.QuestionId == currentQuestion.QuestionId))
 			{
-				break;
+				break; // Break when we find a question that hasn't been answered
 			}
 
-			// Wait for 3 seconds before trying again
-			await Task.Delay(3000);
+			// Wait before retrying if the current question is not valid
+			await Task.Delay(1000);
 		}
 
-		// Return the found question (or null if it wasn't found)
 		return currentQuestion;
 	}
 
-	
-
-
 	private async void LeaveGame(object sender, EventArgs e)
 	{
-		try
-		{
-			_supabaseService.RemoveParticipantAsync(_participant);
-			Application.Current.MainPage = new WelcomePage();
-		}
-		catch (Exception ex)
-		{
-			await DisplayAlert("Error", $"Could not leave game: {ex.Message}", "OK");
-		}
+		_supabaseService.RemoveParticipantAsync(_participant);
+		Application.Current.MainPage = new WelcomePage();
 	}
 
 	private async void OnTruthClicked(object sender, EventArgs e)
 	{
-		NextButton.IsVisible = true;
 		TruthButton.IsVisible = false;
 		DrinkButton.IsVisible = false;
-
-		QuestionLabel.Text = "Je koos Truth!";
-		QuestionLabel.TextColor = Colors.Green;
+		TruthButton.IsEnabled = false;
+		DrinkButton.IsEnabled = false;
+		QuestionLabel.Text = "Wachten op volgende vraag...";
+		QuestionLabel.TextColor = Colors.Gray;
 
 		await SaveAnswerAsync("Truth");
+
+		await SetNextQuestion();
 	}
 
 	private async void OnDrinkClicked(object sender, EventArgs e)
 	{
-		NextButton.IsVisible = true;
 		TruthButton.IsVisible = false;
 		DrinkButton.IsVisible = false;
-
-		QuestionLabel.Text = "Je koos Drink!";
-		QuestionLabel.TextColor = Colors.Red;
+		TruthButton.IsEnabled = false;
+		DrinkButton.IsEnabled = false;
+		QuestionLabel.Text = "Wachten op volgende vraag...";
+		QuestionLabel.TextColor = Colors.Gray;
 
 		await SaveAnswerAsync("Drink");
+
+		await SetNextQuestion();
 	}
 
 	private async Task SaveAnswerAsync(string response)
 	{
-		try
+		Answer answer = new Answer(_currentquestion.QuestionId, response, _participant.ParticipantId);
+		await answer.SaveAnswerAsync();
+
+		if (!_answeredquestions.Contains(_currentquestion))
 		{
-			var question = _questions[_currentQuestionIndex];
-			Answer answer = new Answer(question.QuestionId, response, _participant.ParticipantId);
-
-			await answer.SaveAnswerAsync();
-
-			_currentQuestionIndex++;
+			_answeredquestions.Add(_currentquestion);
 		}
-		catch (Exception ex)
+
+		// Controleer of alle vragen beantwoord zijn
+		if (_answeredquestions.Count == _questions.Count)
 		{
-			await DisplayAlert("Error", $"Could not save answer: {ex.Message}", "OK");
+			await _participant.SetAllQuestionsToAnswered(); // Pas nu markeren
+			if (await CheckIfSessionDone())
+			{
+				await Navigation.PushModalAsync(new GameStatisticsPage(_participant));
+			}
 		}
 	}
 
-	private void OnNextClicked(object sender, EventArgs e)
-	{
-		TruthButton.IsVisible = true;
-		DrinkButton.IsVisible = true;
-		NextButton.IsVisible = false;
-
-		SetNextQuestion();
-	}
 }

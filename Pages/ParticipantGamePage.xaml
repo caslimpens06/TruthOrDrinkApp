@@ -46,13 +46,7 @@
                     CornerRadius="10"
                     Clicked="OnDrinkClicked" />
 
-            <Button x:Name="NextButton"
-                    IsVisible="False"
-                    Text="Volgende"
-                    Style="{StaticResource SelectButtonStyle}"
-                    Clicked="OnNextClicked" />
-
-                <Button Text="Verlaat spel"
+            <Button Text="Verlaat spel"
                     Style="{StaticResource LeaveGameButtonStyle}"
                     Clicked="LeaveGame" />
 

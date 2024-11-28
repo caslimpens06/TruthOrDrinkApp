@@ -69,7 +69,5 @@ namespace TruthOrDrink.Model
 		{
 			_supabaseService.StartGame(this);
 		}
-
-		
 	}
 }

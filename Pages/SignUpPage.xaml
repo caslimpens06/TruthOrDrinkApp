@@ -47,7 +47,11 @@
                 Text="Maak Account" 
                 Style="{StaticResource SelectButtonStyle}"
                 Clicked="CreateAccount" />
-            
+           
+            <Label Text="Dit account kan gebruikt worden voor het maken van een spel." 
+                   TextColor="Gray" 
+                   HorizontalOptions="Center" 
+                   FontSize="11" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

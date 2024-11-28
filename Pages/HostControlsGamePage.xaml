@@ -32,23 +32,24 @@
                             VerticalOptions="FillAndExpand">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame Padding="15"
-                               Margin="8"
-                               BorderColor="#6200EE"
-                               BackgroundColor="White"
-                               CornerRadius="15"
-                               HasShadow="True">
+                        <Frame x:Name="QuestionFrame"
+                               Padding="15"
+                            Margin="8"
+                           BorderColor="#6200EE"
+                           BackgroundColor="White"
+                           CornerRadius="15"
+                           HasShadow="True"
+                           IsEnabled="{Binding IsEnabled}">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnFrameTapped" />
                             </Frame.GestureRecognizers>
 
-                            <VerticalStackLayout VerticalOptions="Center">
-                                <!-- Bind to the Text property of the Question object -->
+                            <VerticalStackLayout Padding="15" VerticalOptions="Center">
                                 <Label Text="{Binding Text}" 
-                                       FontSize="18"
-                                       FontAttributes="Bold"
-                                       TextColor="Black"
-                                       LineBreakMode="WordWrap" />
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="Black"
+                           LineBreakMode="WordWrap" />
                             </VerticalStackLayout>
                         </Frame>
                     </DataTemplate>
@@ -57,7 +58,7 @@
 
             <Button 
                 x:Name="StopGame"
-                Text="Start Nieuwe Ronde"
+                Text="Stop Spel"
                 Style="{StaticResource SelectButtonStyle}"
                 HorizontalOptions="Center"
                 Clicked="StopGame_Clicked" />

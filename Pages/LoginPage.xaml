@@ -32,10 +32,6 @@
                     Style="{StaticResource SelectButtonStyle}" 
                     Clicked="Login" />
 
-            <Label Text="Wachtwoord vergeten?" 
-                   TextColor="Gray" 
-                   HorizontalOptions="Center" 
-                   FontSize="14" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

@@ -9,22 +9,27 @@ public partial class HostJoinParticipantPage : ContentPage
 	private ObservableCollection<Participant> _participants = new ObservableCollection<Participant>();
 	private Session _session;
 
+	// Property to bind to CollectionView
+	public ObservableCollection<Participant> Users => _participants;
+
 	public HostJoinParticipantPage(Session session)
 	{
 		InitializeComponent();
 		_session = session;
+		BindingContext = this;  // Bind the page's context to itself
 		UserList.ItemsSource = _participants;
 		RefreshContent();
 	}
+
 	private async void RefreshButtonClicked(object sender, EventArgs e)
 	{
 		var button = (Button)sender;
 
-		// Flicker effect: maakt het klikken visueel door de transparantie kort te veranderen.
+		// Flicker effect: makes the button briefly fade in and out
 		await button.FadeTo(0, 200);
 		await button.FadeTo(1, 200);
 
-		// Refresh de deelnemerslijst
+		// Refresh the participants list
 		await RefreshContent();
 	}
 
@@ -44,7 +49,7 @@ public partial class HostJoinParticipantPage : ContentPage
 		}
 	}
 
-	private void StartButtonClicked(object sender, EventArgs e) 
+	private void StartButtonClicked(object sender, EventArgs e)
 	{
 		_session.StartGame();
 		Navigation.PushModalAsync(new HostControlsGamePage(_session));

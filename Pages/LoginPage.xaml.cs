@@ -30,9 +30,7 @@ public partial class LoginPage : ContentPage
 		{
 			Host host = new Host(email, password);
 			SupabaseService supabase = new SupabaseService();
-			bool correctCredentials = true;
-		
-			await supabase.ValidateCredentialsAsync(host, LoginButton);
+			bool correctCredentials = await supabase.ValidateCredentialsAsync(host, LoginButton);
 
 			if (correctCredentials)
 			{

@@ -11,6 +11,7 @@ namespace TruthOrDrink.Model
 		private int _questionid;
 		private string _text;
 		private int _gameId;
+		private bool _isenabled = true;
 
 		public int QuestionId
 		{
@@ -29,7 +30,11 @@ namespace TruthOrDrink.Model
 			get { return _gameId; }
 			set { _gameId = value; }
 		}
-		
+		public bool IsEnabled 
+		{  
+			get { return _isenabled; }
+			set { _isenabled = value; }
+		}
 		private readonly SupabaseService _supabaseService = new SupabaseService();
 
 		// Constructor voor Question klasse
@@ -51,11 +56,14 @@ namespace TruthOrDrink.Model
 			_questionid = questionid;
 		}
 
-		public async void SetCurrentQuestion(Session session)
+		public async Task SetCurrentQuestion(Session session)
 		{
 			_supabaseService.SetCurrentQuestion(this, session);
 		}
 
-
+		public async Task<bool> CheckIfAnswerHasBeenGiven(Session session)
+		{
+			return await _supabaseService.CheckIfAnswerHasBeenGiven(this, session);
+		}
 	}
 }
