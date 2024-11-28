@@ -59,46 +59,69 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.100" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
+		<PackageReference Include="Npgsql" Version="9.0.1" />
 		<PackageReference Include="QRCoder" Version="1.6.0" />
+		<PackageReference Include="Supabase" Version="1.1.1" />
 		<PackageReference Include="ZXing.Net.Maui" Version="0.4.0" />
 		<PackageReference Include="ZXing.Net.Maui.Controls" Version="0.4.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Games\Game1.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Games\Game2.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Games\Game3.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Games\Game4.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
+	  <Compile Update="Pages\GameJoinPage.xaml.cs">
+	    <DependentUpon>GameJoinPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\HostJoinParticipantPage.xaml.cs">
+	    <DependentUpon>HostJoinParticipantPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\HostChooseGamePage.xaml.cs">
+	    <DependentUpon>HostChooseGamePage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\ParticipantGamePage.xaml.cs">
+	    <DependentUpon>ParticipantGamePage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\QRScannerPage.xaml.cs">
+	    <DependentUpon>QRScannerPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
 	  <MauiXaml Update="Games\GameCustom.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="GameHostPage.xaml">
+	  <MauiXaml Update="Pages\GameJoinPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="GamePage.xaml">
+	  <MauiXaml Update="Pages\GameStatisticsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="GuestIdentifierPage.xaml">
+	  <MauiXaml Update="Pages\HostControlsGamePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="GuestPage.xaml">
+	  <MauiXaml Update="Pages\HostJoinParticipantPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="LoginPage.xaml">
+	  <MauiXaml Update="Pages\ParticipantGamePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="SignUpPage.xaml">
+	  <MauiXaml Update="Pages\GuestIdentifierPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="WelcomePage.xaml">
+	  <MauiXaml Update="Pages\GuestPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\HostChooseGamePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\LoginPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\SignUpPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\WaitOnHostPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\WelcomePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

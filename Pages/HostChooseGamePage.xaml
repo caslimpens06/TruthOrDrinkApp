@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TruthOrDrink.GamePage"
+             x:Class="TruthOrDrink.HostChooseGamePage"
              BackgroundColor="White"
              NavigationPage.HasBackButton="False"
              NavigationPage.HasNavigationBar="False">
@@ -22,21 +22,13 @@
                HorizontalTextAlignment="Center"
                VerticalOptions="Center" />
 
-        <Button Text="Custom vragenset maken" 
-                BackgroundColor="#FF8C00"  
-                TextColor="White" 
-                HeightRequest="70" 
-                FontSize="20" 
-                Margin="0,10" 
-                Clicked="NavigateTo1" />
-
         <Button Text="Geheimen" 
                 BackgroundColor="#4CAF50"  
                 TextColor="White" 
                 HeightRequest="70" 
                 FontSize="20" 
                 Margin="0,10" 
-                Clicked="NavigateTo2" />
+                Clicked="NavigateTo1" />
 
         <Button Text="Relaties en Liefde"
                 BackgroundColor="#2196F3"  
@@ -44,7 +36,7 @@
                 HeightRequest="70" 
                 FontSize="20" 
                 Margin="0,10" 
-                Clicked="NavigateTo3" />
+                Clicked="NavigateTo2" />
 
         <Button Text="Drank en Feestjes" 
                 BackgroundColor="#FF5722"  
@@ -52,7 +44,7 @@
                 HeightRequest="70" 
                 FontSize="20" 
                 Margin="0,10" 
-                Clicked="NavigateTo4" />
+                Clicked="NavigateTo3" />
 
         <Button Text="Geld" 
                 BackgroundColor="#9C27B0"  
@@ -60,9 +52,17 @@
                 HeightRequest="70" 
                 FontSize="20" 
                 Margin="0,10"
+                Clicked="NavigateTo4" />
+
+        <Button Text="Custom vragenset maken" 
+                BackgroundColor="#FF8C00"  
+                TextColor="White" 
+                HeightRequest="70"
+                FontSize="20" 
+                Margin="0,10" 
                 Clicked="NavigateTo5" />
 
-        <Button Text="Leave Game"
+        <Button Text="Verlaat spel"
                 BackgroundColor="#FF6666"  
                 TextColor="White"
                 FontSize="16"

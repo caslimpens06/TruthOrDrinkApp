@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TruthOrDrink.GuestIdentifierPage"
+             NavigationPage.HasNavigationBar="False">
+
+
+    
+    <VerticalStackLayout Padding="30" Spacing="25" VerticalOptions="Center">
+
+        <Image
+            x:Name="LogoImage"
+            Source="logo.jpg"
+            HorizontalOptions="Center"
+            HeightRequest="200"
+            WidthRequest="200" />
+
+        <Label 
+            Text="Vul je naam in"
+            FontAttributes="Bold"
+            FontSize="24"
+            HorizontalOptions="Center" />
+
+        <Entry x:Name="NameEntry" 
+               Placeholder="Typ je naam hier" 
+               Keyboard="Text" 
+               HeightRequest="50" 
+               Margin="0,10" />
+
+        <Label 
+                Text="Vul je geslacht in"
+                FontAttributes="Bold"
+                FontSize="22"
+                HorizontalOptions="Center" />
+
+        <HorizontalStackLayout Spacing="20" HorizontalOptions="Center">
+            <Button
+                x:Name="ChooseGenderMale"
+                Text="Man" 
+                BackgroundColor="Blue" 
+                Opacity="0.5"
+                TextColor="White" 
+                HeightRequest="50" 
+                WidthRequest="100" 
+                Clicked="ManButton_Clicked" />
+            <Button 
+                x:Name="ChooseGenderFemale"
+                Text="Vrouw" 
+                BackgroundColor="DeepPink" 
+                Opacity="0.5"
+                TextColor="White" 
+                HeightRequest="50" 
+                WidthRequest="100" 
+                Clicked="WomanButton_Clicked" />
+        </HorizontalStackLayout>
+        
+        <Button 
+            Text="Ga verder" 
+            Style="{StaticResource SelectButtonStyle}"  
+            Clicked="Continue_Clicked" />
+
+        <Label Text="Je naam en geslacht worden gebruikt in het spel." 
+               TextColor="Gray" 
+               HorizontalOptions="Center" 
+               FontSize="12" />
+    </VerticalStackLayout>
+</ContentPage>

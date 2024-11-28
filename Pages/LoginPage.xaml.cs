@@ -1,3 +1,5 @@
+using TruthOrDrink.Model;
+
 namespace TruthOrDrink;
 
 public partial class LoginPage : ContentPage
@@ -24,16 +26,23 @@ public partial class LoginPage : ContentPage
 			return;
 		}
 
-		User user = new User(email, password);
-		bool correctCredentials = user.ValidateCredentials();
-		if (correctCredentials)
+		if (IsValidEmail(email) && !string.IsNullOrWhiteSpace(password))
 		{
-			await DisplayAlert("Inloggen", "Je bent succesvol ingelogd!", "OK");
-			await Navigation.PushModalAsync(new GamePage());
-		}
-		else
-		{
-			await DisplayAlert("Inloggen mislukt", "E-mailadres of wachtwoord is onjuist.", "OK");
+			Host host = new Host(email, password);
+			SupabaseService supabase = new SupabaseService();
+			bool correctCredentials = await supabase.ValidateCredentialsAsync(host, LoginButton);
+
+			if (correctCredentials)
+			{
+				int hostid = await supabase.GetHostPrimaryKey(host);
+				Host newHost = new Host(hostid, email, password);
+				await Navigation.PushModalAsync(new HostChooseGamePage(newHost));
+			}
+			else
+			{
+				await DisplayAlert("Inloggen mislukt", "E-mailadres of wachtwoord is onjuist.", "OK");
+				return;
+			}
 		}
 	}
 
