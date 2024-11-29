@@ -49,8 +49,16 @@ namespace TruthOrDrink
 			if (gameExists)
 			{
 					Participant participant = new Participant(_participantid, gamecode);
+					Session session = new Session(gamecode);
 					await supabaseService.JoinParticipantToSession(participant);
-					await Navigation.PushModalAsync(new WaitOnHostPage(participant));
+
+					if (await session.CheckIfCustomGame()) {
+						await Navigation.PushModalAsync(new QuestionInputPage(participant));
+					}
+
+					else {
+						await Navigation.PushModalAsync(new WaitOnHostPage(participant));
+					}
 			}
 			else 
 			{

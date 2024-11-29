@@ -40,8 +40,12 @@ namespace TruthOrDrink.Model
 			_host = host;
 			_gameid = gameid;
 		}
-		
-	
+
+		public Session(int sessioncode)
+		{
+			_sessioncode = sessioncode;
+		}
+
 		public Session(int sessioncode, int gameid)
 		{
 			_sessioncode = sessioncode;
@@ -65,6 +69,10 @@ namespace TruthOrDrink.Model
 			return await _supabaseService.GetParticipantsBySession(this);
 		}
 
+		public async Task<bool> CheckIfCustomGame()
+		{
+			return await _supabaseService.CheckIfCustomGame(this);
+		}
 		public async void StartGame()
 		{
 			_supabaseService.StartGame(this);

@@ -32,8 +32,18 @@ public partial class GuestPage : ContentPage
 				if (!hasStarted)
 				{
 					Participant participant = new Participant(_participantid, parsedSessionCode);
+					Session session = new Session(parsedSessionCode);
 					await supabaseService.JoinParticipantToSession(participant);
-					await Navigation.PushModalAsync(new WaitOnHostPage(participant));
+
+					if (await session.CheckIfCustomGame())
+					{
+						await Navigation.PushModalAsync(new QuestionInputPage(participant));
+					}
+
+					else
+					{
+						await Navigation.PushModalAsync(new WaitOnHostPage(participant));
+					}
 				}
 				else 
 				{

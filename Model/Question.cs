@@ -56,6 +56,17 @@ namespace TruthOrDrink.Model
 			_questionid = questionid;
 		}
 
+		public Question(string text)
+		{
+			_text = text;
+		}
+
+		public async Task AddQuestionByParticipant()
+		{
+			_supabaseService.AddQuestionByParticipant(this);
+		}
+
+
 		public async Task SetCurrentQuestion(Session session)
 		{
 			_supabaseService.SetCurrentQuestion(this, session);

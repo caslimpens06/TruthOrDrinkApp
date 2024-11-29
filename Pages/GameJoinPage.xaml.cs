@@ -1,4 +1,3 @@
-using System.Linq;
 using QRCoder;
 using TruthOrDrink.Model;
 
