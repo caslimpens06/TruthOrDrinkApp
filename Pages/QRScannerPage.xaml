@@ -4,41 +4,29 @@
              xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.Maui.Controls"
              x:Class="TruthOrDrink.QRScannerPage"
              BackgroundColor="White"
-             NavigationPage.HasNavigationBar="False">
+             NavigationPage.HasBackButton="True">
 
     <ScrollView>
-        <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Start">
+        <VerticalStackLayout Style="{StaticResource StandardSpacing}">
 
             <Image
                 x:Name="LogoImage"
-                Source="logo.jpg"
-                HorizontalOptions="Center"
-                HeightRequest="200"
-                WidthRequest="200" />
+                Style="{StaticResource LogoImage}"/>
 
             <Label 
                 Text="Scan de QR-Code"
-                FontAttributes="Bold"
-                FontSize="28"
-                HorizontalOptions="Center" />
-            <Label
-                HeightRequest="40"
-                WidthRequest="40" />
+                Style="{StaticResource BoldTitleText}"/>
+            
+            <Label></Label>
             
             <zxing:CameraBarcodeReaderView
                 x:Name="BarcodeReader"
-                HeightRequest="250"
-                WidthRequest="250"
-                BarcodesDetected="Barcodereader_BarcodeDetected"
-                VerticalOptions="Center" />
+                Style="{StaticResource QRScanWindow}"
+                BarcodesDetected="Barcodereader_BarcodeDetected"/>
 
             <Label 
                 x:Name="barcodeResult" 
-                FontSize="20" 
-                HorizontalOptions="Center" 
-                VerticalOptions="End"
-                TextColor="Black"
-                Padding="0,0,0,20" />
+                Style="{StaticResource QRScanWindow}"/>
 
         </VerticalStackLayout>
     </ScrollView>

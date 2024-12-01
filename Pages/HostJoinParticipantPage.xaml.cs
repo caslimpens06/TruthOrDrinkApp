@@ -16,10 +16,16 @@ public partial class HostJoinParticipantPage : ContentPage
 	{
 		InitializeComponent();
 		_session = session;
-		BindingContext = this;  // Bind the page's context to itself
+		BindingContext = this;
 		UserList.ItemsSource = _participants;
 		RefreshContent();
 	}
+
+	protected override bool OnBackButtonPressed()
+	{
+		return true;
+	}
+
 
 	private async void RefreshButtonClicked(object sender, EventArgs e)
 	{
@@ -52,6 +58,12 @@ public partial class HostJoinParticipantPage : ContentPage
 	private void StartButtonClicked(object sender, EventArgs e)
 	{
 		_session.StartGame();
-		Navigation.PushModalAsync(new HostControlsGamePage(_session));
+		Navigation.PushAsync(new HostControlsGamePage(_session));
+	}
+
+	private async void LeaveGameClicked(object sender, EventArgs e)
+	{
+		await Navigation.PopToRootAsync();
+
 	}
 }

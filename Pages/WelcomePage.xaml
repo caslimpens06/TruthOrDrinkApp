@@ -11,15 +11,10 @@
 
             <Image
                 x:Name="LogoImage"
-                Source="logo.jpg"
-                HorizontalOptions="Center"
-                HeightRequest="200"
-                WidthRequest="200" />
+                Style="{StaticResource LogoImage}"/>
 
             <Label Text="Welkom bij Truth Or Drink"
-                   FontAttributes="Bold"
-                   FontSize="24"
-                   HorizontalOptions="Center" />
+                  Style="{StaticResource BoldTitleText}"/>
 
             <Button 
                 Text="Maak Account" 

@@ -65,4 +65,8 @@ public partial class GameStatisticsPage : ContentPage
 		return await _participant.GetMostDrinks();
 	}
 
+	private async void ToMainMenuClicked(object sender, EventArgs e)
+	{
+		await Navigation.PopToRootAsync();
+	}
 }

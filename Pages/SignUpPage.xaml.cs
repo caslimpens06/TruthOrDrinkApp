@@ -49,7 +49,6 @@ public partial class SignUpPage : ContentPage
 			await supabaseService.AddPlayerAsync(user);
 			await DisplayAlert("Account", "Je account is gemaakt! Je wordt teruggestuurd naar het menu.", "OK");
 		}
-		await Navigation.PopModalAsync();
 	}
 
 	// Hulpmethode voor emailvalidatie

@@ -12,12 +12,17 @@ public partial class HostChooseGamePage : ContentPage
 		_host = host;
 	}
 
+	protected override bool OnBackButtonPressed()
+	{
+		return true;
+	}
+
 	private async void NavigateTo1(object sender, EventArgs e)
 	{
 		Session _session = new Session(_host.HostId, 1);
 		if (_session != null)
 		{
-			await Navigation.PushModalAsync(new GameJoinPage(_session));
+			await Navigation.PushAsync(new GameJoinPage(_session));
 		}
 		else
 		{
@@ -30,7 +35,7 @@ public partial class HostChooseGamePage : ContentPage
 		Session _session = new Session(_host.HostId, 2);
 		if (_session != null)
 		{
-			await Navigation.PushModalAsync(new GameJoinPage(_session));
+			await Navigation.PushAsync(new GameJoinPage(_session));
 		}
 		else
 		{
@@ -43,7 +48,7 @@ public partial class HostChooseGamePage : ContentPage
 		Session _session = new Session(_host.HostId, 3);
 		if (_session != null)
 		{
-			await Navigation.PushModalAsync(new GameJoinPage(_session));
+			await Navigation.PushAsync(new GameJoinPage(_session));
 		}
 		else
 		{
@@ -56,7 +61,7 @@ public partial class HostChooseGamePage : ContentPage
 		Session _session = new Session(_host.HostId, 4);
 		if (_session != null)
 		{
-			await Navigation.PushModalAsync(new GameJoinPage(_session));
+			await Navigation.PushAsync(new GameJoinPage(_session));
 		}
 		else
 		{
@@ -69,7 +74,7 @@ public partial class HostChooseGamePage : ContentPage
 		Session _session = new Session(_host.HostId, 5);
 		if (_session != null)
 		{
-			await Navigation.PushModalAsync(new GameJoinPage(_session));
+			await Navigation.PushAsync(new GameJoinPage(_session));
 		}
 		else
 		{
@@ -77,8 +82,8 @@ public partial class HostChooseGamePage : ContentPage
 		}
 	}
 
-	private async void LeaveGame(object sender, EventArgs e)
+	private async void LeaveGameClicked(object sender, EventArgs e)
 	{
-		Application.Current.MainPage = new WelcomePage();
+		await Navigation.PopToRootAsync();
 	}
 }

@@ -9,7 +9,7 @@
 			Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
 
 			// Stel de startpagina in op WelcomePage
-			MainPage = new WelcomePage();
+			MainPage = new NavigationPage(new WelcomePage());
 		}
 
 		public async void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)

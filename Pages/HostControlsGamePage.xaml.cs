@@ -23,6 +23,11 @@ public partial class HostControlsGamePage : ContentPage
 		_participant = new Participant(_session.SessionCode);
 	}
 
+	protected override bool OnBackButtonPressed()
+	{
+		return true;
+	}
+
 	public ObservableCollection<Question> Questions => _questions;
 
 	public string SelectedQuestion { get; set; }
@@ -38,9 +43,9 @@ public partial class HostControlsGamePage : ContentPage
 		}
 	}
 
-	private void StopGame_Clicked(object sender, EventArgs e)
+	private void StopGameClicked(object sender, EventArgs e)
 	{
-		// Stop the game and perform necessary cleanup
+		Navigation.PushAsync(new GameStatisticsPage(_participant));
 	}
 
 	private async void OnFrameTapped(object sender, EventArgs e)
@@ -75,7 +80,7 @@ public partial class HostControlsGamePage : ContentPage
 							// Wacht tot alle deelnemers antwoorden hebben gegeven
 							if (await CheckIfSessionDone())
 							{
-								await Navigation.PushModalAsync(new GameStatisticsPage(_participant));
+								await Navigation.PushAsync(new GameStatisticsPage(_participant));
 							}
 						}
 					}

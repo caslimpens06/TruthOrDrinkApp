@@ -1,9 +1,3 @@
-using Microsoft.Maui.Controls;
-using Camera.MAUI;
-using System.Runtime.CompilerServices;
-using ZXing.Net.Maui.Controls;
-using ZXing.Net.Maui;
-using Microsoft.IdentityModel.Tokens;
 using TruthOrDrink.Model;
 using TruthOrDrink.Pages;
 
@@ -53,16 +47,17 @@ namespace TruthOrDrink
 					await supabaseService.JoinParticipantToSession(participant);
 
 					if (await session.CheckIfCustomGame()) {
-						await Navigation.PushModalAsync(new QuestionInputPage(participant));
+						await Navigation.PushAsync(new QuestionInputPage(participant));
 					}
 
 					else {
-						await Navigation.PushModalAsync(new WaitOnHostPage(participant));
+						await Navigation.PushAsync(new WaitOnHostPage(participant));
 					}
 			}
 			else 
 			{
 				await DisplayAlert("Ongeldige gamecode", "Verifiëer of de host al een spel heeft gemaakt.", "OK");
+				await Navigation.PopAsync();
 			}
 			});
 		}

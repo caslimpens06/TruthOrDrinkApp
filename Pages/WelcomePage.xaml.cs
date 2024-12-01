@@ -9,16 +9,16 @@ public partial class WelcomePage : ContentPage
 	
 	private async void NavigateToSignup(object sender, EventArgs e)
 	{
-		await Navigation.PushModalAsync(new SignUpPage());
+		await Navigation.PushAsync(new SignUpPage());
 	}
 
 	private async void NavigateToHost(object sender, EventArgs e)
 	{
-		await Navigation.PushModalAsync(new LoginPage());
+		await Navigation.PushAsync(new LoginPage());
 	}
 
 	private async void NavigateToParticipant(object sender, EventArgs e)
 	{
-		await Navigation.PushModalAsync(new GuestIdentifierPage());
+		await Navigation.PushAsync(new GuestIdentifierPage());
 	}
 }

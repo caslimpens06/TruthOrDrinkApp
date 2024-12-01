@@ -85,9 +85,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Games\GameCustom.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Pages\GameJoinPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
