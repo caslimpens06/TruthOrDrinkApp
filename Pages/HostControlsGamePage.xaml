@@ -3,26 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:TruthOrDrink.Pages"
              x:Class="TruthOrDrink.Pages.HostControlsGamePage"
-             Title="Host Controls"
-             NavigationPage.HasNavigationBar="False">
+             NavigationPage.HasBackButton="False">
 
     <ScrollView>
-        <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Start">
+        <VerticalStackLayout Style="{StaticResource StandardSpacing}">
 
             <Image
-                Source="logo.jpg"
-                HorizontalOptions="Center"
-                HeightRequest="150"
-                WidthRequest="150"
-                Margin="0,0,0,10" />
+                Style="{StaticResource LogoImage}"/>
 
             <Label 
                 Text="Kies een vraag voor de spelers"
-                FontAttributes="Bold"
-                FontSize="22"
-                HorizontalOptions="Center"
-                TextColor="Black"
-                Margin="0,10" />
+                Style="{StaticResource BoldTitleText}"
+                FontSize="20"/>
 
             <CollectionView x:Name="QuestionsListView"
                             ItemsSource="{Binding Questions}"
@@ -59,9 +51,8 @@
             <Button 
                 x:Name="StopGame"
                 Text="Stop Spel"
-                Style="{StaticResource SelectButtonStyle}"
-                HorizontalOptions="Center"
-                Clicked="StopGame_Clicked" />
+                Style="{StaticResource LeaveGameButtonStyle}"
+                Clicked="StopGameClicked" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

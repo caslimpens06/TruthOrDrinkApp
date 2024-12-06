@@ -3,26 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:TruthOrDrink"
              x:Class="TruthOrDrink.Pages.GameStatisticsPage"
-             Title="Game Statistics"
-             NavigationPage.HasNavigationBar="False">
+             NavigationPage.HasBackButton="False">
 
     <ScrollView>
-        <VerticalStackLayout Padding="30" Spacing="15" VerticalOptions="Start">
+        <VerticalStackLayout Style="{StaticResource StandardSpacing}">
 
             <Image
                 x:Name="LogoImage"
-                Source="logo.jpg"
-                HorizontalOptions="Center"
-                HeightRequest="150"
-                WidthRequest="150"
-                Margin="0,0,0,10" />
+                Style="{StaticResource LogoImage}"/>
 
             <Label 
                 Text="Statistieken"
-                FontAttributes="Bold"
-                FontSize="30"
-                HorizontalOptions="Center"
-                Margin="0,10" />
+                Style="{StaticResource BoldTitleText}"/>
 
             <Frame Padding="10"
                    Margin="5"
@@ -81,6 +73,10 @@
                     </VerticalStackLayout>
                 </HorizontalStackLayout>
             </Frame>
+
+            <Button Text="Terug naar het hoofdmenu"
+                    Style="{StaticResource LeaveGameButtonStyle}"
+                    Clicked="ToMainMenuClicked" />
 
         </VerticalStackLayout>
     </ScrollView>

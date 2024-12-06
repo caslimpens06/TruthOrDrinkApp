@@ -13,6 +13,11 @@ public partial class GuestPage : ContentPage
 		_participantid = participantid;
 	}
 
+	protected override bool OnBackButtonPressed()
+	{
+		return true;
+	}
+
 	private async void Connect_Clicked(object sender, EventArgs e)
 	{
 		string sessionCode = SessionCodeEntry.Text;
@@ -32,8 +37,18 @@ public partial class GuestPage : ContentPage
 				if (!hasStarted)
 				{
 					Participant participant = new Participant(_participantid, parsedSessionCode);
+					Session session = new Session(parsedSessionCode);
 					await supabaseService.JoinParticipantToSession(participant);
-					await Navigation.PushModalAsync(new WaitOnHostPage(participant));
+
+					if (await session.CheckIfCustomGame())
+					{
+						await Navigation.PushAsync(new QuestionInputPage(participant));
+					}
+
+					else
+					{
+						await Navigation.PushAsync(new WaitOnHostPage(participant));
+					}
 				}
 				else 
 				{
@@ -49,6 +64,11 @@ public partial class GuestPage : ContentPage
 
 	private void QR_Clicked(object sender, EventArgs e)
 	{
-		Navigation.PushModalAsync(new QRScannerPage(_participantid));
+		Navigation.PushAsync(new QRScannerPage(_participantid));
+	}
+
+	private async void LeaveGameClicked(object sender, EventArgs e)
+	{
+		await Navigation.PopToRootAsync();
 	}
 }

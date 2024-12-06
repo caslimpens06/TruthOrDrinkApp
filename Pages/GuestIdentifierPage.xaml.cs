@@ -34,7 +34,7 @@ public partial class GuestIdentifierPage : ContentPage
 		{
 			// Maak de zoek primarykey method opnieuw
 			int ID = await supabaseService.GetParticipantPrimarykey(participant.Name);
-			await Navigation.PushModalAsync(new GuestPage(ID));	
+			await Navigation.PushAsync(new GuestPage(ID));	
 		}
 		else 
 		{

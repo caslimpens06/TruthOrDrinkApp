@@ -1,16 +1,6 @@
-﻿using System;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.Maui.ApplicationModel.Communication;
-using TruthOrDrink.Model;
+﻿using TruthOrDrink.Model;
 using Npgsql;
-using System.Net.Http.Json;
-using Microsoft.Maui.ApplicationModel.DataTransfer;
-using Microsoft.Maui.Controls;
-using System.Xml.Linq;
-using Npgsql.Replication.PgOutput.Messages;
+
 
 namespace TruthOrDrink;
 public class SupabaseService
@@ -517,6 +507,23 @@ public class SupabaseService
 		return session;
 	}
 
+	public async Task<bool> CheckIfCustomGame(Session session)
+	{
+		using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string query = "SELECT EXISTS (SELECT 1 FROM public.\"Session\" WHERE \"SessionId\" = @SessionId AND \"GameId\" = 5)";
+
+			using (var command = new NpgsqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@SessionId", session.SessionCode);
+				return (bool)await command.ExecuteScalarAsync();
+			}
+		}
+	}
+
+
 	public async void StartGame(Session session)
 	{
 		using (var connection = new NpgsqlConnection(connectionString))
@@ -541,6 +548,37 @@ public class SupabaseService
 		}
 	}
 
+	public async void AddQuestionByParticipant(Question question)
+	{
+		using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string query = "INSERT INTO public.\"Question\" (\"QuestionText\", \"GameId\") VALUES (@QuestionText, 5)";
+
+			using (var command = new NpgsqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@QuestionText", question.Text);
+				await command.ExecuteNonQueryAsync();
+			}
+		}
+	}
+
+	public async Task SetDoneAddingQuestions(Participant participant)
+	{
+		using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string query = "UPDATE public.\"JoinedParticipant\" SET \"DoneAddingQuestions\" = TRUE WHERE \"ParticipantId\" = @ParticipantId";
+
+			using (var command = new NpgsqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@ParticipantId", participant.ParticipantId);
+				await command.ExecuteNonQueryAsync();
+			}
+		}
+	}
 
 
 	public async Task<Question> GetCurrentQuestionAsync(Participant participant)

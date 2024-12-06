@@ -16,7 +16,11 @@ namespace TruthOrDrink.Pages
 			WaitOnHost();
 		}
 
-		// Method to check if session has started
+		protected override bool OnBackButtonPressed()
+		{
+			return true;
+		}
+
 		public async void WaitOnHost()
 		{
 			bool notStarted = true;
@@ -34,7 +38,7 @@ namespace TruthOrDrink.Pages
 					notStarted = false;
 					StopFlickering();
 
-					await Navigation.PushModalAsync(new ParticipantGamePage(_participant));
+					await Navigation.PushAsync(new ParticipantGamePage(_participant));
 				}
 
 				await Task.Delay(5000);
@@ -60,6 +64,11 @@ namespace TruthOrDrink.Pages
 		public void StopFlickering()
 		{
 			WaitingLabel.Opacity = 1;
+		}
+
+		private async void LeaveGameClicked(object sender, EventArgs e)
+		{ 
+			await Navigation.PopToRootAsync();
 		}
 
 	}

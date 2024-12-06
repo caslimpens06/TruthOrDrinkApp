@@ -1,4 +1,3 @@
-using System.Linq;
 using QRCoder;
 using TruthOrDrink.Model;
 
@@ -60,7 +59,7 @@ namespace TruthOrDrink
 
 		private void Play(object sender, EventArgs e)
 		{
-			Navigation.PushModalAsync(new HostJoinParticipantPage(_session));
+			Navigation.PushAsync(new HostJoinParticipantPage(_session));
 		}
 		
 		

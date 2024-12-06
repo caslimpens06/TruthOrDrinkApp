@@ -5,15 +5,11 @@
              NavigationPage.HasNavigationBar="False">
 
     <ScrollView>
-        <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Start">
+        <VerticalStackLayout Style="{StaticResource StandardSpacing}">
 
             <Image
                  x:Name="LogoImage"
-                 Source="logo.jpg"
-                 HorizontalOptions="Center"
-                 HeightRequest="150"
-                 WidthRequest="150"
-                 Margin="0,0,0,10" />
+                 Style="{StaticResource LogoImage}"/>
 
             <Label 
                 Text="Deelnemers"
@@ -79,6 +75,11 @@
                 Text="Start Spel"
                 Style="{StaticResource SelectButtonStyle}" 
                 Clicked="StartButtonClicked" />
+
+            <Button Text="Verlaat spel"
+                   Style="{StaticResource LeaveGameButtonStyle}"
+                    Clicked="LeaveGameClicked" />
+            
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

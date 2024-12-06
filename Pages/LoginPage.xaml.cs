@@ -36,7 +36,7 @@ public partial class LoginPage : ContentPage
 			{
 				int hostid = await supabase.GetHostPrimaryKey(host);
 				Host newHost = new Host(hostid, email, password);
-				await Navigation.PushModalAsync(new HostChooseGamePage(newHost));
+				await Navigation.PushAsync(new HostChooseGamePage(newHost));
 			}
 			else
 			{

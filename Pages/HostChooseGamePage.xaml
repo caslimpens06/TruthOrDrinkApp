@@ -2,75 +2,43 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TruthOrDrink.HostChooseGamePage"
-             BackgroundColor="White"
-             NavigationPage.HasBackButton="False"
-             NavigationPage.HasNavigationBar="False">
+             NavigationPage.HasBackButton="False">
 
-    <VerticalStackLayout Spacing="20" 
-                         Padding="20,10,20,0"
-                         VerticalOptions="FillAndExpand">
-
-        <Image Source="home.png"
-               WidthRequest="30" 
-               HeightRequest="30"
-               VerticalOptions="Center"
-               HorizontalOptions="Start" />
+<ScrollView>
+    <VerticalStackLayout Style="{StaticResource StandardSpacing}">
 
         <Label Text="Vragensets"
-               FontSize="24"
-               FontAttributes="Bold"
-               HorizontalTextAlignment="Center"
-               VerticalOptions="Center" />
+               Style="{StaticResource BoldTitleText}"/>
 
-        <Button Text="Geheimen" 
+        <Button Text="Geheimen ☆☆☆☆" 
                 BackgroundColor="#4CAF50"  
-                TextColor="White" 
-                HeightRequest="70" 
-                FontSize="20" 
-                Margin="0,10" 
+                Style="{StaticResource QuestionLists}" 
                 Clicked="NavigateTo1" />
 
-        <Button Text="Relaties en Liefde"
+        <Button Text="Relaties en Liefde ☆☆☆☆☆"
                 BackgroundColor="#2196F3"  
-                TextColor="White" 
-                HeightRequest="70" 
-                FontSize="20" 
-                Margin="0,10" 
+                Style="{StaticResource QuestionLists}"  
                 Clicked="NavigateTo2" />
 
-        <Button Text="Drank en Feestjes" 
+        <Button Text="Drank en Feestjes ☆☆☆" 
                 BackgroundColor="#FF5722"  
-                TextColor="White" 
-                HeightRequest="70" 
-                FontSize="20" 
-                Margin="0,10" 
+                Style="{StaticResource QuestionLists}" 
                 Clicked="NavigateTo3" />
 
-        <Button Text="Geld" 
+        <Button Text="Geld ☆☆☆" 
                 BackgroundColor="#9C27B0"  
-                TextColor="White" 
-                HeightRequest="70" 
-                FontSize="20" 
-                Margin="0,10"
+                Style="{StaticResource QuestionLists}" 
                 Clicked="NavigateTo4" />
 
-        <Button Text="Custom vragenset maken" 
+        <Button Text="Custom vragenset maken ☆" 
                 BackgroundColor="#FF8C00"  
-                TextColor="White" 
-                HeightRequest="70"
-                FontSize="20" 
-                Margin="0,10" 
+                Style="{StaticResource QuestionLists}" 
                 Clicked="NavigateTo5" />
 
         <Button Text="Verlaat spel"
-                BackgroundColor="#FF6666"  
-                TextColor="White"
-                FontSize="16"
-                HeightRequest="45"
-                HorizontalOptions="Center"
-                Margin="0,20,0,0"
-                CornerRadius="10"
-                Clicked="LeaveGame" />
+                Style="{StaticResource LeaveGameButtonStyle}"
+                Clicked="LeaveGameClicked" />
 
     </VerticalStackLayout>
+</ScrollView>
 </ContentPage>

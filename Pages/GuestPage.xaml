@@ -3,22 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TruthOrDrink.GuestPage"
              NavigationPage.HasNavigationBar="False">
-
-
-    
-    <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
+<ScrollView>
+    <VerticalStackLayout Style="{StaticResource StandardSpacing}">
 
         <Image
             x:Name="LogoImage"
-            Source="logo.jpg"
-            HorizontalOptions="Center"
-            HeightRequest="200"
-            WidthRequest="200" />
+            Style="{StaticResource LogoImage}"/>
         <Label 
             Text="Scan de QR-Code"
-            FontAttributes="Bold"
-            FontSize="24"
-            HorizontalOptions="Center" />
+            Style="{StaticResource BoldTitleText}" />
 
         <Button 
             Text="Open QR-Scanner" 
@@ -27,10 +20,9 @@
         
         <Entry 
             x:Name="SessionCodeEntry" 
-           Placeholder="Of typ de sessiecode hier handmatig." 
-           Keyboard="Numeric" 
-           HeightRequest="50" 
-           Margin="0,10" />
+            Placeholder="Of typ de sessiecode hier handmatig." 
+            Keyboard="Numeric" 
+            Style="{StaticResource StandardEntry}"/>
 
         <Button 
             Text="Verbind" 
@@ -38,9 +30,14 @@
             Clicked="Connect_Clicked" />
 
         <Label 
-           Text="De QR-code of de sessiecode is te zien op het hostapparaat." 
-           TextColor="Gray" 
-           HorizontalOptions="Center" 
-           FontSize="12" />
+            Text="De QR-code of de sessiecode is te zien op het hostapparaat." 
+            Style="{StaticResource StandardCommentText}" />
+
+        <Button 
+            Text="Terug naar hoofdmenu"
+            Style="{StaticResource LeaveGameButtonStyle}"
+            Clicked="LeaveGameClicked" />
+        
     </VerticalStackLayout>
+</ScrollView>
 </ContentPage>

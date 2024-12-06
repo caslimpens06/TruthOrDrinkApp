@@ -19,6 +19,11 @@ public partial class ParticipantGamePage : ContentPage
 		_supabaseService = new SupabaseService();
 	}
 
+	protected override bool OnBackButtonPressed()
+	{
+		return true;
+	}
+
 	protected override async void OnAppearing()
 	{
 		base.OnAppearing();
@@ -144,10 +149,10 @@ public partial class ParticipantGamePage : ContentPage
 		return currentQuestion;
 	}
 
-	private async void LeaveGame(object sender, EventArgs e)
+	private async void LeaveGameClicked(object sender, EventArgs e)
 	{
 		_supabaseService.RemoveParticipantAsync(_participant);
-		Application.Current.MainPage = new WelcomePage();
+		await Navigation.PopToRootAsync();
 	}
 
 	private async void OnTruthClicked(object sender, EventArgs e)
@@ -194,7 +199,7 @@ public partial class ParticipantGamePage : ContentPage
 			await _participant.SetAllQuestionsToAnswered(); // Pas nu markeren
 			if (await CheckIfSessionDone())
 			{
-				await Navigation.PushModalAsync(new GameStatisticsPage(_participant));
+				await Navigation.PushAsync(new GameStatisticsPage(_participant));
 			}
 		}
 	}

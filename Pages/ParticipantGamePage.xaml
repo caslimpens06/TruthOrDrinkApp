@@ -6,7 +6,7 @@
              NavigationPage.HasBackButton="False">
 
     <ScrollView>
-        <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="CenterAndExpand">
+        <VerticalStackLayout Style="{StaticResource StandardSpacing}">
 
             <Label Text="Truth or Drink" 
                    FontSize="30" 
@@ -48,7 +48,7 @@
 
             <Button Text="Verlaat spel"
                     Style="{StaticResource LeaveGameButtonStyle}"
-                    Clicked="LeaveGame" />
+                    Clicked="LeaveGameClicked" />
 
         </VerticalStackLayout>
     </ScrollView>
