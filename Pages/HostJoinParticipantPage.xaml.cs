@@ -6,8 +6,8 @@ namespace TruthOrDrink;
 
 public partial class HostJoinParticipantPage : ContentPage
 {
-	private ObservableCollection<Participant> _participants = new ObservableCollection<Participant>();
-	private Session _session;
+	private readonly ObservableCollection<Participant> _participants = new ObservableCollection<Participant>();
+	private readonly Session _session;
 
 	// Property to bind to CollectionView
 	public ObservableCollection<Participant> Users => _participants;
@@ -31,34 +31,29 @@ public partial class HostJoinParticipantPage : ContentPage
 	{
 		var button = (Button)sender;
 
-		// Flicker effect: makes the button briefly fade in and out
+		// Blinking effect on label.
 		await button.FadeTo(0, 200);
 		await button.FadeTo(1, 200);
 
-		// Refresh the participants list
 		await RefreshContent();
 	}
 
 	private async Task RefreshContent()
 	{
-		SupabaseService supabaseService = new SupabaseService();
-
-		// Fetch participants from the Supabase service
 		List<Participant> participants = await _session.GetParticipantsBySession();
 
-		// Clear and re-populate the ObservableCollection
+		// Clear and re-populate the ObservableCollection with participants
 		_participants.Clear();
 		foreach (var participant in participants)
 		{
-			Console.WriteLine($"Participant: {participant.Name}, Gender: {participant.Gender}");
 			_participants.Add(participant);
 		}
 	}
 
-	private void StartButtonClicked(object sender, EventArgs e)
+	private async void StartButtonClicked(object sender, EventArgs e)
 	{
 		_session.StartGame();
-		Navigation.PushAsync(new HostControlsGamePage(_session));
+		await Navigation.PushAsync(new HostControlsGamePage(_session));
 	}
 
 	private async void LeaveGameClicked(object sender, EventArgs e)

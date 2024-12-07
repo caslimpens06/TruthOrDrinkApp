@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using TruthOrDrink.Model;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TruthOrDrink.Pages;
 
@@ -7,9 +8,9 @@ public partial class HostControlsGamePage : ContentPage
 {
 	private readonly ObservableCollection<Question> _questions = new();
 	private readonly Game _game;
-	private List<int> tappedQuestions = new List<int>();
+	private readonly List<int> tappedQuestions = new List<int>();
 	private readonly Session _session;
-	private Participant _participant;
+	private readonly Participant _participant;
 	private bool _questionsareclickable = true;
 	
 
@@ -43,7 +44,7 @@ public partial class HostControlsGamePage : ContentPage
 		}
 	}
 
-	private void StopGameClicked(object sender, EventArgs e)
+	private void BackToMainMenu(object sender, EventArgs e)
 	{
 		Navigation.PushAsync(new GameStatisticsPage(_participant));
 	}
@@ -56,28 +57,29 @@ public partial class HostControlsGamePage : ContentPage
 			var tappedFrame = sender as Frame;
 			if (tappedFrame != null)
 			{
+
 				var tappedQuestion = tappedFrame.BindingContext as Question;
 				if (tappedQuestion != null)
 				{
 					if (tappedQuestions.Contains(tappedQuestion.QuestionId))
 					{
+						_questionsareclickable = true;
 						await DisplayAlert("Waarschuwing", "Deze vraag is al gespeeld. Je kan de vraag niet nog een keer spelen.", "OK");
 					}
 					else
 					{
 						tappedQuestions.Add(tappedQuestion.QuestionId);
 						tappedFrame.BackgroundColor = Colors.Green;
+
 						await SetCurrentQuestion(tappedQuestion);
-						
+
 						if (await CheckIfEveryParticipantAnswered(tappedQuestion))
 						{
 							_questionsareclickable = true;
 						}
 
-						// Controleer als alle vragen gespeeld zijn
 						if (tappedQuestions.Count == _questions.Count)
 						{
-							// Wacht tot alle deelnemers antwoorden hebben gegeven
 							if (await CheckIfSessionDone())
 							{
 								await Navigation.PushAsync(new GameStatisticsPage(_participant));
@@ -106,7 +108,7 @@ public partial class HostControlsGamePage : ContentPage
 				done = true;
 				checking = false;
 			}
-			await Task.Delay(1000);
+			await Task.Delay(500);
 		}
 
 		return done;
@@ -124,10 +126,14 @@ public partial class HostControlsGamePage : ContentPage
 				done = true;
 				checking = false;
 			}
-			await Task.Delay(1000);
+			await Task.Delay(500);
 		}
 
 		return done;
 	}
 
+	private async Task StopGame()
+	{
+		await _participant.SetGameToClose();
+	}
 }

@@ -4,7 +4,7 @@ namespace TruthOrDrink;
 
 public partial class HostChooseGamePage : ContentPage
 {
-	private Host _host;
+	private readonly Host _host;
 
 	public HostChooseGamePage(Host host)
 	{

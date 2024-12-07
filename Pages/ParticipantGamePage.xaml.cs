@@ -5,9 +5,9 @@ namespace TruthOrDrink;
 
 public partial class ParticipantGamePage : ContentPage
 {
-	private Participant _participant;
+	private readonly Participant _participant;
 	private List<Question> _questions;
-	private List<Question> _answeredquestions = new List<Question>();
+	private readonly List<Question> _answeredquestions = new List<Question>();
 	private Question _currentquestion;
 	private Game _game;
 	private readonly SupabaseService _supabaseService;
@@ -151,7 +151,7 @@ public partial class ParticipantGamePage : ContentPage
 
 	private async void LeaveGameClicked(object sender, EventArgs e)
 	{
-		_supabaseService.RemoveParticipantAsync(_participant);
+		await _participant.RemoveParticipantAsync();
 		await Navigation.PopToRootAsync();
 	}
 
@@ -193,10 +193,9 @@ public partial class ParticipantGamePage : ContentPage
 			_answeredquestions.Add(_currentquestion);
 		}
 
-		// Controleer of alle vragen beantwoord zijn
 		if (_answeredquestions.Count == _questions.Count)
 		{
-			await _participant.SetAllQuestionsToAnswered(); // Pas nu markeren
+			await _participant.SetAllQuestionsToAnswered();
 			if (await CheckIfSessionDone())
 			{
 				await Navigation.PushAsync(new GameStatisticsPage(_participant));

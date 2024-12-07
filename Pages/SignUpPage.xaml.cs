@@ -37,17 +37,19 @@ public partial class SignUpPage : ContentPage
 			await DisplayAlert("Wachtwoord Mismatch", "Wachtwoorden komen niet overeen.", "OK");
 			return;
 		}
-		SupabaseService supabaseService = new SupabaseService();
-		Host user = new Host(name, email, password);
-		bool exists = await supabaseService.CheckIfUserExistsAsync(user.Email);
+
+		Host _host = new Host(name, email, password);
+		bool exists = await _host.CheckIfHostExistsAsync();
+
 		if (exists)
 		{
 			await DisplayAlert("Account maken mislukt", "Dit emailadres bestaat al. Log in met je account.", "OK");
 		}
 		else 
 		{
-			await supabaseService.AddPlayerAsync(user);
+			await _host.AddHostAsync();
 			await DisplayAlert("Account", "Je account is gemaakt! Je wordt teruggestuurd naar het menu.", "OK");
+			await Navigation.PopToRootAsync();
 		}
 	}
 

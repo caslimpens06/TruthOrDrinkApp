@@ -49,10 +49,11 @@
             </CollectionView>
 
             <Button 
-                x:Name="StopGame"
+                x:Name="BackToMainMenu"
                 Text="Stop Spel"
                 Style="{StaticResource LeaveGameButtonStyle}"
-                Clicked="StopGameClicked" />
+                Clicked="BackToMainMenu" />
+            
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

@@ -6,11 +6,12 @@ namespace TruthOrDrink;
 
 public partial class GuestPage : ContentPage
 {
-	private int _participantid;
-	public GuestPage(int participantid)
+	private readonly Participant _participant;
+
+	public GuestPage(Participant participant)
 	{
 		InitializeComponent();
-		_participantid = participantid;
+		_participant = participant;
 	}
 
 	protected override bool OnBackButtonPressed()
@@ -29,16 +30,16 @@ public partial class GuestPage : ContentPage
 		else 
 		{
 			int parsedSessionCode = Int32.Parse(sessionCode);
-			SupabaseService supabaseService = new SupabaseService();
+			Session session = new Session(parsedSessionCode);
 
-			if (await supabaseService.CheckIfSessionExistsAsync(parsedSessionCode))
+			if (await session.CheckIfSessionExistsAsync())
 			{	
-				bool hasStarted = await supabaseService.CheckIfSessionHasStarted(parsedSessionCode);
+				bool hasStarted = await session.CheckIfSessionHasStarted();
 				if (!hasStarted)
 				{
-					Participant participant = new Participant(_participantid, parsedSessionCode);
-					Session session = new Session(parsedSessionCode);
-					await supabaseService.JoinParticipantToSession(participant);
+					Participant participant = new Participant(_participant.ParticipantId, parsedSessionCode);
+					Console.WriteLine($"{_participant.ParticipantId} {parsedSessionCode}");
+					await participant.JoinParticipantToSession();
 
 					if (await session.CheckIfCustomGame())
 					{
@@ -64,11 +65,12 @@ public partial class GuestPage : ContentPage
 
 	private void QR_Clicked(object sender, EventArgs e)
 	{
-		Navigation.PushAsync(new QRScannerPage(_participantid));
+		Navigation.PushAsync(new QRScannerPage(_participant));
 	}
 
 	private async void LeaveGameClicked(object sender, EventArgs e)
 	{
+		await _participant.RemoveParticipantAsync();
 		await Navigation.PopToRootAsync();
 	}
 }

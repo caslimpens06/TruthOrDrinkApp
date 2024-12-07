@@ -26,15 +26,15 @@ public partial class GuestIdentifierPage : ContentPage
 			await DisplayAlert("Waarschuwing", "Vul je naam in voordat je doorgaat.", "OK");
 			return;
 		}
-		Participant participant = new Participant(participantName, gender);
+		Participant _participant = new Participant(participantName, gender);
 		SupabaseService supabaseService = new SupabaseService();
 
-		bool exists = await supabaseService.AddParticipantIfNotExists(participant);
+		bool exists = await _participant.AddParticipantIfNotExists();
 		if (exists)
 		{
-			// Maak de zoek primarykey method opnieuw
-			int ID = await supabaseService.GetParticipantPrimarykey(participant.Name);
-			await Navigation.PushAsync(new GuestPage(ID));	
+			int ID = await _participant.GetParticipantPrimarykey();
+			Participant newparticipant = new Participant(ID, participantName, gender);
+			await Navigation.PushAsync(new GuestPage(newparticipant));	
 		}
 		else 
 		{

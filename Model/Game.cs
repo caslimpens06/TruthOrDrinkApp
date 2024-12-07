@@ -54,8 +54,6 @@ namespace TruthOrDrink.Model
 			_gameid = gameid;
 		}
 
-
-		// Verkrijg alle vragen voor dit spel
 		public async Task<List<Question>> GetQuestionsAsync()
 		{
 			return await _supabaseService.GetQuestionsByGameIdAsync(this);

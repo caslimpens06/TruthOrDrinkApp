@@ -8,31 +8,35 @@
 
 			Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
 
-			// Stel de startpagina in op WelcomePage
 			MainPage = new NavigationPage(new WelcomePage());
+
+			CheckInternetConnectionOnStart();
 		}
 
-		public async void Connectivity_ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+		public void Connectivity_ConnectivityChanged(object? sender, ConnectivityChangedEventArgs e)
 		{
-			// Controleer of de verbinding wegvalt tijdens gebruik
-			if (e.NetworkAccess == NetworkAccess.None)
+			if (e.NetworkAccess == NetworkAccess.None && MainPage != null)
 			{
-				await MainPage.DisplayAlert("Geen internet", "De internetverbinding is verbroken. De app wordt afgesloten.", "OK");
-
-				CloseApp();
+				MainPage.Dispatcher.Dispatch(async () =>
+				{
+					await MainPage.DisplayAlert("Geen Internet :(", "De app zal zichzelf afsluiten.", "OK");
+					CloseApp();
+				});
 			}
 		}
-		public async void CheckInternetConnectionOnStart()
-		{
-			// Controleer netwerktoegang
-			if (Connectivity.NetworkAccess == NetworkAccess.None)
-			{
-				// Toon melding via de WelcomePage
-				await MainPage.DisplayAlert("Geen internet", "Er is geen internetverbinding. De app wordt afgesloten.", "OK");
 
-				CloseApp();
+		public void CheckInternetConnectionOnStart()
+		{
+			if (Connectivity.NetworkAccess == NetworkAccess.None && MainPage != null)
+			{
+				MainPage.Dispatcher.Dispatch(async () =>
+				{
+					await MainPage.DisplayAlert("Geen Internet :(", "De app zal zichzelf afsluiten.", "OK");
+					CloseApp();
+				});
 			}
 		}
+
 		public static void CloseApp()
 		{
 			Environment.Exit(0);

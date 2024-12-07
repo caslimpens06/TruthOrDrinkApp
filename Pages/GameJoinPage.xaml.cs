@@ -5,9 +5,8 @@ namespace TruthOrDrink
 {
 	public partial class GameJoinPage : ContentPage
 	{
-		private int _hostid;
-		private int NewCodeFor;
-		private int _gameid;
+		private readonly int _hostid;
+		private readonly int _gameid;
 		private Session _session;
 
 		public GameJoinPage(Session session)
@@ -22,7 +21,7 @@ namespace TruthOrDrink
 		private async void GenerateGameCode()
 		{
 			int newCode = await GenerateUniqueGameCode();
-			NewCodeFor = newCode;
+			int NewCodeFor = newCode;
 			SupabaseService supabaseService = new SupabaseService();
 			
 			Session session = new Session(newCode, _hostid, _gameid);
@@ -57,9 +56,9 @@ namespace TruthOrDrink
 		}
 
 
-		private void Play(object sender, EventArgs e)
+		private async void Play(object sender, EventArgs e)
 		{
-			Navigation.PushAsync(new HostJoinParticipantPage(_session));
+			await Navigation.PushAsync(new HostJoinParticipantPage(_session));
 		}
 		
 		

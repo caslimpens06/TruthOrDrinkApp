@@ -37,10 +37,12 @@
                         <Label x:Name="TruthLabel"
                                FontSize="18"
                                FontAttributes="Bold"
+                               Text="Laden..."
                                TextColor="Black" />
                         <Label x:Name="TopTruthCount"
                                FontSize="14"
-                               TextColor="Black" />
+                               TextColor="Black"
+                               Text="Laden..." />
                     </VerticalStackLayout>
                 </HorizontalStackLayout>
             </Frame>
@@ -66,10 +68,12 @@
                         <Label x:Name="DrinkLabel"
                                FontSize="18"
                                FontAttributes="Bold"
+                               Text="Laden..."
                                TextColor="Black" />
                         <Label x:Name="TopDrinkCount"
                                FontSize="14"
-                               TextColor="Black" />
+                               TextColor="Black"
+                               Text="Laden..." />
                     </VerticalStackLayout>
                 </HorizontalStackLayout>
             </Frame>
