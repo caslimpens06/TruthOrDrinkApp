@@ -45,7 +45,6 @@ namespace TruthOrDrink.Model
 			_participantid = participantid;
 		}
 
-		// Sla het antwoord op voor deze vraag
 		public async Task SaveAnswerAsync()
 		{
 			await _supabaseService.SaveAnswerAsync(this);

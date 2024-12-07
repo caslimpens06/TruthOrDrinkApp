@@ -30,7 +30,7 @@ public partial class LoginPage : ContentPage
 		{
 			Host host = new Host(email, password);
 			SupabaseService supabase = new SupabaseService();
-			bool correctCredentials = await supabase.ValidateCredentialsAsync(host, LoginButton);
+			bool correctCredentials = await host.ValidateCredentialsAsync();
 
 			if (correctCredentials)
 			{
@@ -38,6 +38,7 @@ public partial class LoginPage : ContentPage
 				Host newHost = new Host(hostid, email, password);
 				await Navigation.PushAsync(new HostChooseGamePage(newHost));
 			}
+			
 			else
 			{
 				await DisplayAlert("Inloggen mislukt", "E-mailadres of wachtwoord is onjuist.", "OK");
@@ -46,7 +47,7 @@ public partial class LoginPage : ContentPage
 		}
 	}
 
-	private bool IsValidEmail(string email)
+	private static  bool IsValidEmail(string email)
 	{
 		try
 		{

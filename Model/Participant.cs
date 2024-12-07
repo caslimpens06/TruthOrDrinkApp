@@ -61,6 +61,13 @@ namespace TruthOrDrink.Model
 			_gender = gender;
 		}
 
+		public Participant(int participantid, string name, string gender)
+		{
+			_participantid = participantid;
+			_name = name;
+			_gender = gender;
+		}
+
 		public Participant(string name, string gender, int truthordrinkcount)
 		{
 			_name = name;
@@ -101,7 +108,7 @@ namespace TruthOrDrink.Model
 
 		public async Task SetAllQuestionsToAnswered() 
 		{
-			_supabaseService.SetAllQuestionsToAnswered(this);
+			await _supabaseService.SetAllQuestionsToAnswered(this);
 		}
 
 		public async Task<bool> CheckIfAllQuestionsAnswered() 
@@ -117,6 +124,31 @@ namespace TruthOrDrink.Model
 		public async Task<Participant> GetMostDrinks()
 		{
 			return await _supabaseService.GetTopDrinker(this);
+		}
+
+		public async Task RemoveParticipantAsync()
+		{
+			await _supabaseService.RemoveParticipantAsync(this);
+		}
+
+		public async Task<int> GetParticipantPrimarykey()
+		{
+			return await _supabaseService.GetParticipantPrimarykey(this);
+		}
+
+		public async Task<bool> AddParticipantIfNotExists()
+		{
+			return await _supabaseService.AddParticipantIfNotExists(this);
+		}
+
+		public async Task JoinParticipantToSession()
+		{
+			await _supabaseService.JoinParticipantToSession(this);
+		}
+
+		public async Task SetGameToClose()
+		{
+			await _supabaseService.SetSessionToClose(this);
 		}
 	}
 }

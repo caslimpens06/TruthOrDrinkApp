@@ -6,12 +6,12 @@ namespace TruthOrDrink
 {
 	public partial class QRScannerPage : ContentPage
 	{
-		private int _participantid;
+		private readonly Participant _participant;
 
-		public QRScannerPage(int participantid)
+		public QRScannerPage(Participant participant)
 		{
 			InitializeComponent();
-			_participantid = participantid;
+			_participant = participant;
 			BarcodeReader.Options = new ZXing.Net.Maui.BarcodeReaderOptions
 			{
 				Formats = ZXing.Net.Maui.BarcodeFormat.QrCode,
@@ -36,15 +36,15 @@ namespace TruthOrDrink
 
 			Dispatcher.DispatchAsync(async () =>
 			{
-			int gamecode = Int32.Parse(first.Value);
+			int sessioncode = Int32.Parse(first.Value);
 			SupabaseService supabaseService = new SupabaseService();
-			bool gameExists = await supabaseService.CheckIfSessionExistsAsync(gamecode);
+			Session session = new Session(sessioncode);
+			bool sessionExists = await session.CheckIfSessionExistsAsync();
 
-			if (gameExists)
+			if (sessionExists)
 			{
-					Participant participant = new Participant(_participantid, gamecode);
-					Session session = new Session(gamecode);
-					await supabaseService.JoinParticipantToSession(participant);
+					Participant participant = new Participant(_participant.ParticipantId, sessioncode);
+					await participant.JoinParticipantToSession();
 
 					if (await session.CheckIfCustomGame()) {
 						await Navigation.PushAsync(new QuestionInputPage(participant));

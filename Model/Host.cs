@@ -1,4 +1,5 @@
-﻿namespace TruthOrDrink.Model
+﻿
+namespace TruthOrDrink.Model
 {
 	public class Host
 	{
@@ -6,7 +7,7 @@
 		private string _name;
 		private string _email;
 		private string _password;
-		private int _gameid; // 0 t/m 5
+		private readonly SupabaseService _supabaseService = new SupabaseService();
 
 		public int HostId
 		{
@@ -28,11 +29,6 @@
 			get { return _password; }
 		}
 
-		public int GameId
-		{
-			get { return _gameid; }
-		}
-
 		public Host(string name, string email, string password)
 		{
 			_name = name;
@@ -43,21 +39,34 @@
 		public Host(int hostid, string email, string password)
 		{
 			_hostid = hostid;
-			_name = "";
 			_email = email;
 			_password = password;
 		}
 
 		public Host(string email, string password)
 		{
-			_hostid = 0;
-			_name = "";
 			_email = email;
 			_password = password;
 		}
 		public Host(int hostid) 
 		{
 			_hostid = hostid;
+		}
+
+		public async Task<bool> CheckIfHostExistsAsync()
+		{
+			return await _supabaseService.CheckIfHostExistsAsync(this);
+		}
+
+		public async Task AddHostAsync()
+		{
+			await _supabaseService.AddHostAsync(this);
+		}
+
+		public async Task<bool> ValidateCredentialsAsync()
+		{
+			return await _supabaseService.ValidateCredentialsAsync(this);
+
 		}
 	}
 }

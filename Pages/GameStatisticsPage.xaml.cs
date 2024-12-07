@@ -1,57 +1,58 @@
-using Supabase.Gotrue;
 using TruthOrDrink.Model;
 
 namespace TruthOrDrink.Pages;
 
 public partial class GameStatisticsPage : ContentPage
 {
-
-	private Participant _toptruthparticipant;
-	private Participant _topdrinkparticipant;
 	private Participant _participant;
-	public Participant TopTruthParticipant
-	{
-		get { return _toptruthparticipant; }
-		set { _toptruthparticipant = value; OnPropertyChanged(); }
-	}
-
-	public Participant TopDrinkParticipant
-	{
-		get { return _topdrinkparticipant; }
-		set { _topdrinkparticipant = value; OnPropertyChanged(); }
-	}
 
 	public GameStatisticsPage(Participant participant)
 	{
 		InitializeComponent();
 		_participant = participant;
-		_ = InitializeData();
 		BindingContext = this;
+	}
+
+	protected override async void OnAppearing()
+	{
+		base.OnAppearing();
+		await InitializeData();
 	}
 
 	private async Task InitializeData()
 	{
-		_toptruthparticipant = await GetParticipantWithMostTruthAnswers();
-		_topdrinkparticipant = await GetParticipantWithMostDrinkAnswers();
+		Participant truthParticipant = await GetParticipantWithMostTruthAnswers();
+		Participant drinkParticipant = await GetParticipantWithMostDrinkAnswers();
 
-		if (_toptruthparticipant?.Name == _topdrinkparticipant?.Name)
+		// Update UI elements on the main thread
+		MainThread.BeginInvokeOnMainThread(() =>
 		{
-			TruthLabel.Text = _toptruthparticipant?.Name ?? "Geen Data";
-			DrinkLabel.Text = _topdrinkparticipant?.Name ?? "Geen Data";
-			TopTruthCount.Text = $"Je vulde {_toptruthparticipant.TruthOrDrinkCount} keer Truth in.";
-			TopDrinkCount.Text = $"Je vulde {_topdrinkparticipant.TruthOrDrinkCount} keer Drink in.";
-			TopTruthImage.Source = _toptruthparticipant.GenderImage;
-			TopDrinkImage.Source = _topdrinkparticipant.GenderImage;
-		}
-		else
-		{
-			TopTruthImage.Source = _toptruthparticipant.GenderImage;
-			TopDrinkImage.Source = _topdrinkparticipant.GenderImage;
-			TruthLabel.Text = _toptruthparticipant?.Name ?? "Geen Data";
-			DrinkLabel.Text = _topdrinkparticipant?.Name ?? "Geen Data";
-			TopTruthCount.Text = $"Meeste keren Truth: {_toptruthparticipant?.TruthOrDrinkCount ?? 0}";
-			TopDrinkCount.Text = $"Meeste keren Drink: {_topdrinkparticipant?.TruthOrDrinkCount ?? 0}";
-		}
+			if (truthParticipant != null)
+			{
+				TruthLabel.Text = truthParticipant.Name ?? "Geen Data";
+				TopTruthCount.Text = $"Meeste keren Truth: {truthParticipant.TruthOrDrinkCount}";
+				TopTruthImage.Source = truthParticipant.GenderImage;
+			}
+			else
+			{
+				TruthLabel.Text = "Geen Data";
+				TopTruthCount.Text = "Geen Data";
+				TopTruthImage.Source = null;
+			}
+
+			if (drinkParticipant != null)
+			{
+				DrinkLabel.Text = drinkParticipant.Name ?? "Geen Data";
+				TopDrinkCount.Text = $"Meeste keren Drink: {drinkParticipant.TruthOrDrinkCount}";
+				TopDrinkImage.Source = drinkParticipant.GenderImage;
+			}
+			else
+			{
+				DrinkLabel.Text = "Geen Data";
+				TopDrinkCount.Text = "Geen Data";
+				TopDrinkImage.Source = null;
+			}
+		});
 	}
 
 
@@ -67,6 +68,7 @@ public partial class GameStatisticsPage : ContentPage
 
 	private async void ToMainMenuClicked(object sender, EventArgs e)
 	{
+		await _participant.SetGameToClose();
 		await Navigation.PopToRootAsync();
 	}
 }

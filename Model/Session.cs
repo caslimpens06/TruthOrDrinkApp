@@ -12,7 +12,7 @@ namespace TruthOrDrink.Model
 		private int _hostid;
 		private int _gameid;
 		private int _sessioncode;
-		private SupabaseService _supabaseService = new SupabaseService();
+		private readonly SupabaseService _supabaseService = new SupabaseService();
 
 		public Host Host
 		{
@@ -73,9 +73,19 @@ namespace TruthOrDrink.Model
 		{
 			return await _supabaseService.CheckIfCustomGame(this);
 		}
-		public async void StartGame()
+		public async Task StartGame()
 		{
-			_supabaseService.StartGame(this);
+			await _supabaseService.StartGame(this);
+		}
+
+		public async Task<bool> CheckIfSessionExistsAsync()
+		{
+			return await _supabaseService.CheckIfSessionExistsAsync(this);
+		}
+
+		public async Task<bool> CheckIfSessionHasStarted()
+		{
+			return await _supabaseService.CheckIfSessionHasStarted(this);
 		}
 	}
 }
