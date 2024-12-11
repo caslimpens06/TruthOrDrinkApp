@@ -35,7 +35,7 @@
                 Style="{StaticResource QuestionLists}" 
                 Clicked="NavigateTo5" />
 
-        <Button Text="Verlaat spel"
+        <Button Text="Log uit"
                 Style="{StaticResource LeaveGameButtonStyle}"
                 Clicked="LeaveGameClicked" />
 

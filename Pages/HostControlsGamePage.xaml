@@ -52,7 +52,7 @@
                 x:Name="BackToMainMenu"
                 Text="Stop Spel"
                 Style="{StaticResource LeaveGameButtonStyle}"
-                Clicked="BackToMainMenu" />
+                Clicked="BackToMainMenuClicked" />
             
         </VerticalStackLayout>
     </ScrollView>

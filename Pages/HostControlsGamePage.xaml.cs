@@ -44,9 +44,9 @@ public partial class HostControlsGamePage : ContentPage
 		}
 	}
 
-	private void BackToMainMenu(object sender, EventArgs e)
+	private async void BackToMainMenuClicked(object sender, EventArgs e)
 	{
-		Navigation.PushAsync(new GameStatisticsPage(_participant));
+		await Navigation.PushAsync(new GameStatisticsPage(_participant));
 	}
 
 	private async void OnFrameTapped(object sender, EventArgs e)

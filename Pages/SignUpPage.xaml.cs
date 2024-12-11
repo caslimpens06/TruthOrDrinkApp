@@ -1,4 +1,5 @@
 using TruthOrDrink.Model;
+using TruthOrDrink.Pages;
 
 namespace TruthOrDrink;
 
@@ -48,12 +49,13 @@ public partial class SignUpPage : ContentPage
 		else 
 		{
 			await _host.AddHostAsync();
-			await DisplayAlert("Account", "Je account is gemaakt! Je wordt teruggestuurd naar het menu.", "OK");
-			await Navigation.PopToRootAsync();
+			int hostid = await _host.GetHostPrimaryKey();
+			await DisplayAlert("Account", "Je account is gemaakt! Je wordt meteen ingelogd.", "OK");
+			await SecureStorage.SetAsync("host_id", hostid.ToString());
+			await Navigation.PushAsync(new HostMainPage(_host));
 		}
 	}
 
-	// Hulpmethode voor emailvalidatie
 	private bool IsValidEmail(string email)
 	{
 		try

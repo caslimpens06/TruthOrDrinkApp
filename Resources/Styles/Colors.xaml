@@ -11,7 +11,8 @@
     <Color x:Key="GenderMaleBlue">Blue</Color>
     <Color x:Key="StandardGray">Gray</Color>
     <Color x:Key="StandardBlack">Black</Color>
-
+    <Color x:Key="StandardYellow">#f4e53a</Color>
+    <Color x:Key="StandardGreen">Green</Color>
 
 
 

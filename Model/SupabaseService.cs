@@ -694,6 +694,29 @@ public class SupabaseService
 		}
 	}
 
+	public async Task<Host> LoadHostData(Host host)
+	{
+		using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
 
+			string query = "SELECT \"Name\", \"Email\", \"Password\" FROM public.\"Host\" WHERE \"HostId\" = @HostId;";
+
+			using (var command = new NpgsqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@HostId", host.HostId);
+
+				using (var reader = await command.ExecuteReaderAsync())
+				{
+					if (await reader.ReadAsync())
+					{
+						return new Host(reader[0].ToString(), reader[1].ToString(), reader[2].ToString());
+					}
+				}
+			}
+		}
+
+		return null;
+	}
 }
 

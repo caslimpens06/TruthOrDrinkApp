@@ -52,6 +52,7 @@ namespace TruthOrDrink.Model
 		{
 			_hostid = hostid;
 		}
+		
 
 		public async Task<bool> CheckIfHostExistsAsync()
 		{
@@ -67,6 +68,16 @@ namespace TruthOrDrink.Model
 		{
 			return await _supabaseService.ValidateCredentialsAsync(this);
 
+		}
+
+		public async Task<int> GetHostPrimaryKey()
+		{
+			return await _supabaseService.GetHostPrimaryKey(this);
+		}
+
+		public async Task<Host> LoadHostData()
+		{
+			return await _supabaseService.LoadHostData(this);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 using TruthOrDrink.Model;
+using TruthOrDrink.Pages;
 
 namespace TruthOrDrink;
 
@@ -34,9 +35,11 @@ public partial class LoginPage : ContentPage
 
 			if (correctCredentials)
 			{
-				int hostid = await supabase.GetHostPrimaryKey(host);
+				int hostid = await host.GetHostPrimaryKey();
 				Host newHost = new Host(hostid, email, password);
-				await Navigation.PushAsync(new HostChooseGamePage(newHost));
+				await SecureStorage.SetAsync("host_id", hostid.ToString());
+				
+				await Navigation.PushAsync(new HostMainPage(newHost));
 			}
 			
 			else
