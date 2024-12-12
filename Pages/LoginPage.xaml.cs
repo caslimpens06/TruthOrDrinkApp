@@ -39,14 +39,8 @@ public partial class LoginPage : ContentPage
 			{
 				int hostid = await host.GetHostPrimaryKey();
 				string name = await host.GetHostName();
-				Console.WriteLine(name);
-
 				Host newHost = new Host(hostid, name, email, password);
-
-				await SecureStorage.SetAsync("host_id", hostid.ToString());
-
 				await sqlliteservice.SaveHostAsync(newHost);
-				
 				await Navigation.PushAsync(new HostMainPage(newHost));
 			}
 			

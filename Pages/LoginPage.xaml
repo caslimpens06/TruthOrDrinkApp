@@ -29,6 +29,9 @@
                     Style="{StaticResource SelectButtonStyle}" 
                     Clicked="Login" />
 
+            <Label Text="Bij vergeten inloggegevens kan het account niet hersteld worden."
+                   Style="{StaticResource StandardCommentText}"/>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

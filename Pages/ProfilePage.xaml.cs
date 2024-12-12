@@ -16,7 +16,7 @@ public partial class ProfilePage : ContentPage
 
 	private async Task LoadData(Host host)
 	{
-		_host = await sqlliteservice.GetHostAsync(host);
+		_host = await sqlliteservice.GetHostAsync();
 
 		if (_host != null)
 		{

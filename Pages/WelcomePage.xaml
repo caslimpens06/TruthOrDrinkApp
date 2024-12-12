@@ -29,6 +29,9 @@
                 Style="{StaticResource SelectButtonStyle}" 
                 Clicked="NavigateToParticipant" />
 
+            <Label Text="Ontwikkeld door Cas Limpens - zie credits"
+                Style="{StaticResource StandardCommentText}"/>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

@@ -84,7 +84,6 @@ public partial class HostChooseGamePage : ContentPage
 
 	private async void LeaveGameClicked(object sender, EventArgs e)
 	{
-		SecureStorage.Remove("host_id");
 		await Navigation.PopToRootAsync();
 	}
 }

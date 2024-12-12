@@ -39,7 +39,7 @@
                 Clicked="CreateAccount" />
            
             <Label 
-                Text="Dit account kan gebruikt worden voor het maken van een spel." 
+                Text="Dit account is nodig om een spel te creeëren." 
                 Style="{StaticResource StandardCommentText}"/>
         </VerticalStackLayout>
     </ScrollView>

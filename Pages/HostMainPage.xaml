@@ -2,16 +2,34 @@
 <FlyoutPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TruthOrDrink.Pages.HostMainPage"
-             BackgroundColor="{StaticResource StandardWhite}"
-             NavigationPage.HasBackButton="False">
+             NavigationPage.HasNavigationBar="True">
 
     <FlyoutPage.Flyout>
-        <ContentPage Title="Menu" BackgroundColor="{StaticResource StandardYellow}">
-            <StackLayout Padding="20" Spacing="20" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
-                <Button Text="Creeër Sessie" Clicked="OnHostChoosesGamePageClicked" 
-                        Style="{StaticResource FlyoutButton}"/>
-                <Button Text="Profiel" Clicked="OnProfilePageClicked"
-                        Style="{StaticResource FlyoutButton}"/>
+        <ContentPage Title="Menu" BackgroundColor="{StaticResource StandardMenu}">
+            <StackLayout Spacing="10" VerticalOptions="FillAndExpand">
+                <Frame Style="{StaticResource ProfileContainerStyle}">
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <Frame Style="{StaticResource ProfileImageContainerStyle}">
+                            <Image Source="profile.jpg" 
+                                   Aspect="AspectFill" 
+                                   HeightRequest="100" 
+                                   WidthRequest="100" />
+                        </Frame>
+                        <Label x:Name="HostName"
+                               Text="Aan het laden..." 
+                               Style="{StaticResource ProfileNameStyle}" />
+                        <Label Text="Host"
+                               Style="{StaticResource ProfileDescriptionStyle}" />
+                    </StackLayout>
+                </Frame>
+                <StackLayout Padding="20" Spacing="15" HorizontalOptions="CenterAndExpand">
+                    <Button Text="Uitleg" Style="{StaticResource MenuOptionTextStyle}" Clicked="OnRulesClicked"/>
+                    <Button Text="Account" Style="{StaticResource MenuOptionTextStyle}" Clicked="OnProfilePageClicked"/>
+                    <Button Text="Log Out" Style="{StaticResource LogoutTextStyle}" Clicked="LogoutClicked" />
+                </StackLayout>
+                <Button Text="START SESSION"
+                        Style="{StaticResource StartSessionButtonStyle}" 
+                        Clicked="OnHostChoosesGamePageClicked"/>
             </StackLayout>
         </ContentPage>
     </FlyoutPage.Flyout>
@@ -20,11 +38,44 @@
         <NavigationPage>
             <x:Arguments>
                 <ContentPage BackgroundColor="{StaticResource StandardWhite}">
-                    <Label Text="Hier komen de spelregels" 
-                           Style="{StaticResource BoldTitleText}" />
-                    <Button Text="Log uit"
-                            Style="{StaticResource LeaveGameButtonStyle}"
-                            Clicked="LogoutClicked" />
+                    <ContentPage.ToolbarItems>
+                        <ToolbarItem IconImageSource="custom_back_icon.png" 
+                                     Command="{Binding BackCommand}" />
+                    </ContentPage.ToolbarItems>
+                    <ScrollView Padding="20">
+                        <StackLayout Spacing="20">
+                            <Label Text="Truth or Drink" 
+                                   Style="{StaticResource BoldTitleText}" 
+                                   FontSize="30"
+                                   Margin="10"/>
+                            <Label Text="Spelregels" 
+                                   Style="{StaticResource BoldTitleText}" 
+                                   FontSize="20"
+                                   Margin="10"/>
+
+                            <StackLayout Spacing="30">
+                                <Label Text="1. Aantal spelers: Meestal 3 of meer spelers." 
+                                       Style="{StaticResource RuleTextStyle}" />
+                                <Label Text="2. Benodigdheden: Één Host die het spel beheert, een aantal deelnemers en veel drankjes!." 
+                                       Style="{StaticResource RuleTextStyle}" />
+                                <Label Text="3. Doel van het spel: Spelers beantwoorden persoonlijke vragen of drinken als ze de vraag niet willen beantwoorden." 
+                                       Style="{StaticResource RuleTextStyle}" />
+                                <Label Text="4. Spelverloop: 
+                                      
+                                    - De host kiest een vragenset.
+                                    - De deelnemers geven antwoord of drinken een slok." 
+                                       Style="{StaticResource RuleTextStyle}" />
+                                <Label Text="5. Variaties: Spelers kunnen extra vragen toevoegen." 
+                                       Style="{StaticResource RuleTextStyle}" />
+                                <Label Text="6. Einde van het spel: Het spel eindigt wanneer de Host besluit te stoppen of als alle vragen door iedere deelnemer zijn beantwoord." 
+                                       Style="{StaticResource RuleTextStyle}" />
+                                <Label Text="NIX18, drink met mate." 
+                                       FontAttributes="Bold"
+                                       Style="{StaticResource StandardCommentText}" />
+                            </StackLayout>
+
+                        </StackLayout>
+                    </ScrollView>
                 </ContentPage>
             </x:Arguments>
         </NavigationPage>
