@@ -1,10 +1,12 @@
 using TruthOrDrink.Model;
 using TruthOrDrink.Pages;
+using TruthOrDrink.DataAccessLayer;
 
 namespace TruthOrDrink;
 
 public partial class LoginPage : ContentPage
 {
+	private readonly SQLiteService sqlliteservice = new SQLiteService();
 	public LoginPage()
 	{
 		InitializeComponent();
@@ -36,8 +38,14 @@ public partial class LoginPage : ContentPage
 			if (correctCredentials)
 			{
 				int hostid = await host.GetHostPrimaryKey();
-				Host newHost = new Host(hostid, email, password);
+				string name = await host.GetHostName();
+				Console.WriteLine(name);
+
+				Host newHost = new Host(hostid, name, email, password);
+
 				await SecureStorage.SetAsync("host_id", hostid.ToString());
+
+				await sqlliteservice.SaveHostAsync(newHost);
 				
 				await Navigation.PushAsync(new HostMainPage(newHost));
 			}

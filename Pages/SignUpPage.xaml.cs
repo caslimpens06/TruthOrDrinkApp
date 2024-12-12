@@ -1,10 +1,13 @@
 using TruthOrDrink.Model;
 using TruthOrDrink.Pages;
+using TruthOrDrink.DataAccessLayer;
 
 namespace TruthOrDrink;
 
 public partial class SignUpPage : ContentPage
 {
+	private readonly SQLiteService sqlliteservice = new SQLiteService();
+
 	public SignUpPage()
 	{
 		InitializeComponent();
@@ -50,9 +53,16 @@ public partial class SignUpPage : ContentPage
 		{
 			await _host.AddHostAsync();
 			int hostid = await _host.GetHostPrimaryKey();
-			await DisplayAlert("Account", "Je account is gemaakt! Je wordt meteen ingelogd.", "OK");
+
+			Host savedHost = new Host(hostid, name, email, password);
+
+			await sqlliteservice.SaveHostAsync(savedHost);
+			
 			await SecureStorage.SetAsync("host_id", hostid.ToString());
-			await Navigation.PushAsync(new HostMainPage(_host));
+
+			await DisplayAlert("Account", "Je account is gemaakt! Je wordt meteen ingelogd.", "OK");
+
+			await Navigation.PushAsync(new HostMainPage(savedHost));
 		}
 	}
 

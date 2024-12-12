@@ -1,22 +1,22 @@
 using TruthOrDrink.Model;
+using TruthOrDrink.DataAccessLayer;
 
 namespace TruthOrDrink.Pages;
 
 public partial class ProfilePage : ContentPage
 {
 	private Host _host;
-	private Host _newhost;
+	private readonly SQLiteService sqlliteservice = new SQLiteService();
 
 	public ProfilePage(Host host)
 	{
 		InitializeComponent();
-		_host = host;
-		LoadData();
+		LoadData(host);
 	}
 
-	private async void LoadData()
+	private async Task LoadData(Host host)
 	{
-		_host = await _host.LoadHostData();
+		_host = await sqlliteservice.GetHostAsync(host);
 
 		if (_host != null)
 		{
@@ -47,9 +47,17 @@ public partial class ProfilePage : ContentPage
 		PasswordEntry.IsReadOnly = false;
 	}
 
-	private async Task OnSaveClicked(object sender, EventArgs e)
+	private async void OnSaveClicked(object sender, EventArgs e)
 	{
-		
-		await DisplayAlert("Opgeslagen", "Je nieuwe accountgegevens zijn opgeslagen.", "Ok");
+		string name = NameEntry.Text;
+		string password = PasswordEntry.Text;
+
+		if (_host.Name != name || _host.Password != password) {
+			Host _newhost = new Host(_host.HostId, name, _host.Email, password);
+
+			await sqlliteservice.UpdateHostAsync(_newhost);
+			await _newhost.UpdateHostCredentials();
+		}
+		await DisplayAlert("Opgeslagen", "Je accountgegevens zijn opgeslagen.", "Ok");
 	}
 }

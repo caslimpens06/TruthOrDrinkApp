@@ -1,19 +1,26 @@
-﻿namespace TruthOrDrink
+﻿using TruthOrDrink.Model;
+using TruthOrDrink.DataAccessLayer;
+
+namespace TruthOrDrink
 {
 	public partial class App : Application
 	{
+		private SQLiteService sqlliteservice = new SQLiteService();
+
 		public App()
 		{
 			InitializeComponent();
 
 			Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
 
+			CreateLocalDatabaseTables();
+
 			MainPage = new NavigationPage(new WelcomePage());
 
 			CheckInternetConnectionOnStart();
 		}
 
-		public void Connectivity_ConnectivityChanged(object? sender, ConnectivityChangedEventArgs e)
+		private void Connectivity_ConnectivityChanged(object? sender, ConnectivityChangedEventArgs e)
 		{
 			if (e.NetworkAccess == NetworkAccess.None && MainPage != null)
 			{
@@ -25,7 +32,7 @@
 			}
 		}
 
-		public void CheckInternetConnectionOnStart()
+		private void CheckInternetConnectionOnStart()
 		{
 			if (Connectivity.NetworkAccess == NetworkAccess.None && MainPage != null)
 			{
@@ -37,7 +44,13 @@
 			}
 		}
 
-		public static void CloseApp()
+		private async Task CreateLocalDatabaseTables() 
+		{
+			await sqlliteservice.InitializeAsync();
+		}
+
+
+		private static void CloseApp()
 		{
 			Environment.Exit(0);
 		}

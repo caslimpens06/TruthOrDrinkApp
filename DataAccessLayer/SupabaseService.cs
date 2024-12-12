@@ -1,7 +1,7 @@
-﻿using TruthOrDrink.Model;
-using Npgsql;
+﻿using Npgsql;
+using TruthOrDrink.Model;
 
-namespace TruthOrDrink;
+namespace TruthOrDrink.DataAccessLayer;
 public class SupabaseService
 {
 	private readonly string connectionString = "Host=aws-0-eu-central-1.pooler.supabase.com;Port=5432;Username=postgres.etzhitxivaaleejoqevs;Password=Joepie2021@#$%;Database=postgres;SSL Mode=Require;Trust Server Certificate=true;";
@@ -234,14 +234,12 @@ public class SupabaseService
 		{
 			await connection.OpenAsync();
 
-			// Query to get the HostId based on the Email
 			string sqlQuery = "SELECT \"HostId\" FROM \"Host\" WHERE \"Email\" = @Email LIMIT 1;";
 
 			await using (var command = new NpgsqlCommand(sqlQuery, connection))
 			{
 				command.Parameters.AddWithValue("@Email", host.Email);
 
-				// Execute the query asynchronously
 				await using (var reader = await command.ExecuteReaderAsync())
 				{
 					if (await reader.ReadAsync())
@@ -252,8 +250,32 @@ public class SupabaseService
 				}
 			}
 
-			// If no data found, return -1
 			return -1;
+		}
+	}
+	
+	public async Task<string> GetHostName(Host host)
+	{
+		await using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string sqlQuery = "SELECT \"Name\" FROM \"Host\" WHERE \"Email\" = @Email LIMIT 1;";
+
+			await using (var command = new NpgsqlCommand(sqlQuery, connection))
+			{
+				command.Parameters.AddWithValue("@Email", host.Email);
+
+				await using (var reader = await command.ExecuteReaderAsync())
+				{
+					if (await reader.ReadAsync())
+					{
+						string name = reader["Name"].ToString();
+						return name;
+					}
+				}
+			}
+			return null;
 		}
 	}
 
@@ -290,32 +312,44 @@ public class SupabaseService
 		}
 	}
 
-	public async Task<bool> CheckIfSessionHasStarted(Session session)
+	public async Task UpdateHostCredentials(Host newhost)
 	{
-		try
+		using (var connection = new NpgsqlConnection(connectionString))
 		{
-			string query = "SELECT \"SessionHasStarted\" FROM \"Session\" WHERE \"SessionId\" = @sessionId;";
-
-			await using var connection = new NpgsqlConnection(connectionString);
-
 			await connection.OpenAsync();
 
-			await using var command = new NpgsqlCommand(query, connection);
+			string query = "UPDATE public.\"Host\" SET \"Name\" = @Name, \"Password\" = @Password WHERE \"HostId\" = @HostId";
 
-			command.Parameters.AddWithValue("@sessionId", session.SessionCode);
-
-			var result = await command.ExecuteScalarAsync();
-
-			if (result is bool gameHasStarted)
+			using (var command = new NpgsqlCommand(query, connection))
 			{
-				return gameHasStarted;
-			}
-			else
-			{
-				return true;
+				command.Parameters.AddWithValue("@Name", newhost.Name);
+				command.Parameters.AddWithValue("@Password", newhost.Password);
+				command.Parameters.AddWithValue("@HostId", newhost.HostId);
+
+				await command.ExecuteNonQueryAsync();
 			}
 		}
-		catch (Exception)
+	}
+
+	public async Task<bool> CheckIfSessionHasStarted(Session session)
+	{
+		string query = "SELECT \"SessionHasStarted\" FROM \"Session\" WHERE \"SessionId\" = @sessionId;";
+
+		await using var connection = new NpgsqlConnection(connectionString);
+
+		await connection.OpenAsync();
+
+		await using var command = new NpgsqlCommand(query, connection);
+
+		command.Parameters.AddWithValue("@sessionId", session.SessionCode);
+
+		var result = await command.ExecuteScalarAsync();
+
+		if (result is bool gameHasStarted)
+		{
+			return gameHasStarted;
+		}
+		else
 		{
 			return true;
 		}
