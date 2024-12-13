@@ -34,10 +34,6 @@
                 Style="{StaticResource QuestionLists}" 
                 Clicked="NavigateTo5" />
 
-        <Button Text="Log uit"
-                Style="{StaticResource LeaveGameButtonStyle}"
-                Clicked="LeaveGameClicked" />
-
-    </VerticalStackLayout>
+        </VerticalStackLayout>
 </ScrollView>
 </ContentPage>

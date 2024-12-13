@@ -69,7 +69,10 @@ namespace TruthOrDrink.Model
 		{
 			_hostid = hostid;
 		}
-		
+		public Host(string email)
+		{
+			_email = email;
+		}
 
 		public async Task<bool> CheckIfHostExistsAsync()
 		{
@@ -81,7 +84,7 @@ namespace TruthOrDrink.Model
 			await _supabaseService.AddHostAsync(this);
 		}
 
-		public async Task<bool> ValidateCredentialsAsync()
+		public async Task<string> ValidateCredentialsAsync()
 		{
 			return await _supabaseService.ValidateCredentialsAsync(this);
 

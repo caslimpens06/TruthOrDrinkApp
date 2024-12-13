@@ -2,45 +2,55 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TruthOrDrink.SignUpPage">
-    
-    <ScrollView>
-        <VerticalStackLayout Style="{StaticResource StandardSpacing}">
-            <Image
-                x:Name="LogoImage"
-                Style="{StaticResource LogoImage}"/>   
-            
-            <Label 
-                Text="Maak een account"
-                Style="{StaticResource BoldTitleText}" />
-            
-            <Entry 
-                x:Name="NameEntry" 
-                Placeholder="Typ je naam hier" 
-                Style="{StaticResource StandardEntry}"/>
-            
-            <Entry 
-                x:Name="EmailEntry" 
-                Placeholder="Typ je email hier" 
-                Style="{StaticResource StandardEntry}"/>
 
-            <Entry 
-                x:Name="PasswordEntry" 
-                Placeholder="Typ je wachtwoord hier" 
-                Style="{StaticResource StandardEntry}"/>
-            
-            <Entry 
-                x:Name="ConfirmPasswordEntry" 
-                Placeholder="Typ je wachtwoord nog een keer" 
-                Style="{StaticResource StandardEntry}"/>
+    <Grid>
+        <!-- Main Content -->
+        <ScrollView>
+            <VerticalStackLayout Style="{StaticResource StandardSpacing}">
+                <Image
+                    x:Name="LogoImage"
+                    Style="{StaticResource LogoImage}" />
 
-            <Button 
-                Text="Maak Account" 
-                Style="{StaticResource SelectButtonStyle}"
-                Clicked="CreateAccount" />
-           
-            <Label 
-                Text="Dit account is nodig om een spel te creeëren." 
-                Style="{StaticResource StandardCommentText}"/>
-        </VerticalStackLayout>
-    </ScrollView>
+                <Label 
+                    Text="Maak een account"
+                    Style="{StaticResource BoldTitleText}" />
+
+                <Entry 
+                    x:Name="NameEntry" 
+                    Placeholder="Typ je naam hier" 
+                    Style="{StaticResource StandardEntry}" />
+
+                <Entry 
+                    x:Name="EmailEntry" 
+                    Placeholder="Typ je email hier" 
+                    Style="{StaticResource StandardEntry}" />
+
+                <Entry 
+                    x:Name="PasswordEntry" 
+                    Placeholder="Typ je wachtwoord hier" 
+                    Style="{StaticResource StandardEntry}" />
+
+                <Entry 
+                    x:Name="ConfirmPasswordEntry" 
+                    Placeholder="Typ je wachtwoord nog een keer" 
+                    Style="{StaticResource StandardEntry}" />
+
+                <Button 
+                    Text="Maak Account" 
+                    Style="{StaticResource SelectButtonStyle}"
+                    Clicked="CreateAccount" />
+
+                <Label 
+                    Text="Dit account is nodig om een spel te creeëren." 
+                    Style="{StaticResource StandardCommentText}" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Loading Overlay -->
+        <Grid IsVisible="False" x:Name="OverlayGrid" BackgroundColor="Black" Opacity="0.5" 
+              HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" IsRunning="True" />
+        </Grid>
+    </Grid>
+
 </ContentPage>

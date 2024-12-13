@@ -2,26 +2,26 @@
 <FlyoutPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TruthOrDrink.Pages.HostMainPage"
-             NavigationPage.HasNavigationBar="True">
+            NavigationPage.HasBackButton="True"
+             BackgroundColor="{StaticResource StandardMenu}">
 
     <FlyoutPage.Flyout>
         <ContentPage Title="Menu" BackgroundColor="{StaticResource StandardMenu}">
-            <StackLayout Spacing="10" VerticalOptions="FillAndExpand">
-                <Frame Style="{StaticResource ProfileContainerStyle}">
-                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+            <StackLayout Spacing="15" Margin="40" VerticalOptions="FillAndExpand">
+
+                <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
                         <Frame Style="{StaticResource ProfileImageContainerStyle}">
                             <Image Source="profile.jpg" 
                                    Aspect="AspectFill" 
                                    HeightRequest="100" 
-                                   WidthRequest="100" />
+                                   WidthRequest="100" 
+                                   />
                         </Frame>
                         <Label x:Name="HostName"
-                               Text="Aan het laden..." 
+                               Text="Aan het laden..."
                                Style="{StaticResource ProfileNameStyle}" />
-                        <Label Text="Host"
-                               Style="{StaticResource ProfileDescriptionStyle}" />
-                    </StackLayout>
-                </Frame>
+                </StackLayout>
+               
                 <StackLayout Padding="20" Spacing="15" HorizontalOptions="CenterAndExpand">
                     <Button Text="Uitleg" Style="{StaticResource MenuOptionTextStyle}" Clicked="OnRulesClicked"/>
                     <Button Text="Account" Style="{StaticResource MenuOptionTextStyle}" Clicked="OnProfilePageClicked"/>
@@ -37,7 +37,7 @@
     <FlyoutPage.Detail>
         <NavigationPage>
             <x:Arguments>
-                <ContentPage BackgroundColor="{StaticResource StandardWhite}">
+                <ContentPage>
                     <ContentPage.ToolbarItems>
                         <ToolbarItem IconImageSource="custom_back_icon.png" 
                                      Command="{Binding BackCommand}" />
@@ -69,7 +69,7 @@
                                        Style="{StaticResource RuleTextStyle}" />
                                 <Label Text="6. Einde van het spel: Het spel eindigt wanneer de Host besluit te stoppen of als alle vragen door iedere deelnemer zijn beantwoord." 
                                        Style="{StaticResource RuleTextStyle}" />
-                                <Label Text="NIX18, drink met mate." 
+                                <Label Text="NIX18 - drink met mate" 
                                        FontAttributes="Bold"
                                        Style="{StaticResource StandardCommentText}" />
                             </StackLayout>

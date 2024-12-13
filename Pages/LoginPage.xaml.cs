@@ -14,7 +14,7 @@ public partial class LoginPage : ContentPage
 
 	private async void Login(object sender, EventArgs e)
 	{
-		string email = EmailEntry.Text;
+		string email = EmailEntry.Text.ToLower();
 		string password = PasswordEntry.Text;
 
 		if (string.IsNullOrWhiteSpace(email) || !IsValidEmail(email))
@@ -31,9 +31,12 @@ public partial class LoginPage : ContentPage
 
 		if (IsValidEmail(email) && !string.IsNullOrWhiteSpace(password))
 		{
-			Host host = new Host(email, password);
-			SupabaseService supabase = new SupabaseService();
-			bool correctCredentials = await host.ValidateCredentialsAsync();
+			Host host = new Host(email);
+			string storedOnlineHash = await host.ValidateCredentialsAsync();
+
+			PasswordHasher passwordhasher = new PasswordHasher(password, storedOnlineHash);
+
+			bool correctCredentials = passwordhasher.VerifyPassword();
 
 			if (correctCredentials)
 			{

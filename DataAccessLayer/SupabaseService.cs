@@ -8,20 +8,15 @@ public class SupabaseService
 
 	public SupabaseService() {}
 
-	public async Task<bool> ValidateCredentialsAsync(Host host)
+	public async Task<string> ValidateCredentialsAsync(Host host)
 	{
-		string query = "SELECT \"HostId\" FROM \"Host\" WHERE \"Email\" = @Email AND \"Password\" = @Password;";
-
+		string query = "SELECT \"Password\" FROM \"Host\" WHERE \"Email\" = @Email;";
 		await using var connection = new NpgsqlConnection(connectionString);
 		await connection.OpenAsync();
-
 		await using var command = new NpgsqlCommand(query, connection);
 		command.Parameters.AddWithValue("@Email", host.Email);
-		command.Parameters.AddWithValue("@Password", host.Password);
-
 		var result = await command.ExecuteScalarAsync();
-
-		return result != null;
+		return result?.ToString();
 	}
 
 	public async Task<bool> AddParticipantIfNotExists(Participant participant)
