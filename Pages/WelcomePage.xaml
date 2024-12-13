@@ -4,10 +4,8 @@
              x:Class="TruthOrDrink.WelcomePage"
              NavigationPage.HasNavigationBar="False">
 
-
-
     <ScrollView>
-        <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
+        <VerticalStackLayout Style="{StaticResource StandardSpacing}">
 
             <Image
                 x:Name="LogoImage"
@@ -30,6 +28,9 @@
                 Text="Speel als Deelnemer" 
                 Style="{StaticResource SelectButtonStyle}" 
                 Clicked="NavigateToParticipant" />
+
+            <Label Text="Ontwikkeld door Cas Limpens - zie credits"
+                Style="{StaticResource StandardCommentText}"/>
 
         </VerticalStackLayout>
     </ScrollView>

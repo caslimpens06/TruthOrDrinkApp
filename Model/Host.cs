@@ -1,6 +1,9 @@
-﻿
+﻿using SQLite;
+using TruthOrDrink.DataAccessLayer;
+
 namespace TruthOrDrink.Model
 {
+	[SQLite.Table("Host")]
 	public class Host
 	{
 		private int _hostid;
@@ -9,24 +12,29 @@ namespace TruthOrDrink.Model
 		private string _password;
 		private readonly SupabaseService _supabaseService = new SupabaseService();
 
+		[PrimaryKey]
 		public int HostId
 		{
 			get { return _hostid; }
+			set { _hostid = value; }
 		}
 
 		public string Name
 		{
 			get { return _name; }
+			set { _name  = value; }
 		}
 
 		public string Email
 		{
 			get { return _email; }
+			set { _email = value; }
 		}
 
 		public string Password
 		{
 			get { return _password; }
+			set { _password = value; }
 		}
 
 		public Host(string name, string email, string password)
@@ -35,10 +43,19 @@ namespace TruthOrDrink.Model
 			_email = email;
 			_password = password;
 		}
+		public Host() { }
 
 		public Host(int hostid, string email, string password)
 		{
 			_hostid = hostid;
+			_email = email;
+			_password = password;
+		}
+
+		public Host(int hostid, string name, string email, string password)
+		{
+			_hostid = hostid;
+			_name = name;
 			_email = email;
 			_password = password;
 		}
@@ -52,6 +69,10 @@ namespace TruthOrDrink.Model
 		{
 			_hostid = hostid;
 		}
+		public Host(string email)
+		{
+			_email = email;
+		}
 
 		public async Task<bool> CheckIfHostExistsAsync()
 		{
@@ -63,10 +84,29 @@ namespace TruthOrDrink.Model
 			await _supabaseService.AddHostAsync(this);
 		}
 
-		public async Task<bool> ValidateCredentialsAsync()
+		public async Task<string> ValidateCredentialsAsync()
 		{
 			return await _supabaseService.ValidateCredentialsAsync(this);
 
 		}
+
+		public async Task<int> GetHostPrimaryKey()
+		{
+			return await _supabaseService.GetHostPrimaryKey(this);
+		}
+
+		public async Task<string> GetHostName()
+		{
+			return await _supabaseService.GetHostName(this);
+		}
+		public async Task UpdateHostCredentials()
+		{
+			await _supabaseService.UpdateHostCredentials(this);
+		}
+		public async Task<Host> LoadHostData()
+		{
+			return await _supabaseService.LoadHostData(this);
+		}
+
 	}
 }

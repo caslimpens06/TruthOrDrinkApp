@@ -1,9 +1,12 @@
 using TruthOrDrink.Model;
+using TruthOrDrink.Pages;
+using TruthOrDrink.DataAccessLayer;
 
 namespace TruthOrDrink;
 
 public partial class LoginPage : ContentPage
 {
+	private readonly SQLiteService sqlliteservice = new SQLiteService();
 	public LoginPage()
 	{
 		InitializeComponent();
@@ -11,7 +14,7 @@ public partial class LoginPage : ContentPage
 
 	private async void Login(object sender, EventArgs e)
 	{
-		string email = EmailEntry.Text;
+		string email = EmailEntry.Text.ToLower();
 		string password = PasswordEntry.Text;
 
 		if (string.IsNullOrWhiteSpace(email) || !IsValidEmail(email))
@@ -28,15 +31,20 @@ public partial class LoginPage : ContentPage
 
 		if (IsValidEmail(email) && !string.IsNullOrWhiteSpace(password))
 		{
-			Host host = new Host(email, password);
-			SupabaseService supabase = new SupabaseService();
-			bool correctCredentials = await host.ValidateCredentialsAsync();
+			Host host = new Host(email);
+			string storedOnlineHash = await host.ValidateCredentialsAsync();
+
+			PasswordHasher passwordhasher = new PasswordHasher(password, storedOnlineHash);
+
+			bool correctCredentials = passwordhasher.VerifyPassword();
 
 			if (correctCredentials)
 			{
-				int hostid = await supabase.GetHostPrimaryKey(host);
-				Host newHost = new Host(hostid, email, password);
-				await Navigation.PushAsync(new HostChooseGamePage(newHost));
+				int hostid = await host.GetHostPrimaryKey();
+				string name = await host.GetHostName();
+				Host newHost = new Host(hostid, name, email, password);
+				await sqlliteservice.SaveHostAsync(newHost);
+				await Navigation.PushAsync(new HostMainPage(newHost));
 			}
 			
 			else

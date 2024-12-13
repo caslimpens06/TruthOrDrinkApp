@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TruthOrDrink.Pages.ProfilePage">
+
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout Style="{StaticResource StandardSpacing}">
+
+                <StackLayout>
+                    <Image
+                       x:Name="LogoImage"
+                       Style="{StaticResource LogoImage}" />
+                </StackLayout>
+
+                <Label Text="Account" Style="{StaticResource BoldTitleText}" />
+
+                <StackLayout>
+                    <Label Text="Naam" Style="{StaticResource SmallerBoldTitleText}" />
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                        <Entry x:Name="NameEntry"
+                               Placeholder="Aan het laden..."
+                               IsReadOnly="True"
+                               Style="{StaticResource StandardEntry}"
+                               HorizontalOptions="FillAndExpand" />
+                        <Button Text="Bewerken"
+                                x:Name="EditNameButton"
+                                Clicked="OnEditNameButtonClicked"
+                                Style="{StaticResource ToggleButton}" />
+                    </StackLayout>
+                </StackLayout>
+
+                <StackLayout>
+                    <Label Text="Email" Style="{StaticResource SmallerBoldTitleText}" />
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                        <Entry x:Name="EmailEntry"
+                               Placeholder="Aan het laden..."
+                               IsReadOnly="True"
+                               Style="{StaticResource StandardEntry}"
+                               HorizontalOptions="FillAndExpand" />
+                    </StackLayout>
+                </StackLayout>
+
+                <StackLayout>
+                    <Label Text="Wachtwoord wijzigen" Style="{StaticResource SmallerBoldTitleText}" />
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                        <Entry x:Name="PasswordEntry"
+                               Placeholder="Typ een nieuw wachtwoord"
+                               IsReadOnly="False"
+                               IsPassword="True"
+                               Style="{StaticResource StandardEntry}"
+                               HorizontalOptions="FillAndExpand" />
+                        <Button Text="Toon"
+                            x:Name="ShowPasswordButton"
+                            Clicked="ShowPasswordClicked"
+                            Style="{StaticResource ToggleButton}" />
+                    </StackLayout>
+                    <StackLayout>
+                        <Entry x:Name="ConfirmPasswordEntry"
+                               Placeholder="Bevestig je wachtwoord"
+                               IsReadOnly="False"
+                               IsPassword="True"
+                               Style="{StaticResource StandardEntry}"
+                               HorizontalOptions="FillAndExpand" />
+                    </StackLayout>
+                </StackLayout>
+
+                <Button Text="Opslaan"
+                        BackgroundColor="{StaticResource StandardGreen}"
+                        Style="{StaticResource StandardMaleButton}"
+                        VerticalOptions="End"
+                        Margin="0,20,0,0" 
+                        Clicked="OnSaveClicked"/>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Loading Overlay -->
+        <Grid IsVisible="False" x:Name="OverlayGrid" BackgroundColor="Black" Opacity="0.5" 
+              HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" IsRunning="True" />
+        </Grid>
+    </Grid>
+</ContentPage>

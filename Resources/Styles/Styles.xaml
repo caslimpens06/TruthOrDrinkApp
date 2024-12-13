@@ -38,7 +38,19 @@
         <Setter Property="HorizontalOptions" Value="Center" />
     </Style>
 
+    <Style x:Key="SmallerBoldTitleText" TargetType="Label">
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+    </Style>
+
     <Style x:Key="StandardSpacing" TargetType="VerticalStackLayout">
+        <Setter Property ="Padding" Value="30" />
+        <Setter Property="Spacing" Value="25" />
+        <Setter Property="VerticalOptions"  Value="Center" />
+    </Style>
+
+    <Style x:Key="DifferentSpacing" TargetType="VerticalStackLayout">
         <Setter Property ="Padding" Value="30" />
         <Setter Property="Spacing" Value="25" />
         <Setter Property="VerticalOptions"  Value="Center" />
@@ -93,8 +105,92 @@
         <Setter Property="Margin" Value="0,10" />
     </Style>
 
+    <Style x:Key="FlyoutButton" TargetType="Button">
+        <Setter Property="TextColor" Value="{StaticResource StandardWhite}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource StandardBlack}" />
+        <Setter Property="FontFamily" Value="OpenSansRegular"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Padding" Value="15, 20"/>
+        <Setter Property="HeightRequest" Value="60"/>
+        <Setter Property="Margin" Value="0,15"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="BorderColor" Value="{StaticResource StandardGray}" />
+        <Setter Property="BorderWidth" Value="1" />
+    </Style>
 
-            <Style TargetType="ActivityIndicator">
+    <Style x:Key="EditableEntry" TargetType="Entry" BasedOn="{StaticResource StandardEntry}">
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="BackgroundColor" Value="LightGray" />
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+    </Style>
+
+    <Style x:Key="ToggleButton" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource StandardGray}" />
+        <Setter Property="HeightRequest" Value="40" />
+        <Setter Property="WidthRequest" Value="100" />
+        <Setter Property="Margin" Value="10,0,0,0" />
+    </Style>
+
+    <Style x:Key="RuleTextStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="TextColor" Value="{StaticResource StandardBlack}"/>
+        <Setter Property="LineHeight" Value="1.6"/>
+        <Setter Property="VerticalTextAlignment" Value="Start"/>
+        <Setter Property="Padding" Value="5,0"/>
+    </Style>
+
+    <Style x:Key="ProfileContainerStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{StaticResource StandardLightMenu}" />
+        <Setter Property="CornerRadius" Value="20" />
+        <Setter Property="Margin" Value="20,20,20,10" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="HasShadow" Value="True" />
+    </Style>
+
+    <Style x:Key="ProfileImageContainerStyle" TargetType="Frame">
+        <Setter Property="BackgroundColor" Value="{StaticResource StandardLightMenu}" />
+        <Setter Property="HeightRequest" Value="100" />
+        <Setter Property="WidthRequest" Value="100" />
+        <Setter Property="CornerRadius" Value="50" />
+        <Setter Property="VerticalOptions" Value="Center" />
+    </Style>
+
+    <Style x:Key="ProfileNameStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="TextColor" Value="{StaticResource StandardWhite}" />
+        <Setter Property="Margin" Value="10" />
+    </Style>
+
+    <Style x:Key="ProfileDescriptionStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="TextColor" Value="{StaticResource StandardGray}" />
+    </Style>
+
+    <Style x:Key="MenuOptionTextStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="TextColor" Value="{StaticResource StandardBlack}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource StandardOption}" />
+    </Style>
+
+    <Style x:Key="LogoutTextStyle" TargetType="Label" BasedOn="{StaticResource MenuOptionTextStyle}">
+        <Setter Property="TextColor" Value="{StaticResource StandardBlack}" />
+    </Style>
+
+    <Style x:Key="StartSessionButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource StandardMenu}" />
+        <Setter Property="TextColor" Value="{StaticResource StandardWhite}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="Margin" Value="20,10" />
+        <Setter Property="CornerRadius" Value="25" />
+        <Setter Property="HeightRequest" Value="50" />
+    </Style>
+
+    <Style TargetType="ActivityIndicator">
         <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
     </Style>
 

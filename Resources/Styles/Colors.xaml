@@ -11,9 +11,12 @@
     <Color x:Key="GenderMaleBlue">Blue</Color>
     <Color x:Key="StandardGray">Gray</Color>
     <Color x:Key="StandardBlack">Black</Color>
+    <Color x:Key="StandardMenu">#0b395a</Color>
+    <Color x:Key="StandardLightMenu">#f5cd53</Color>
+    <Color x:Key="StandardGreen">Green</Color>
+    <Color x:Key="StandardOption">#d7655c</Color>
 
-
-
+    
 
 
     <Color x:Key="Primary">#512BD4</Color>

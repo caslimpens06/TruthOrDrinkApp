@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TruthOrDrink.HostChooseGamePage"
-             NavigationPage.HasBackButton="False">
+             x:Class="TruthOrDrink.HostChooseGamePage">
 
 <ScrollView>
     <VerticalStackLayout Style="{StaticResource StandardSpacing}">
@@ -35,10 +34,6 @@
                 Style="{StaticResource QuestionLists}" 
                 Clicked="NavigateTo5" />
 
-        <Button Text="Verlaat spel"
-                Style="{StaticResource LeaveGameButtonStyle}"
-                Clicked="LeaveGameClicked" />
-
-    </VerticalStackLayout>
+        </VerticalStackLayout>
 </ScrollView>
 </ContentPage>

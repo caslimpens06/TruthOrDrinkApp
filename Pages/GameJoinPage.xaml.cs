@@ -1,5 +1,6 @@
 using QRCoder;
 using TruthOrDrink.Model;
+using TruthOrDrink.DataAccessLayer;
 
 namespace TruthOrDrink
 {
