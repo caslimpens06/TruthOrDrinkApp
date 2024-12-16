@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using SQLitePCL;
 using TruthOrDrink.Model;
 
 namespace TruthOrDrink.DataAccessLayer
@@ -6,8 +7,9 @@ namespace TruthOrDrink.DataAccessLayer
 	public class SQLiteService
 	{
 		private SQLiteAsyncConnection _database;
+		private List<Question> _questions;
 
-		// Local database for caching
+		// DataAccesLayer for the local database
 		public SQLiteService()
 		{
 			_database = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
@@ -17,7 +19,8 @@ namespace TruthOrDrink.DataAccessLayer
 		{
 			try
 			{
-				await _database.CreateTableAsync<Host>();
+				await _database.CreateTablesAsync<Host, Question>();
+
 				Console.WriteLine("Create Table Success");
 			}
 			catch (Exception ex)
@@ -26,25 +29,11 @@ namespace TruthOrDrink.DataAccessLayer
 			}
 		}
 
-		public async Task PopulateTableAsync(Host host)
-		{
-			try
-			{
-				await _database.InsertAsync(host);
-				Console.WriteLine($"Host {host.Name} added successfully.");
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine($"Error inserting hosts: {ex.Message}");
-			}
-		}
-
 		public async Task SaveHostAsync(Host host)
 		{
 			try
 			{
 				await _database.InsertAsync(host);
-				Console.WriteLine("Host added successfully.");
 			}
 			catch (Exception ex)
 			{
@@ -91,16 +80,31 @@ namespace TruthOrDrink.DataAccessLayer
 				if (newhost != null)
 				{
 					await _database.UpdateAsync(newhost);
-					Console.WriteLine("Host updated successfully.");
-				}
-				else
-				{
-					Console.WriteLine($"Host with HostId {newhost.HostId} not found.");
 				}
 			}
 			catch (Exception ex)
 			{
 				Console.WriteLine($"Error updating host: {ex.Message}");
+			}
+		}
+
+		public async Task PopulateQuestionsForOfflineGame() 
+		{
+			try
+			{
+				SupabaseService supabaseService = new SupabaseService();
+				_questions = await supabaseService.GetAllQuestions();
+				if (_questions != null)
+				{
+					foreach (Question question in _questions)
+					{
+						await _database.InsertAsync(question);
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Error loading/updating questions: {ex.Message}");
 			}
 		}
 	}

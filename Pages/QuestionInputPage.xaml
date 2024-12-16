@@ -4,7 +4,6 @@
              x:Class="TruthOrDrink.QuestionInputPage"
              NavigationPage.HasNavigationBar="False">
 
-
     <ScrollView>
         <VerticalStackLayout Style="{StaticResource StandardSpacing}">
             

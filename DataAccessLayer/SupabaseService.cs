@@ -214,10 +214,8 @@ public class SupabaseService
 
 			using (var command = new NpgsqlCommand(sqlQuery, connection))
 			{
-				// Add parameter for Name
 				command.Parameters.AddWithValue("@participantid", participant.ParticipantId);
 
-				// Execute the query asynchronously
 				await command.ExecuteNonQueryAsync();
 			}
 		}
@@ -747,5 +745,75 @@ public class SupabaseService
 
 		return null;
 	}
+
+	public async Task<bool> CheckIfGameClosed(Participant participant)
+	{
+		using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string query = "SELECT \"CloseGame\" FROM public.\"Session\" WHERE \"SessionId\" = @SessionId;";
+
+			using (var command = new NpgsqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@SessionId", participant.SessionCode);
+
+				using (var reader = await command.ExecuteReaderAsync())
+				{
+					if (await reader.ReadAsync())
+					{
+						return reader.GetBoolean(0);
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public async Task DeleteAllSessions(Host host)
+	{
+		await using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string sqlQuery = "DELETE FROM \"Session\" WHERE \"HostId\" = @HostId;";
+
+			using (var command = new NpgsqlCommand(sqlQuery, connection))
+			{
+				command.Parameters.AddWithValue("@HostId", host.HostId);
+
+				await command.ExecuteNonQueryAsync();
+			}
+		}
+	}
+
+	public async Task<List<Question>> GetAllQuestions()
+	{
+		var questions = new List<Question>();
+
+		await using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string sqlQuery = "SELECT * FROM public.\"Question\" WHERE \"GameId\" != 5;";
+
+			await using (var command = new NpgsqlCommand(sqlQuery, connection))
+			{
+				await using (var reader = await command.ExecuteReaderAsync())
+				{
+					while (await reader.ReadAsync())
+					{
+						Question question = new Question(Convert.ToInt32(reader["QuestionId"]), reader["QuestionText"].ToString(), Convert.ToInt32(reader["GameId"]));
+
+						questions.Add(question);
+					}
+				}
+			}
+		}
+
+		return questions;
+	}
+
 }
 

@@ -18,19 +18,16 @@ namespace TruthOrDrink.Model
 			get { return _hostid; }
 			set { _hostid = value; }
 		}
-
 		public string Name
 		{
 			get { return _name; }
 			set { _name  = value; }
 		}
-
 		public string Email
 		{
 			get { return _email; }
 			set { _email = value; }
 		}
-
 		public string Password
 		{
 			get { return _password; }
@@ -43,7 +40,7 @@ namespace TruthOrDrink.Model
 			_email = email;
 			_password = password;
 		}
-		public Host() { }
+		public Host() { } // Local database needs parameterless constructor
 
 		public Host(int hostid, string email, string password)
 		{
@@ -102,6 +99,10 @@ namespace TruthOrDrink.Model
 		public async Task UpdateHostCredentials()
 		{
 			await _supabaseService.UpdateHostCredentials(this);
+		}
+		public async Task DeleteAllSessions()
+		{
+			await _supabaseService.DeleteAllSessions(this);
 		}
 		public async Task<Host> LoadHostData()
 		{

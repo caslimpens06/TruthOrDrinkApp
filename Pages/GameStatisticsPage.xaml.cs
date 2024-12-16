@@ -24,7 +24,6 @@ public partial class GameStatisticsPage : ContentPage
 		Participant truthParticipant = await GetParticipantWithMostTruthAnswers();
 		Participant drinkParticipant = await GetParticipantWithMostDrinkAnswers();
 
-		// Update UI elements on the main thread
 		MainThread.BeginInvokeOnMainThread(() =>
 		{
 			if (truthParticipant != null)
@@ -68,7 +67,7 @@ public partial class GameStatisticsPage : ContentPage
 
 	private async void ToMainMenuClicked(object sender, EventArgs e)
 	{
-		await _participant.SetGameToClose();
+		await _participant.RemoveParticipantAsync();
 		await Navigation.PopToRootAsync();
 	}
 }

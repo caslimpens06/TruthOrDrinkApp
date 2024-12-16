@@ -39,15 +39,10 @@ public partial class HostMainPage : FlyoutPage
         IsPresented = false;
     }
 
-	private void OnRulesClicked(object sender, EventArgs e)
-	{
-		Detail = new NavigationPage(new HostMainPage(_host));
-		IsPresented = false;
-	}
-
 	private async void LogoutClicked(object sender, EventArgs e)
     {
         await _sqliteservice.ClearHostTableAsync();
+        await _host.DeleteAllSessions();
         await Navigation.PopToRootAsync();
     }
 }

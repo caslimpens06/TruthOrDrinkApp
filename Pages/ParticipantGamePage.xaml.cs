@@ -11,13 +11,11 @@ public partial class ParticipantGamePage : ContentPage
 	private readonly List<Question> _answeredquestions = new List<Question>();
 	private Question _currentquestion;
 	private Game _game;
-	private readonly SupabaseService _supabaseService;
 
 	public ParticipantGamePage(Participant participant)
 	{
 		InitializeComponent();
 		_participant = participant;
-		_supabaseService = new SupabaseService();
 	}
 
 	protected override bool OnBackButtonPressed()
@@ -65,12 +63,10 @@ public partial class ParticipantGamePage : ContentPage
 	{
 		if (_questions != null && _answeredquestions.Count == _questions.Count)
 		{
-			// Verwijder navigatie hier naar GameStatisticsPage
 			QuestionLabel.Text = "Het spel is afgelopen. Wachten op antwoorden...";
-			return; // Wacht tot antwoorden zijn verzonden.
+			return;
 		}
 
-		// Standaard logica voor het instellen van de volgende vraag
 		if (_questions != null && _questions.Count > 0)
 		{
 			TruthButton.IsVisible = false;
@@ -135,20 +131,31 @@ public partial class ParticipantGamePage : ContentPage
 
 		while (checking)
 		{
+			await MonitorGameClosureAsync();
+
 			currentQuestion = await _participant.GetCurrentQuestionAsync();
 
-			// Ensure the current question has not been answered already
-			if (currentQuestion != null && !_answeredquestions.Any(q => q.QuestionId == currentQuestion.QuestionId))
+			bool isQuestionAnswered = false;
+			foreach (var answeredQuestion in _answeredquestions)
 			{
-				break; // Break when we find a question that hasn't been answered
+				if (answeredQuestion.QuestionId == currentQuestion.QuestionId)
+				{
+					isQuestionAnswered = true;
+					break;
+				}
 			}
 
-			// Wait before retrying if the current question is not valid
+			if (currentQuestion != null && !isQuestionAnswered)
+			{
+				break;
+			}
+
 			await Task.Delay(1000);
 		}
 
 		return currentQuestion;
 	}
+
 
 	private async void LeaveGameClicked(object sender, EventArgs e)
 	{
@@ -203,5 +210,13 @@ public partial class ParticipantGamePage : ContentPage
 			}
 		}
 	}
+	private async Task MonitorGameClosureAsync()
+	{
+		bool isGameClosed = await _participant.CheckIfGameClosed();
 
+		if (isGameClosed)
+		{
+			await Navigation.PushAsync(new GameStatisticsPage(_participant));
+		}
+	}
 }
