@@ -1,0 +1,22 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TruthOrDrink.Pages.ProfilePage"
+             Title="Profile">
+
+    <StackLayout Padding="20">
+        <Label Text="Name" FontSize="Medium" />
+        <Entry Text="{Binding Name}" IsReadOnly="{Binding IsNameReadOnly}" />
+        <Button Text="{Binding NameButtonText}" Command="{Binding EditNameCommand}" />
+
+        <Label Text="Email" FontSize="Medium" />
+        <Entry Text="{Binding Email}" IsReadOnly="True" />
+
+        <Label Text="Password" FontSize="Medium" />
+        <Entry Text="{Binding Password}" IsPassword="True" IsReadOnly="{Binding IsPasswordReadOnly}" />
+        <Label Text="Confirm Password" FontSize="Medium" />
+        <Entry Text="{Binding ConfirmPassword}" IsPassword="True" IsReadOnly="{Binding IsPasswordReadOnly}" />
+
+        <Button Text="Show Password" Command="{Binding ShowPasswordCommand}" />
+        <Button Text="Save" Command="{Binding SaveCommand}" />
+    </StackLayout>
+</ContentPage>

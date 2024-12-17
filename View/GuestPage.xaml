@@ -1,0 +1,13 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TruthOrDrink.GuestPage"
+             NavigationPage.HasBackButton="True">
+
+    <VerticalStackLayout Padding="20">
+        <Label Text="Join Game" FontSize="24" HorizontalOptions="Center"/>
+        <Entry x:Name="SessionCodeEntry" Placeholder="Enter session code"/>
+        <Button Text="Connect" Command="{Binding ConnectCommand}"/>
+        <Button Text="Scan QR Code" Command="{Binding QRCommand}"/>
+        <Button Text="Leave Game" Command="{Binding LeaveGameCommand}"/>
+    </VerticalStackLayout>
+</ContentPage>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:TruthOrDrink.ViewModels"
+             x:Class="TruthOrDrink.SignUpPage"
+             x:DataType="local:SignUpViewModel">
+
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout Style="{StaticResource StandardSpacing}">
+                <Image
+                    x:Name="LogoImage"
+                    Style="{StaticResource LogoImage}" />
+
+                <Label 
+                    Text="Maak een account"
+                    Style="{StaticResource BoldTitleText}" />
+
+                <Entry 
+                    Text="{Binding Name}" 
+                    Placeholder="Typ je naam hier" 
+                    Style="{StaticResource StandardEntry}" />
+
+                <Entry 
+                    Text="{Binding Email}" 
+                    Placeholder="Typ je email hier" 
+                    Style="{StaticResource StandardEntry}" />
+
+                <Entry 
+                    Text="{Binding Password}" 
+                    Placeholder="Typ je wachtwoord hier" 
+                    IsPassword="True" 
+                    Style="{StaticResource StandardEntry}" />
+
+                <Entry 
+                    Text="{Binding ConfirmPassword}" 
+                    Placeholder="Typ je wachtwoord nog een keer" 
+                    IsPassword="True" 
+                    Style="{StaticResource StandardEntry}" />
+
+                <Button 
+                    Text="Maak Account" 
+                    Style="{StaticResource SelectButtonStyle}"
+                    Command="{Binding CreateAccountCommand}" />
+
+                <Label 
+                    Text="Dit account is nodig om een spel te creeëren." 
+                    Style="{StaticResource StandardCommentText}" />
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid IsVisible="{Binding IsOverlayVisible}" 
+              BackgroundColor="Black" Opacity="0.5" 
+              HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" IsRunning="True" />
+        </Grid>
+    </Grid>
+
+</ContentPage>

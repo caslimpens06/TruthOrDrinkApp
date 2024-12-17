@@ -1,0 +1,14 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TruthOrDrink.Pages.ParticipantGamePage"
+             Title="Participant Game">
+
+    <StackLayout Padding="20">
+        <Label Text="{Binding CurrentQuestionText}" FontSize="24" TextColor="Black" />
+
+        <Button Text="Truth" Command="{Binding TruthCommand}" IsVisible="{Binding IsTruthButtonVisible}" />
+        <Button Text="Drink" Command="{Binding DrinkCommand}" IsVisible="{Binding IsDrinkButtonVisible}" />
+
+        <Button Text="Leave Game" Command="{Binding LeaveGameCommand}" />
+    </StackLayout>
+</ContentPage>

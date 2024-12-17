@@ -1,0 +1,10 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TruthOrDrink.QRScannerPage"
+             Title="QR Scanner">
+
+    <StackLayout>
+        <Label Text="Scan a QR Code" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
+        <Button Text="Start Scanning" Command="{Binding ProcessBarcodeCommand}" />
+    </StackLayout>
+</ContentPage>

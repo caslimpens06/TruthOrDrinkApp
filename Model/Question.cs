@@ -15,6 +15,7 @@ namespace TruthOrDrink.Model
 		private string _text;
 		private int _gameId;
 		private bool _isenabled = true;
+		private bool _istapped;
 
 		[PrimaryKey]
 		public int QuestionId
@@ -38,6 +39,11 @@ namespace TruthOrDrink.Model
 			set { _isenabled = value; }
 		}
 
+		public bool IsTapped
+		{
+			get { return _istapped; }
+			set { _istapped = value; }
+		}
 
 		private readonly SupabaseService _supabaseService = new SupabaseService();
 

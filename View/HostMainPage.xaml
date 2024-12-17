@@ -1,0 +1,20 @@
+<FlyoutPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            x:Class="TruthOrDrink.Pages.HostMainPage">
+
+    <FlyoutPage.Flyout>
+        <ContentPage Title="Menu">
+            <StackLayout>
+                <Label Text="{Binding HostName}" FontSize="24" HorizontalOptions="Center" />
+                <Button Text="Choose Game" Command="{Binding NavigateToChooseGamePageCommand}" />
+                <Button Text="Profile" Command="{Binding NavigateToProfilePageCommand}" />
+                <Button Text="Logout" Command="{Binding LogoutCommand}" />
+            </StackLayout>
+        </ContentPage>
+    </FlyoutPage.Flyout>
+
+    <FlyoutPage.Detail>
+        <NavigationPage x:Name="MainNavigationPage">
+        </NavigationPage>
+    </FlyoutPage.Detail>
+</FlyoutPage>
