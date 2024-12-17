@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
 using TruthOrDrink.Model;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace TruthOrDrink.Pages;
 
