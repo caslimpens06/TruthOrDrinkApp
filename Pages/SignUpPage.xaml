@@ -4,7 +4,6 @@
              x:Class="TruthOrDrink.SignUpPage">
 
     <Grid>
-        <!-- Main Content -->
         <ScrollView>
             <VerticalStackLayout Style="{StaticResource StandardSpacing}">
                 <Image
@@ -46,7 +45,6 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Loading Overlay -->
         <Grid IsVisible="False" x:Name="OverlayGrid" BackgroundColor="Black" Opacity="0.5" 
               HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" IsRunning="True" />

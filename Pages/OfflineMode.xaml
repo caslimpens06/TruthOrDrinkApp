@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <FlyoutPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TruthOrDrink.Pages.HostMainPage"
+             x:Class="TruthOrDrink.Pages.OfflineMode"
              NavigationPage.HasBackButton="True"
              BackgroundColor="{StaticResource StandardMenu}">
 
@@ -10,25 +10,22 @@
             <StackLayout Spacing="15" Margin="40" VerticalOptions="FillAndExpand">
 
                 <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                        <Frame Style="{StaticResource ProfileImageContainerStyle}">
-                            <Image Source="profile.jpg" 
+                    <Frame Style="{StaticResource ProfileImageContainerStyle}">
+                        <Image Source="profile.jpg" 
                                    Aspect="AspectFill" 
                                    HeightRequest="100" 
-                                   WidthRequest="100" 
-                                   />
-                        </Frame>
-                        <Label x:Name="HostName"
-                               Text="Aan het laden..."
-                               Style="{StaticResource ProfileNameStyle}" />
+                                   WidthRequest="100" />
+                    </Frame>
+                    <Label Text="Offline"
+                           Style="{StaticResource ProfileNameStyle}" />
                 </StackLayout>
 
-                <StackLayout Padding="20" Spacing="15" HorizontalOptions="CenterAndExpand">
-                    <Button Text="Account" Style="{StaticResource MenuOptionTextStyle}" Clicked="OnProfilePageClicked"/>
-                    <Button Text="Log uit" Style="{StaticResource LogoutTextStyle}" Clicked="LogoutClicked" />
+                <StackLayout Padding="20" HorizontalOptions="CenterAndExpand">
+                    <Button Text="Afsluiten" Margin="10" Style="{StaticResource LogoutTextStyle}" Clicked="CloseAppClicked" />
                 </StackLayout>
                 <Button Text="START SESSIE"
                         Style="{StaticResource StartSessionButtonStyle}" 
-                        Clicked="OnHostChoosesGamePageClicked"/>
+                        Clicked="GoToOfflineModeClicked"/>
             </StackLayout>
         </ContentPage>
     </FlyoutPage.Flyout>
@@ -80,3 +77,5 @@
         </NavigationPage>
     </FlyoutPage.Detail>
 </FlyoutPage>
+
+

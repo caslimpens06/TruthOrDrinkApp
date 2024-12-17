@@ -68,7 +68,8 @@ namespace TruthOrDrink.Pages
 		}
 
 		private async void LeaveGameClicked(object sender, EventArgs e)
-		{ 
+		{
+			await _participant.RemoveParticipantAsync();
 			await Navigation.PopToRootAsync();
 		}
 

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TruthOrDrink.DataAccessLayer;
+using SQLite;
 
 namespace TruthOrDrink.Model
 {
+	[SQLite.Table("Question")]
 	public class Question
 	{
 		private int _questionid;
@@ -14,18 +16,17 @@ namespace TruthOrDrink.Model
 		private int _gameId;
 		private bool _isenabled = true;
 
+		[PrimaryKey]
 		public int QuestionId
 		{
 			get { return _questionid; }
 			set { _questionid = value; }
 		}
-
 		public string Text
 		{
 			get { return _text; }
 			set { _text = value; }
 		}
-
 		public int GameId
 		{
 			get { return _gameId; }
@@ -36,9 +37,10 @@ namespace TruthOrDrink.Model
 			get { return _isenabled; }
 			set { _isenabled = value; }
 		}
+
+
 		private readonly SupabaseService _supabaseService = new SupabaseService();
 
-		// Constructor voor Question klasse
 		public Question(int questionid, string text, int gameid)
 		{
 			_questionid = questionid;
@@ -62,6 +64,7 @@ namespace TruthOrDrink.Model
 			_text = text;
 		}
 
+		public Question() { } // Local database needs parameterless constructor
 		public async Task AddQuestionByParticipant()
 		{
 			_supabaseService.AddQuestionByParticipant(this);

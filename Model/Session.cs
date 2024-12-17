@@ -42,7 +42,7 @@ namespace TruthOrDrink.Model
 			_gameid = gameid;
 		}
 
-		public Session(int sessioncode)
+		public Session(int sessioncode) // gameid = sessioncode in offline-mode (because of constructor ambiguity)
 		{
 			_sessioncode = sessioncode;
 		}

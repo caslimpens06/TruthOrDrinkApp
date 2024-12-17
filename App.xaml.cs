@@ -1,11 +1,12 @@
 ﻿using TruthOrDrink.Model;
 using TruthOrDrink.DataAccessLayer;
+using TruthOrDrink.Pages;
 
 namespace TruthOrDrink
 {
 	public partial class App : Application
 	{
-		private SQLiteService sqlliteservice = new SQLiteService();
+		private readonly SQLiteService sqliteservice = new SQLiteService();
 
 		public App()
 		{
@@ -26,8 +27,7 @@ namespace TruthOrDrink
 			{
 				MainPage.Dispatcher.Dispatch(async () =>
 				{
-					await MainPage.DisplayAlert("Geen Internet :(", "De app zal zichzelf afsluiten.", "OK");
-					CloseApp();
+					MainPage = new NavigationPage(new OfflineMode());
 				});
 			}
 		}
@@ -38,19 +38,19 @@ namespace TruthOrDrink
 			{
 				MainPage.Dispatcher.Dispatch(async () =>
 				{
-					await MainPage.DisplayAlert("Geen Internet :(", "De app zal zichzelf afsluiten.", "OK");
-					CloseApp();
+					MainPage = new NavigationPage(new OfflineMode());
 				});
 			}
 		}
 
 		private async Task CreateLocalDatabaseTables() 
 		{
-			await sqlliteservice.InitializeAsync();
+			await sqliteservice.InitializeAsync();
+			await sqliteservice.PopulateQuestionsForOfflineGame();
 		}
 
 
-		private static void CloseApp()
+		public static void CloseApp()
 		{
 			Environment.Exit(0);
 		}

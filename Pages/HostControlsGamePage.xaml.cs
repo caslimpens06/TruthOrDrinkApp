@@ -44,8 +44,9 @@ public partial class HostControlsGamePage : ContentPage
 		}
 	}
 
-	private async void BackToMainMenuClicked(object sender, EventArgs e)
+	private async void StopGameClicked(object sender, EventArgs e)
 	{
+		await _participant.SetGameToClose();
 		await Navigation.PushAsync(new GameStatisticsPage(_participant));
 	}
 
@@ -53,6 +54,7 @@ public partial class HostControlsGamePage : ContentPage
 	{
 		if (_questionsareclickable) {
 			_questionsareclickable = false;
+			StopGameButton.IsEnabled = false;
 
 			var tappedFrame = sender as Frame;
 			if (tappedFrame != null)
@@ -64,6 +66,7 @@ public partial class HostControlsGamePage : ContentPage
 					if (tappedQuestions.Contains(tappedQuestion.QuestionId))
 					{
 						_questionsareclickable = true;
+
 						await DisplayAlert("Waarschuwing", "Deze vraag is al gespeeld. Je kan de vraag niet nog een keer spelen.", "OK");
 					}
 					else
@@ -76,6 +79,7 @@ public partial class HostControlsGamePage : ContentPage
 						if (await CheckIfEveryParticipantAnswered(tappedQuestion))
 						{
 							_questionsareclickable = true;
+							StopGameButton.IsEnabled = true;
 						}
 
 						if (tappedQuestions.Count == _questions.Count)
@@ -130,10 +134,5 @@ public partial class HostControlsGamePage : ContentPage
 		}
 
 		return done;
-	}
-
-	private async Task StopGame()
-	{
-		await _participant.SetGameToClose();
 	}
 }
