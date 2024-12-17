@@ -4,7 +4,7 @@ using TruthOrDrink.Model;
 namespace TruthOrDrink.DataAccessLayer;
 public class SupabaseService
 {
-	private readonly string connectionString = "Host=aws-0-eu-central-1.pooler.supabase.com;Port=5432;Username=postgres.etzhitxivaaleejoqevs;Password=Joepie2021@#$%;Database=postgres;SSL Mode=Require;Trust Server Certificate=true;";
+	private readonly string connectionString = "Host=aws-0-eu-central-1.pooler.supabase.com;Port=5432;Username=postgres.etzhitxivaaleejoqevs;Password=TruthOrDrinkTables@#$%;Database=postgres;SSL Mode=Require;Trust Server Certificate=true;";
 
 	public SupabaseService() {}
 
