@@ -1,0 +1,24 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TruthOrDrink.Pages.HostControlsGamePage"
+             BackgroundColor="White"
+             NavigationPage.HasBackButton="True">
+
+    <VerticalStackLayout Padding="20">
+        <Label Text="Host Controls" FontSize="24" HorizontalOptions="Center"/>
+        <Button Text="Stop Game" Command="{Binding StopGameCommand}"/>
+        <CollectionView ItemsSource="{Binding Questions}" SelectionMode="Single">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="10" Margin="5" 
+                           BackgroundColor="{Binding IsTapped, Converter={StaticResource BooleanToColorConverter}}">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OnQuestionTapped}" CommandParameter="{Binding .}"/>
+                        </Frame.GestureRecognizers>
+                        <Label Text="{Binding Text}"/>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>

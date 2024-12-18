@@ -1,0 +1,12 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TruthOrDrink.Pages.OfflineMode"
+             Title="Offline Mode">
+
+    <StackLayout Padding="20">
+        <Label Text="Offline Mode" FontSize="32" HorizontalOptions="Center" />
+
+        <Button Text="Go to Offline Game" Command="{Binding GoToOfflineGameCommand}" />
+        <Button Text="Close App" Command="{Binding CloseAppCommand}" />
+    </StackLayout>
+</ContentPage>

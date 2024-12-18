@@ -56,6 +56,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Camera.MAUI" Version="1.5.1" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		<PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.100" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
@@ -70,73 +71,73 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Pages\GameJoinPage.xaml.cs">
+	  <Compile Update="View\GameJoinPage.xaml.cs">
 	    <DependentUpon>GameJoinPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Pages\HostJoinParticipantPage.xaml.cs">
+	  <Compile Update="View\HostJoinParticipantPage.xaml.cs">
 	    <DependentUpon>HostJoinParticipantPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Pages\HostChooseGamePage.xaml.cs">
+	  <Compile Update="View\HostChooseGamePage.xaml.cs">
 	    <DependentUpon>HostChooseGamePage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Pages\ParticipantGamePage.xaml.cs">
+	  <Compile Update="View\ParticipantGamePage.xaml.cs">
 	    <DependentUpon>ParticipantGamePage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Pages\QRScannerPage.xaml.cs">
+	  <Compile Update="View\QRScannerPage.xaml.cs">
 	    <DependentUpon>QRScannerPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Pages\GameJoinPage.xaml">
+	  <MauiXaml Update="View\GameJoinPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\GameStatisticsPage.xaml">
+	  <MauiXaml Update="View\GameStatisticsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\HostControlsGamePage.xaml">
+	  <MauiXaml Update="View\HostControlsGamePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\HostJoinParticipantPage.xaml">
+	  <MauiXaml Update="View\HostJoinParticipantPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\HostMainPage.xaml">
+	  <MauiXaml Update="View\HostMainPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\OfflineGamePage.xaml">
+	  <MauiXaml Update="View\OfflineGamePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\OfflineMode.xaml">
+	  <MauiXaml Update="View\OfflineMode.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\ParticipantGamePage.xaml">
+	  <MauiXaml Update="View\ParticipantGamePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\GuestIdentifierPage.xaml">
+	  <MauiXaml Update="View\GuestIdentifierPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\GuestPage.xaml">
+	  <MauiXaml Update="View\GuestPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\HostChooseGamePage.xaml">
+	  <MauiXaml Update="View\HostChooseGamePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\LoginPage.xaml">
+	  <MauiXaml Update="View\LoginPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\ProfilePage.xaml">
+	  <MauiXaml Update="View\ProfilePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\QuestionInputPage.xaml">
+	  <MauiXaml Update="View\QuestionInputPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\SignUpPage.xaml">
+	  <MauiXaml Update="View\SignUpPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\WaitOnHostPage.xaml">
+	  <MauiXaml Update="View\WaitOnHostPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\WelcomePage.xaml">
+	  <MauiXaml Update="View\WelcomePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

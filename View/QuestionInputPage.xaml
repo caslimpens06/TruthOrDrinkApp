@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TruthOrDrink.QuestionInputPage"
+             NavigationPage.HasNavigationBar="False">
+
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource StandardSpacing}">
+
+            <Image
+                x:Name="LogoImage"
+                Style="{StaticResource LogoImage}"/>
+
+            <Label 
+                Text="Voeg een vraag toe"
+                Style="{StaticResource BoldTitleText}" />
+
+            <Entry 
+                Text="{Binding QuestionText}"
+                Placeholder="Typ je vraag hier" 
+                Style="{StaticResource StandardEntry}" />
+
+            <Button 
+                Text="Stuur" 
+                Style="{StaticResource SelectButtonStyle}" 
+                Command="{Binding SendQuestionCommand}" />
+
+            <Button 
+                Text="Klaar"
+                Style="{StaticResource LeaveGameButtonStyle}"
+                Command="{Binding DoneAddingQuestionsCommand}" 
+                IsEnabled="{Binding IsDoneButtonEnabled}"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
