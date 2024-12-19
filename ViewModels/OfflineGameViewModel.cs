@@ -24,7 +24,7 @@ namespace TruthOrDrink.ViewModels
 
 		private async Task JoinGame(Session session)
 		{
-			await App.Current.MainPage.Navigation.PushAsync(new GameJoinPage(session));
+			await App.Current.MainPage.Navigation.PushAsync(new AddOfflineParticipantsPage(session));
 		}
 
 		private async Task LeaveGame()

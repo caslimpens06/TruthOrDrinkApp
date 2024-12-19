@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:TruthOrDrink.ViewModels"
+             x:Class="TruthOrDrink.View.AddOfflineParticipantsPage"
+             NavigationPage.HasBackButton="True">
+
+    <ContentPage.BindingContext>
+        <vm:AddOfflineParticipantsViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource StandardSpacing}" Spacing="15">
+
+            <Image
+                x:Name="LogoImage"
+                Style="{StaticResource LogoImage}" />
+
+            <Label Text="Voeg deelnemer toe"
+                   Style="{StaticResource BoldTitleText}" />
+
+            <Entry Placeholder="Typ je naam hier"
+                   Text="{Binding ParticipantName}"
+                   Style="{StaticResource StandardEntry}" />
+
+            <Label Text="Selecteer geslacht"
+                   Style="{StaticResource BoldTitleText}" />
+
+            <HorizontalStackLayout Spacing="20" HorizontalOptions="Center">
+                <Button
+                    Text="Man"
+                    Style="{StaticResource StandardMaleButton}"
+                    Command="{Binding ChooseMaleCommand}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsMaleSelected}" Value="true">
+                            <Setter Property="Opacity" Value="1" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsMaleSelected}" Value="false">
+                            <Setter Property="Opacity" Value="0.5" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+
+                <Button
+                    Text="Vrouw"
+                    Style="{StaticResource StandardFemaleButton}"
+                    Command="{Binding ChooseFemaleCommand}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsFemaleSelected}" Value="true">
+                            <Setter Property="Opacity" Value="1" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsFemaleSelected}" Value="false">
+                            <Setter Property="Opacity" Value="0.5" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+            </HorizontalStackLayout>
+
+            <Button 
+                Text="Voeg toe"
+                BackgroundColor="{StaticResource StandardGreen}"
+                Style="{StaticResource SelectButtonStyle}"  
+                Command="{Binding AddCommand}" />
+
+            <Button 
+                Text="Ga verder" 
+                Style="{StaticResource SelectButtonStyle}"  
+                Command="{Binding ContinueCommand}" />
+
+            <Label Text="Je naam en geslacht worden gebruikt in het spel."
+                   Style="{StaticResource StandardCommentText}" />
+
+            <Label Text="{Binding ParticipantsCountDisplay}" 
+                   Style="{StaticResource BoldTitleText}" 
+                   Margin="10,20,10,5" />
+
+            <CollectionView ItemsSource="{Binding Participants}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="5"
+                               BorderColor="#6200EE" BackgroundColor="White" CornerRadius="10">
+                            <Grid ColumnDefinitions="*, Auto">
+
+                                <VerticalStackLayout Grid.Column="0">
+                                    <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" />
+                                    <Label Text="{Binding Gender}" FontSize="14" />
+                                </VerticalStackLayout>
+
+                                <Button
+                                    Grid.Column="1"
+                                    Text="🗑️"
+                                    BackgroundColor="Transparent"
+                                    HorizontalOptions="End"
+                                    Command="{Binding BindingContext.RemoveParticipantCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                    CommandParameter="{Binding}" />
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

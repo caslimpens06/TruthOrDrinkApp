@@ -2,8 +2,8 @@
 using System.Windows.Input;
 using TruthOrDrink.DataAccessLayer;
 using TruthOrDrink.Model;
-using TruthOrDrink.Pages;
 using TruthOrDrink.View;
+using System.Timers;
 
 namespace TruthOrDrink.ViewModels
 {
@@ -12,13 +12,29 @@ namespace TruthOrDrink.ViewModels
 		private readonly SQLiteService _sqliteService = new SQLiteService();
 		private Host _host;
 
-		public Host Host
+		private string _hostButtonText = "Speel als Host";
+		private Color _hostButtonBackgroundColor = Colors.Black;
+
+		private int _countdown = 10;
+		private System.Timers.Timer _timer;
+
+		public string HostButtonText
 		{
-			get => _host;
+			get => _hostButtonText;
 			set
 			{
-				_host = value;
-				OnPropertyChanged(nameof(Host));
+				_hostButtonText = value;
+				OnPropertyChanged(nameof(HostButtonText));
+			}
+		}
+
+		public Color HostButtonBackgroundColor
+		{
+			get => _hostButtonBackgroundColor;
+			set
+			{
+				_hostButtonBackgroundColor = value;
+				OnPropertyChanged(nameof(HostButtonBackgroundColor));
 			}
 		}
 
@@ -28,7 +44,6 @@ namespace TruthOrDrink.ViewModels
 
 		public WelcomePageViewModel()
 		{
-
 			NavigateToSignupCommand = new Command(async () => await NavigateToSignup());
 			NavigateToHostCommand = new Command(async () => await NavigateToHost());
 			NavigateToParticipantCommand = new Command(async () => await NavigateToParticipant());
@@ -36,14 +51,84 @@ namespace TruthOrDrink.ViewModels
 			CheckLoginStatus();
 		}
 
-		private async void CheckLoginStatus()
+		public async void CheckLoginStatus()
 		{
-			Host = await _sqliteService.GetHostAsync();
+			_host = await _sqliteService.GetHostAsync();
 
-			if (Host != null)
+			if (_host != null)
 			{
-				await App.Current.MainPage.Navigation.PushAsync(new HostMainPage(Host));
+				HostButtonText = $"Schud om in te loggen als {_host.Name} ({_countdown})";
+				HostButtonBackgroundColor = Colors.Green;
+
+				StartShakeDetection();
+				StartCountdown();
 			}
+		}
+
+		private void StartShakeDetection()
+		{
+			if (Accelerometer.Default.IsSupported)
+			{
+				if (!Accelerometer.Default.IsMonitoring)
+				{
+					Accelerometer.Default.ReadingChanged += DetectShake;
+					Accelerometer.Default.Start(SensorSpeed.Game);
+				}
+			}
+			else
+			{
+				Console.WriteLine("Accelerometer not supported.");
+			}
+		}
+
+		private void StartCountdown()
+		{
+			_timer = new System.Timers.Timer(1000);
+			_timer.Elapsed += (sender, e) => OnCountdownTick();
+			_timer.Start();
+		}
+
+		private async void OnCountdownTick()
+		{
+			if (_countdown > 0)
+			{
+				_countdown--;
+				HostButtonText = $"Schud je apparaat om in te loggen als {_host.Name} ({_countdown})";
+			}
+			else
+			{
+				ResetButton();
+				_timer.Stop();
+				await _sqliteService.ClearHostTableAsync();
+			}
+		}
+
+		private async void DetectShake(object sender, AccelerometerChangedEventArgs e)
+		{
+			const double shakeThreshold = 3.0;
+
+			double x = e.Reading.Acceleration.X;
+			double y = e.Reading.Acceleration.Y;
+			double z = e.Reading.Acceleration.Z;
+
+			double magnitude = Math.Sqrt(x * x + y * y + z * z);
+			Console.WriteLine(magnitude);
+
+			if (magnitude > shakeThreshold)
+			{
+				_timer.Stop();
+				Accelerometer.Default.Stop();
+				Accelerometer.Default.ReadingChanged -= DetectShake;
+
+				await App.Current.MainPage.Navigation.PushAsync(new HostMainPage(_host));
+			}
+		}
+
+		private void ResetButton()
+		{
+			HostButtonText = "Speel als Host";
+			HostButtonBackgroundColor = Colors.Black;
+			_countdown = 10;
 		}
 
 		private async Task NavigateToSignup()

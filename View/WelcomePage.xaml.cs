@@ -1,6 +1,6 @@
 using TruthOrDrink.ViewModels;
 
-namespace TruthOrDrink
+namespace TruthOrDrink.View
 {
 	public partial class WelcomePage : ContentPage
 	{

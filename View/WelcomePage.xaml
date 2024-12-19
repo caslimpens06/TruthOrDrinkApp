@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:TruthOrDrink.ViewModels"
-             x:Class="TruthOrDrink.WelcomePage"
+             x:Class="TruthOrDrink.View.WelcomePage"
              x:DataType="local:WelcomePageViewModel"
              NavigationPage.HasBackButton="False">
 
@@ -17,12 +17,8 @@
                   Style="{StaticResource BoldTitleText}"/>
 
             <Button 
-                Text="Maak Account" 
-                Style="{StaticResource SelectButtonStyle}" 
-                Command="{Binding NavigateToSignupCommand}" />
-
-            <Button 
-                Text="Speel als Host" 
+                Text="{Binding HostButtonText}" 
+                BackgroundColor="{Binding HostButtonBackgroundColor}" 
                 Style="{StaticResource SelectButtonStyle}" 
                 Command="{Binding NavigateToHostCommand}" />
 
@@ -31,6 +27,11 @@
                 Style="{StaticResource SelectButtonStyle}" 
                 Command="{Binding NavigateToParticipantCommand}" />
 
+            <Button 
+                Text="Maak Account" 
+                Style="{StaticResource SelectButtonStyle}" 
+                Command="{Binding NavigateToSignupCommand}" />
+            
             <Label Text="Ontwikkeld door Cas Limpens - zie credits"
                 Style="{StaticResource StandardCommentText}"/>
 

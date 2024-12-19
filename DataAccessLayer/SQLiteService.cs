@@ -58,11 +58,7 @@ namespace TruthOrDrink.DataAccessLayer
 		{
 			try
 			{
-				var allHosts = await _database.Table<Host>().ToListAsync();
-				foreach (var host in allHosts)
-				{
-					await _database.DeleteAsync(host);
-				}
+				await _database.Table<Host>().DeleteAsync(q => true);
 				return true;
 			}
 			catch (Exception ex)
@@ -90,21 +86,33 @@ namespace TruthOrDrink.DataAccessLayer
 
 		public async Task PopulateQuestionsForOfflineGame() 
 		{
-			try
+			_questions = await _database.Table<Question>().ToListAsync();
+			if (_questions == null || _questions.Count == 0)
 			{
-				SupabaseService supabaseService = new SupabaseService();
-				_questions = await supabaseService.GetAllQuestions();
-				if (_questions != null)
+				try
 				{
-					foreach (Question question in _questions)
+					SupabaseService supabaseService = new SupabaseService();
+					_questions = await supabaseService.GetAllQuestions();
+					if (_questions != null)
 					{
-						await _database.InsertAsync(question);
+						foreach (Question question in _questions)
+						{
+							await _database.InsertAsync(question);
+						}
+					}
+					else
+					{
+						Console.WriteLine("Questions is null");
 					}
 				}
+				catch (Exception ex)
+				{
+					Console.WriteLine($"Error loading/updating questions: {ex.Message}");
+				}
 			}
-			catch (Exception ex)
+			else
 			{
-				Console.WriteLine($"Error loading/updating questions: {ex.Message}");
+				Console.WriteLine("Questions are already populated");
 			}
 		}
 
@@ -112,7 +120,6 @@ namespace TruthOrDrink.DataAccessLayer
 		{
 			List<Drink> drinkdata = await GetDrinksFromLocalDatabase();
 
-			// Keep retrying until we get valid drink data
 			while (drinkdata == null || drinkdata.Count == 0)
 			{
 				try
@@ -130,31 +137,30 @@ namespace TruthOrDrink.DataAccessLayer
 					Console.WriteLine($"Error while fetching drink data: {ex.Message}");
 					await Task.Delay(3000);
 				}
-			}
 
-			try
-			{
-				// Once we have valid data, process it
-				foreach (var drink in drinkdata)
+
+				try
 				{
-					if (string.IsNullOrEmpty(drink.Name) || string.IsNullOrEmpty(drink.Type))
+					foreach (var drink in drinkdata)
 					{
-						Console.WriteLine($"Skipping drink with invalid data: Name = {drink.Name}, Type = {drink.Type}");
-						continue;
+						if (string.IsNullOrEmpty(drink.Name) || string.IsNullOrEmpty(drink.Type))
+						{
+							Console.WriteLine($"Skipping drink with invalid data: Name = {drink.Name}, Type = {drink.Type}");
+							continue;
+						}
+
+						drink.Name = drink.Name.Trim();
+						drink.Type = drink.Type.Trim();
+
+						await _database.InsertAsync(drink);
 					}
 
-					drink.Name = drink.Name.Trim();
-					drink.Type = drink.Type.Trim();
-
-					await _database.InsertAsync(drink);
-					Console.WriteLine($"Inserted drink: {drink.Name} | {drink.Type}");
+					Console.WriteLine("Inserted all valid drink data.");
 				}
-
-				Console.WriteLine("Inserted all valid drink data.");
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine($"Error loading/updating drinks: {ex.Message}");
+				catch (Exception ex)
+				{
+					Console.WriteLine($"Error loading/updating drinks: {ex.Message}");
+				}
 			}
 		}
 
@@ -177,6 +183,30 @@ namespace TruthOrDrink.DataAccessLayer
 			catch (Exception ex)
 			{
 				Console.WriteLine($"Error while validating drinks: {ex.Message}");
+				return null;
+			}
+		}
+
+		public async Task<List<Question>> GetQuestionsFromLocalDatabase(Session session)
+		{
+			try
+			{
+				List<Question> questions = await _database.Table<Question>()
+														  .Where(q => q.GameId == session.SessionCode)
+														  .ToListAsync();
+
+				if (questions != null && questions.Count > 0)
+				{
+					return questions;
+				}
+				else
+				{
+					return null;
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Error while validating questions: {ex.Message}");
 				return null;
 			}
 		}

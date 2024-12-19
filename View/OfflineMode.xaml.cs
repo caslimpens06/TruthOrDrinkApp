@@ -9,11 +9,12 @@ namespace TruthOrDrink.View
 			InitializeComponent();
 			BindingContext = new OfflineModeViewModel();
 		}
-
+		
 		protected override bool OnBackButtonPressed()
 		{
 			IsPresented = !IsPresented;
 			return true;
 		}
+		
 	}
 }

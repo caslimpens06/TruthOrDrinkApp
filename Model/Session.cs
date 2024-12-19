@@ -9,6 +9,7 @@ namespace TruthOrDrink.Model
 		private int _gameid;
 		private int _sessioncode;
 		private readonly SupabaseService _supabaseService = new SupabaseService();
+		private readonly SQLiteService _sqliteService = new SQLiteService();
 
 		public int SessionCode
 		{
@@ -77,6 +78,10 @@ namespace TruthOrDrink.Model
 		public async Task<bool> CheckIfSessionHasStarted()
 		{
 			return await _supabaseService.CheckIfSessionHasStarted(this);
+		}
+		public async Task<List<Question>> GetLocalQuestions()
+		{
+			return await _sqliteService.GetQuestionsFromLocalDatabase(this);
 		}
 	}
 }

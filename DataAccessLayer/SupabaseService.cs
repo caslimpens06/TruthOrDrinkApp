@@ -772,17 +772,18 @@ public class SupabaseService
 		{
 			await connection.OpenAsync();
 
-			string sqlQuery = "SELECT * FROM public.\"Question\" WHERE \"GameId\" != 5;";
+			string query = "SELECT \"QuestionId\", \"QuestionText\", \"GameId\" FROM public.\"Question\" WHERE \"GameId\" != 5;";
 
-			await using (var command = new NpgsqlCommand(sqlQuery, connection))
+			await using (var command = new NpgsqlCommand(query, connection))
 			{
 				await using (var reader = await command.ExecuteReaderAsync())
 				{
 					while (await reader.ReadAsync())
 					{
-						Question question = new Question(Convert.ToInt32(reader["QuestionId"]), reader["QuestionText"].ToString(), Convert.ToInt32(reader["GameId"]));
+						Question question = new Question(Convert.ToInt32(reader["QuestionId"]), Convert.ToString(reader["QuestionText"]), Convert.ToInt32(reader["GameId"]));
 
 						questions.Add(question);
+						Console.WriteLine(question.QuestionId + question.Text + question.GameId);
 					}
 				}
 			}
