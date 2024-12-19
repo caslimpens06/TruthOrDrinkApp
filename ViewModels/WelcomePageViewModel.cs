@@ -2,7 +2,6 @@
 using System.Windows.Input;
 using TruthOrDrink.DataAccessLayer;
 using TruthOrDrink.Model;
-using TruthOrDrink.Pages;
 using TruthOrDrink.View;
 
 namespace TruthOrDrink.ViewModels
@@ -12,13 +11,26 @@ namespace TruthOrDrink.ViewModels
 		private readonly SQLiteService _sqliteService = new SQLiteService();
 		private Host _host;
 
-		public Host Host
+		private string _hostButtonText = "Speel als Host";
+		private Color _hostButtonBackgroundColor = Colors.Black;
+
+		public string HostButtonText
 		{
-			get => _host;
+			get => _hostButtonText;
 			set
 			{
-				_host = value;
-				OnPropertyChanged(nameof(Host));
+				_hostButtonText = value;
+				OnPropertyChanged(nameof(HostButtonText));
+			}
+		}
+
+		public Color HostButtonBackgroundColor
+		{
+			get => _hostButtonBackgroundColor;
+			set
+			{
+				_hostButtonBackgroundColor = value;
+				OnPropertyChanged(nameof(HostButtonBackgroundColor));
 			}
 		}
 
@@ -28,7 +40,6 @@ namespace TruthOrDrink.ViewModels
 
 		public WelcomePageViewModel()
 		{
-
 			NavigateToSignupCommand = new Command(async () => await NavigateToSignup());
 			NavigateToHostCommand = new Command(async () => await NavigateToHost());
 			NavigateToParticipantCommand = new Command(async () => await NavigateToParticipant());
@@ -36,13 +47,53 @@ namespace TruthOrDrink.ViewModels
 			CheckLoginStatus();
 		}
 
-		private async void CheckLoginStatus()
+		public async void CheckLoginStatus()
 		{
-			Host = await _sqliteService.GetHostAsync();
+			_host = await _sqliteService.GetHostAsync();
 
-			if (Host != null)
+			if (_host != null)
 			{
-				await App.Current.MainPage.Navigation.PushAsync(new HostMainPage(Host));
+				HostButtonText = $"Schud om in te loggen als {_host.Name}";
+				HostButtonBackgroundColor = Colors.Green;
+
+				StartShakeDetection();
+			}
+		}
+
+		private void StartShakeDetection()
+		{
+			if (Accelerometer.Default.IsSupported)
+			{
+				if (!Accelerometer.Default.IsMonitoring)
+				{
+					Accelerometer.Default.ReadingChanged += DetectShake;
+					Accelerometer.Default.Start(SensorSpeed.Game); // Use high responsiveness
+				}
+			}
+			else
+			{
+				Console.WriteLine("Accelerometer not supported.");
+			}
+		}
+
+		private async void DetectShake(object sender, AccelerometerChangedEventArgs e)
+		{
+			const double shakeThreshold = 2.5;
+
+			double x = e.Reading.Acceleration.X;
+			double y = e.Reading.Acceleration.Y;
+			double z = e.Reading.Acceleration.Z;
+
+			double magnitude = Math.Sqrt(x * x + y * y + z * z);
+			Console.WriteLine(magnitude);
+
+			if (magnitude > shakeThreshold)
+			{
+				Accelerometer.Default.Stop();
+				Accelerometer.Default.ReadingChanged -= DetectShake;
+
+				// Navigate to HostMainPage after shake detection
+				await App.Current.MainPage.Navigation.PushAsync(new HostMainPage(_host));
 			}
 		}
 

@@ -1,6 +1,6 @@
 ﻿using Camera.MAUI;
 using ZXing.Net.Maui.Controls;
-using Supabase;
+using TruthOrDrink.ViewModels;
 
 namespace TruthOrDrink
 {
@@ -14,7 +14,7 @@ namespace TruthOrDrink
 				.UseMauiApp<App>()
 				.UseMauiCameraView()
 				.UseBarcodeReader();
-				
+			builder.Services.AddSingleton<IAccelerometer>(Accelerometer.Default);
 			return builder.Build();
 		}
     }
