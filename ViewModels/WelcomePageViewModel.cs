@@ -3,6 +3,7 @@ using System.Windows.Input;
 using TruthOrDrink.DataAccessLayer;
 using TruthOrDrink.Model;
 using TruthOrDrink.View;
+using System.Timers;
 
 namespace TruthOrDrink.ViewModels
 {
@@ -13,6 +14,9 @@ namespace TruthOrDrink.ViewModels
 
 		private string _hostButtonText = "Speel als Host";
 		private Color _hostButtonBackgroundColor = Colors.Black;
+
+		private int _countdown = 10;
+		private System.Timers.Timer _timer;
 
 		public string HostButtonText
 		{
@@ -53,10 +57,11 @@ namespace TruthOrDrink.ViewModels
 
 			if (_host != null)
 			{
-				HostButtonText = $"Schud om in te loggen als {_host.Name}";
+				HostButtonText = $"Schud om in te loggen als {_host.Name} ({_countdown})";
 				HostButtonBackgroundColor = Colors.Green;
 
 				StartShakeDetection();
+				StartCountdown();
 			}
 		}
 
@@ -67,12 +72,34 @@ namespace TruthOrDrink.ViewModels
 				if (!Accelerometer.Default.IsMonitoring)
 				{
 					Accelerometer.Default.ReadingChanged += DetectShake;
-					Accelerometer.Default.Start(SensorSpeed.Game); // Use high responsiveness
+					Accelerometer.Default.Start(SensorSpeed.Game);
 				}
 			}
 			else
 			{
 				Console.WriteLine("Accelerometer not supported.");
+			}
+		}
+
+		private void StartCountdown()
+		{
+			_timer = new System.Timers.Timer(1000);
+			_timer.Elapsed += (sender, e) => OnCountdownTick();
+			_timer.Start();
+		}
+
+		private async void OnCountdownTick()
+		{
+			if (_countdown > 0)
+			{
+				_countdown--;
+				HostButtonText = $"Schud om in te loggen als {_host.Name} ({_countdown})";
+			}
+			else
+			{
+				ResetButton();
+				_timer.Stop();
+				await _sqliteService.ClearHostTableAsync();
 			}
 		}
 
@@ -89,12 +116,19 @@ namespace TruthOrDrink.ViewModels
 
 			if (magnitude > shakeThreshold)
 			{
+				_timer.Stop();
 				Accelerometer.Default.Stop();
 				Accelerometer.Default.ReadingChanged -= DetectShake;
 
-				// Navigate to HostMainPage after shake detection
 				await App.Current.MainPage.Navigation.PushAsync(new HostMainPage(_host));
 			}
+		}
+
+		private void ResetButton()
+		{
+			HostButtonText = "Speel als Host";
+			HostButtonBackgroundColor = Colors.Black;
+			_countdown = 10;
 		}
 
 		private async Task NavigateToSignup()
