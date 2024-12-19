@@ -46,7 +46,8 @@ namespace TruthOrDrink
 		private async Task CreateLocalDatabaseTables() 
 		{
 			await sqliteservice.InitializeAsync();
-			await sqliteservice.PopulateQuestionsForOfflineGame();
+			sqliteservice.PopulateQuestionsForOfflineGame(); // don't await because system can continue without fully loading the questions for offline mode
+			sqliteservice.PopulateDrinks(); // don't await because system can continue without fully loading the drinks
 		}
 
 

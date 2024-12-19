@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using TruthOrDrink.Model;
 using TruthOrDrink.View;
-using System.Collections.ObjectModel;
 
 namespace TruthOrDrink.ViewModels;
 

@@ -29,8 +29,8 @@ namespace TruthOrDrink.ViewModels
 
 		private async Task LeaveGame()
 		{
-			await App.Current.MainPage.DisplayAlert("Verlaat spel", "Je hebt het spel verlaten.", "OK");
-			await App.Current.MainPage.Navigation.PopToRootAsync();
+			await App.Current.MainPage.DisplayAlert("Verlaat app", "Je hebt de app verlaten.", "OK");
+			App.CloseApp();
 		}
 	}
 }
