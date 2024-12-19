@@ -1,8 +1,7 @@
-using System.Collections.ObjectModel;
 using TruthOrDrink.Model;
 using TruthOrDrink.ViewModels;
 
-namespace TruthOrDrink.Pages
+namespace TruthOrDrink.View
 {
 	public partial class HostControlsGamePage : ContentPage
 	{
@@ -10,19 +9,6 @@ namespace TruthOrDrink.Pages
 		{
 			InitializeComponent();
 			BindingContext = new HostControlsGameViewModel(session);
-		}
-
-		private async void OnFrameTapped(object sender, EventArgs e)
-		{
-			var tappedFrame = sender as Frame;
-			if (tappedFrame != null)
-			{
-				var tappedQuestion = tappedFrame.BindingContext as Question;
-				if (tappedQuestion != null)
-				{
-					await ((HostControlsGameViewModel)BindingContext).OnQuestionTapped(tappedQuestion);
-				}
-			}
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TruthOrDrink.Model;
+using TruthOrDrink.View;
 
 namespace TruthOrDrink.ViewModels
 {

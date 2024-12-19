@@ -1,21 +1,20 @@
-using Microsoft.Maui.Controls;
 using TruthOrDrink.ViewModels;
 using TruthOrDrink.Model;
+using ZXing.Net.Maui;
 
-namespace TruthOrDrink
+namespace TruthOrDrink.View;
+
+public partial class QRScannerPage : ContentPage
 {
-	public partial class QRScannerPage : ContentPage
+	public QRScannerPage(Participant participant)
 	{
-		public QRScannerPage(Participant participant)
-		{
-			InitializeComponent();
-			BindingContext = new QRScannerViewModel(participant);
-		}
+		InitializeComponent();
+		BindingContext = new QRScannerViewModel(participant);
+	}
 
-		private void OnBarcodeDetected(object sender, ZXing.Net.Maui.BarcodeDetectionEventArgs args)
-		{
-			var viewModel = BindingContext as QRScannerViewModel;
-			viewModel?.ProcessBarcodeCommand.Execute(args.Results.FirstOrDefault()?.Value);
-		}
+	private void OnBarcodesDetected(object sender, BarcodeDetectionEventArgs args)
+	{
+		MainThread.BeginInvokeOnMainThread(() =>
+			(BindingContext as QRScannerViewModel)?.ProcessBarcodeCommand.Execute(args.Results.FirstOrDefault()?.Value));
 	}
 }

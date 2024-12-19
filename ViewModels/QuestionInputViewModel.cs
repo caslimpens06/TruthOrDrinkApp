@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using TruthOrDrink.Model;
 using TruthOrDrink.Pages;
+using TruthOrDrink.View;
 
 namespace TruthOrDrink.ViewModels
 {

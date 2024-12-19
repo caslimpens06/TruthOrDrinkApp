@@ -1,125 +1,132 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using TruthOrDrink.Model;
-using TruthOrDrink.Pages;
+using TruthOrDrink.View;
 
 namespace TruthOrDrink.ViewModels
 {
-	public class HostControlsGameViewModel : ObservableObject
+	public partial class HostControlsGameViewModel : ObservableObject
 	{
-		private readonly ObservableCollection<Question> _questions = new();
 		private readonly Game _game;
 		private readonly Session _session;
 		private readonly Participant _participant;
 		private bool _questionsAreClickable = true;
-		private readonly List<int> _tappedQuestions = new List<int>();
+		private readonly List<int> _tappedQuestionIds = new();
 
 		public HostControlsGameViewModel(Session session)
 		{
 			_session = session;
 			_game = new Game(session.GameId);
-			LoadQuestionsAsync();
-			_participant = new Participant(_session.SessionCode);
+			_participant = new Participant(session.SessionCode);
+
 			StopGameCommand = new AsyncRelayCommand(StopGame);
+			OnQuestionTappedCommand = new AsyncRelayCommand<QuestionViewModel>(OnQuestionTapped);
+
+			LoadQuestionsAsync();
 		}
 
-		public ObservableCollection<Question> Questions => _questions;
-
+		public ObservableCollection<QuestionViewModel> Questions { get; } = new();
+		public IAsyncRelayCommand<QuestionViewModel> OnQuestionTappedCommand { get; }
 		public IAsyncRelayCommand StopGameCommand { get; }
 
 		private async Task LoadQuestionsAsync()
 		{
-			_questions.Clear();
+			Questions.Clear();
 			var questionsList = await _game.GetQuestionsAsync();
 
-			foreach (Question question in questionsList)
+			foreach (var question in questionsList)
 			{
-				_questions.Add(question);
+				Questions.Add(new QuestionViewModel(question));
 			}
 		}
 
-		public async Task OnQuestionTapped(Question tappedQuestion)
+		private async Task OnQuestionTapped(QuestionViewModel tappedQuestion)
 		{
-			if (_questionsAreClickable)
+			if (!_questionsAreClickable || tappedQuestion == null || tappedQuestion.IsTapped)
 			{
-				_questionsAreClickable = false;
-
-				if (_tappedQuestions.Contains(tappedQuestion.QuestionId))
-				{
-					_questionsAreClickable = true;
-					await Application.Current.MainPage.DisplayAlert("Warning", "This question has already been played. You cannot play it again.", "OK");
-				}
-				else
-				{
-					_tappedQuestions.Add(tappedQuestion.QuestionId);
-					tappedQuestion.IsTapped = true; // Mark the question as tapped
-
-					await SetCurrentQuestion(tappedQuestion);
-
-					if (await CheckIfEveryParticipantAnswered(tappedQuestion))
-					{
-						_questionsAreClickable = true;
-					}
-
-					if (_tappedQuestions.Count == _questions.Count)
-					{
-						if (await CheckIfSessionDone())
-						{
-							await Application.Current.MainPage.Navigation.PushAsync(new GameStatisticsPage(_participant));
-						}
-					}
-				}
-			}
-		}
-
-		private async Task SetCurrentQuestion(Question tappedQuestion)
-		{
-			await tappedQuestion.SetCurrentQuestion(_session);
-		}
-
-		private async Task<bool> CheckIfSessionDone()
-		{
-			bool checking = true;
-			bool done = false;
-
-			while (checking)
-			{
-				if (await _participant.CheckIfAllQuestionsAnswered())
-				{
-					done = true;
-					checking = false;
-				}
-				await Task.Delay(500);
+				await Application.Current.MainPage.DisplayAlert("Waarschuwing", "Deze vraag is al gespeeld. Je kan hem niet nog een keer spelen.", "OK");
+				return;
 			}
 
-			return done;
-		}
+			_questionsAreClickable = false;
 
-		private async Task<bool> CheckIfEveryParticipantAnswered(Question tappedQuestion)
-		{
-			bool checking = true;
-			bool done = false;
+			tappedQuestion.IsTapped = true;
+			tappedQuestion.BackgroundColor = Colors.Green;
 
-			while (checking)
+			_tappedQuestionIds.Add(tappedQuestion.QuestionId);
+
+			await SetCurrentQuestion(tappedQuestion.Question);
+
+			if (await CheckIfEveryParticipantAnswered(tappedQuestion.Question))
 			{
-				if (await tappedQuestion.CheckIfAnswerHasBeenGiven(_session))
-				{
-					done = true;
-					checking = false;
-				}
-				await Task.Delay(500);
+				_questionsAreClickable = true;
 			}
 
-			return done;
+			if (Questions.All(q => q.IsTapped))
+			{
+				if (await CheckIfSessionDone())
+				{
+					await Application.Current.MainPage.Navigation.PushAsync(new GameStatisticsPage(_participant));
+				}
+			}
 		}
 
 		private async Task StopGame()
 		{
 			await _participant.SetGameToClose();
 			await Application.Current.MainPage.Navigation.PushAsync(new GameStatisticsPage(_participant));
+		}
+
+		private async Task<bool> CheckIfSessionDone()
+		{
+			while (!await _participant.CheckIfAllQuestionsAnswered())
+			{
+				await Task.Delay(500);
+			}
+			return true;
+		}
+
+		private async Task<bool> CheckIfEveryParticipantAnswered(Question tappedQuestion)
+		{
+			while (!await tappedQuestion.CheckIfAnswerHasBeenGiven(_session))
+			{
+				await Task.Delay(1000);
+			}
+			return true;
+		}
+
+		private async Task SetCurrentQuestion(Question tappedQuestion)
+		{
+			await tappedQuestion.SetCurrentQuestion(_session);
+		}
+	}
+
+	public partial class QuestionViewModel : ObservableObject
+	{
+		private readonly Question _question;
+		private Color _backgroundColor = Colors.White;
+		private bool _isTapped;
+
+		public QuestionViewModel(Question question)
+		{
+			_question = question;
+		}
+
+		public int QuestionId => _question.QuestionId;
+		public string Text => _question.Text;
+		public Question Question => _question;
+
+		public Color BackgroundColor
+		{
+			get => _backgroundColor;
+			set => SetProperty(ref _backgroundColor, value);
+		}
+
+		public bool IsTapped
+		{
+			get => _isTapped;
+			set => SetProperty(ref _isTapped, value);
 		}
 	}
 }

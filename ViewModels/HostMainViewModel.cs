@@ -1,9 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Threading.Tasks;
 using TruthOrDrink.Model;
 using TruthOrDrink.DataAccessLayer;
-using Microsoft.Maui.Controls;
 using TruthOrDrink.Pages;
 
 namespace TruthOrDrink.ViewModels
@@ -29,16 +27,12 @@ namespace TruthOrDrink.ViewModels
 
 		private async Task NavigateToChooseGamePage()
 		{
-			// Navigate to HostChooseGamePage
-			var page = new HostChooseGamePage(_host);
-			await App.Current.MainPage.Navigation.PushAsync(page);
+			await App.Current.MainPage.Navigation.PushAsync(new HostChooseGamePage(_host));
 		}
 
 		private async Task NavigateToProfilePage()
 		{
-			// Navigate to ProfilePage
-			var page = new ProfilePage(_host);
-			await App.Current.MainPage.Navigation.PushAsync(page);
+			await App.Current.MainPage.Navigation.PushAsync(new ProfilePage(_host));
 		}
 
 		private async Task Logout()

@@ -1,68 +1,66 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SQLite;
 using TruthOrDrink.DataAccessLayer;
-using SQLite;
 
 namespace TruthOrDrink.Model
 {
-	[SQLite.Table("Question")]
+	[Table("Question")]
 	public class Question
 	{
-		private int _questionid;
+		private int _questionId;
 		private string _text;
 		private int _gameId;
-		private bool _isenabled = true;
-		private bool _istapped;
+		private bool _isEnabled = true;
+		private bool _isTapped;
 
 		[PrimaryKey]
 		public int QuestionId
 		{
-			get { return _questionid; }
-			set { _questionid = value; }
+			get { return _questionId; }
+			set { _questionId = value; }
 		}
+
 		public string Text
 		{
 			get { return _text; }
 			set { _text = value; }
 		}
+
 		public int GameId
 		{
 			get { return _gameId; }
 			set { _gameId = value; }
 		}
-		public bool IsEnabled 
-		{  
-			get { return _isenabled; }
-			set { _isenabled = value; }
+
+		public bool IsEnabled
+		{
+			get { return _isEnabled; }
+			set { _isEnabled = value; }
 		}
 
 		public bool IsTapped
 		{
-			get { return _istapped; }
-			set { _istapped = value; }
+			get { return _isTapped; }
+			set { _isTapped = value; }
 		}
 
 		private readonly SupabaseService _supabaseService = new SupabaseService();
 
-		public Question(int questionid, string text, int gameid)
+		public Question(int questionId, string text, int gameId)
 		{
-			_questionid = questionid;
+			_questionId = questionId;
 			_text = text;
-			_gameId = gameid;
+			_gameId = gameId;
 		}
 
-		public Question(int questionid, string text)
+		public Question(int questionId, string text)
 		{
-			_questionid = questionid;
+			_questionId = questionId;
 			_text = text;
 		}
 
-		public Question(int questionid)
+		public Question(int questionId)
 		{
-			_questionid = questionid;
+			_questionId = questionId;
 		}
 
 		public Question(string text)
@@ -70,12 +68,12 @@ namespace TruthOrDrink.Model
 			_text = text;
 		}
 
-		public Question() { } // Local database needs parameterless constructor
+		public Question() { } // Required for SQLite and other ORM frameworks
+
 		public async Task AddQuestionByParticipant()
 		{
 			_supabaseService.AddQuestionByParticipant(this);
 		}
-
 
 		public async Task SetCurrentQuestion(Session session)
 		{

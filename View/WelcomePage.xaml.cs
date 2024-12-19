@@ -7,7 +7,7 @@ namespace TruthOrDrink
 		public WelcomePage()
 		{
 			InitializeComponent();
-			BindingContext = new WelcomePageViewModel(Navigation);
+			BindingContext = new WelcomePageViewModel();
 		}
 	}
 }

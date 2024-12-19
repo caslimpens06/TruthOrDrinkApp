@@ -1,18 +1,16 @@
 ﻿using System.ComponentModel;
 using System.Windows.Input;
-using TruthOrDrink.DataAccessLayer;
 using TruthOrDrink.Model;
-using TruthOrDrink.Pages;
+using TruthOrDrink.View;
 
 namespace TruthOrDrink.ViewModels
 {
 	public partial class WaitOnHostViewModel : INotifyPropertyChanged
 	{
-		private readonly SupabaseService _supabaseService;
-		private readonly INavigation _navigation;
 		private Participant _participant;
 		private double _waitingLabelOpacity;
 		private bool _isFlickering;
+		private bool _notStarted;
 
 		public double WaitingLabelOpacity
 		{
@@ -29,30 +27,32 @@ namespace TruthOrDrink.ViewModels
 
 		public ICommand LeaveGameCommand { get; }
 
-		public WaitOnHostViewModel(Participant participant, INavigation navigation)
+		public WaitOnHostViewModel(Participant participant)
 		{
 			_participant = participant;
-			_supabaseService = new SupabaseService();
-			_navigation = navigation;
 			WaitingLabelOpacity = 1;
 			LeaveGameCommand = new Command(async () => await LeaveGame());
+
 			WaitOnHost();
 		}
 
 		private async void WaitOnHost()
 		{
-			bool notStarted = true;
+			_notStarted = true;
+
+			// Start flickering the label
 			StartFlickering();
 
-			while (notStarted)
+			// Continuously check if the session has started
+			while (_notStarted)
 			{
-				bool sessionStarted = await _supabaseService.CheckIfSessionHasStartedAsync(_participant);
-
+				Session session = new Session(_participant.SessionCode);
+				bool sessionStarted = await session.CheckIfSessionHasStarted();
 				if (sessionStarted)
 				{
-					notStarted = false;
+					_notStarted = false;
 					StopFlickering();
-					await _navigation.PushAsync(new ParticipantGamePage(_participant));
+					await Application.Current.MainPage.Navigation.PushAsync(new ParticipantGamePage(_participant));
 				}
 
 				await Task.Delay(2000);
@@ -81,7 +81,7 @@ namespace TruthOrDrink.ViewModels
 		private async Task LeaveGame()
 		{
 			await _participant.RemoveParticipantAsync();
-			await _navigation.PopToRootAsync();
+			await Application.Current.MainPage.Navigation.PopToRootAsync();
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

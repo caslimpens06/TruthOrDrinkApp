@@ -1,16 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TruthOrDrink.Pages.OfflineGamePage">
+             xmlns:vm="clr-namespace:TruthOrDrink.ViewModels"
+             x:Class="TruthOrDrink.View.OfflineGamePage"
+             NavigationPage.HasBackButton="True">
 
-    <StackLayout Padding="20">
-        <Label Text="Choose a Game Session" FontSize="32" HorizontalOptions="Center" />
+    <ContentPage.BindingContext>
+        <vm:OfflineGameViewModel />
+    </ContentPage.BindingContext>
 
-        <Button Text="Join Game 1" Command="{Binding JoinGame1Command}" />
-        <Button Text="Join Game 2" Command="{Binding JoinGame2Command}" />
-        <Button Text="Join Game 3" Command="{Binding JoinGame3Command}" />
-        <Button Text="Join Game 4" Command="{Binding JoinGame4Command}" />
-        <Button Text="Join Game 5" Command="{Binding JoinGame5Command}" />
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource StandardSpacing}">
 
-        <Button Text="Leave Game" Command="{Binding LeaveGameCommand}" />
-    </StackLayout>
+            <Label Text="Offline-Modus"
+                   Style="{StaticResource BoldTitleText}" />
+
+            <Label Text="Je kan alleen standaard vragensets spelen."
+                   Style="{StaticResource BoldTitleText}"
+                   FontSize="14" />
+
+            <Button Text="Geheimen ☆☆☆☆" 
+                    BackgroundColor="#4CAF50"  
+                    Style="{StaticResource QuestionLists}" 
+                    Command="{Binding JoinGame1Command}" />
+
+            <Button Text="Relaties en Liefde ☆☆☆☆☆"
+                    BackgroundColor="#2196F3"  
+                    Style="{StaticResource QuestionLists}"  
+                    Command="{Binding JoinGame2Command}" />
+
+            <Button Text="Drank en Feestjes ☆☆☆" 
+                    BackgroundColor="#FF5722"  
+                    Style="{StaticResource QuestionLists}" 
+                    Command="{Binding JoinGame3Command}" />
+
+            <Button Text="Geld ☆☆☆" 
+                    BackgroundColor="#9C27B0"  
+                    Style="{StaticResource QuestionLists}" 
+                    Command="{Binding JoinGame4Command}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

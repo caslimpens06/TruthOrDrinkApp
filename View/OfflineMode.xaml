@@ -1,12 +1,91 @@
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<FlyoutPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TruthOrDrink.Pages.OfflineMode"
-             Title="Offline Mode">
+             xmlns:vm="clr-namespace:TruthOrDrink.ViewModels"
+             x:Class="TruthOrDrink.View.OfflineMode"
+             NavigationPage.HasBackButton="True"
+             BackgroundColor="{StaticResource StandardMenu}">
 
-    <StackLayout Padding="20">
-        <Label Text="Offline Mode" FontSize="32" HorizontalOptions="Center" />
+    <FlyoutPage.BindingContext>
+        <vm:OfflineModeViewModel />
+    </FlyoutPage.BindingContext>
 
-        <Button Text="Go to Offline Game" Command="{Binding GoToOfflineGameCommand}" />
-        <Button Text="Close App" Command="{Binding CloseAppCommand}" />
-    </StackLayout>
-</ContentPage>
+    <FlyoutPage.Flyout>
+        <ContentPage Title="Menu" BackgroundColor="{StaticResource StandardMenu}">
+            <StackLayout Spacing="15" Margin="40" VerticalOptions="FillAndExpand">
+
+                <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                    <Frame Style="{StaticResource ProfileImageContainerStyle}">
+                        <Image Source="profile.jpg" 
+                               Aspect="AspectFill" 
+                               HeightRequest="100" 
+                               WidthRequest="100" />
+                    </Frame>
+                    <Label Text="Offline"
+                           Style="{StaticResource ProfileNameStyle}" />
+                </StackLayout>
+
+                <StackLayout Padding="20" HorizontalOptions="CenterAndExpand">
+
+                    <Button Text="Afsluiten" 
+                            Margin="10" 
+                            Style="{StaticResource LogoutTextStyle}" 
+                            Command="{Binding CloseAppCommand}" />
+                </StackLayout>
+
+                <Button Text="START SESSIE"
+                        Style="{StaticResource StartSessionButtonStyle}" 
+                        Command="{Binding GoToOfflineGameCommand}" />
+            </StackLayout>
+        </ContentPage>
+    </FlyoutPage.Flyout>
+
+    <FlyoutPage.Detail>
+        <NavigationPage>
+            <x:Arguments>
+                <ContentPage>
+                    <ContentPage.ToolbarItems>
+                        <ToolbarItem IconImageSource="custom_back_icon.png" 
+                                     Command="{Binding BackCommand}" />
+                    </ContentPage.ToolbarItems>
+                    <ScrollView Padding="20">
+                        <StackLayout Spacing="20">
+                            <Label Text="Truth or Drink" 
+                                   Style="{StaticResource BoldTitleText}" 
+                                   FontSize="30"
+                                   Margin="10"/>
+                            <Label Text="Let op - Je speelt in Offline-Modus"
+                                   Style="{StaticResource BoldTitleText}" 
+                                   FontSize="16"/>
+                            <Label Text="Spelregels" 
+                                   Style="{StaticResource BoldTitleText}" 
+                                   FontSize="20"
+                                   Margin="10"/>
+
+                            <StackLayout Spacing="30">
+                                <Label Text="1. Aantal spelers: Meestal 3 of meer spelers." 
+                                       Style="{StaticResource RuleTextStyle}" />
+                                <Label Text="2. Benodigdheden: Één Host die het spel beheert, een aantal deelnemers en veel drankjes!" 
+                                       Style="{StaticResource RuleTextStyle}" />
+                                <Label Text="3. Doel van het spel: Spelers beantwoorden persoonlijke vragen of drinken als ze de vraag niet willen beantwoorden." 
+                                       Style="{StaticResource RuleTextStyle}" />
+                                <Label Text="4. Spelverloop: 
+                                       
+                                       - De host kiest een vragenset.
+                                       - De deelnemers geven antwoord of drinken een slok." 
+                                       Style="{StaticResource RuleTextStyle}" />
+                                <Label Text="5. Variaties: Niet beschikbaar in offline-modus." 
+                                       Style="{StaticResource RuleTextStyle}" />
+                                <Label Text="6. Einde van het spel: Het spel eindigt wanneer de Host besluit te stoppen of als alle vragen door iedere deelnemer zijn beantwoord." 
+                                       Style="{StaticResource RuleTextStyle}" />
+                                <Label Text="NIX18 - drink met mate" 
+                                       FontAttributes="Bold"
+                                       Style="{StaticResource StandardCommentText}" />
+                            </StackLayout>
+                        </StackLayout>
+                    </ScrollView>
+                </ContentPage>
+            </x:Arguments>
+        </NavigationPage>
+    </FlyoutPage.Detail>
+</FlyoutPage>

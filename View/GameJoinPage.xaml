@@ -1,14 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TruthOrDrink.GameJoinPage"
-             NavigationPage.HasBackButton="True">
+             x:Class="TruthOrDrink.View.GameJoinPage">
 
     <ScrollView>
         <VerticalStackLayout Style="{StaticResource StandardSpacing}">
-            <Label Text="Game Join" Style="{StaticResource BoldTitleText}"/>
-            <Label Text="{Binding GameCode}" Style="{StaticResource StandardLabel}"/>
-            <Image Source="{Binding QrCodeImage}" Style="{StaticResource QRScanWindow}"/>
-            <Button Text="Play" Command="{Binding PlayCommand}" IsEnabled="{Binding IsPlayButtonEnabled}"/>
+
+            <Label Text="{Binding GameCode}"
+                   Style="{StaticResource BoldTitleText}" />
+
+            <Image HeightRequest="400"
+                   WidthRequest="400"
+                   Source="{Binding QrCodeImage}" />
+
+            <Button Text="Beheer spel" 
+                    WidthRequest="200"
+                    HeightRequest="50"
+                    BackgroundColor="SkyBlue"
+                    TextColor="White"
+                    FontSize="18"
+                    CornerRadius="10"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    Command="{Binding PlayCommand}"
+                    IsEnabled="{Binding IsPlayButtonEnabled}" />
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
