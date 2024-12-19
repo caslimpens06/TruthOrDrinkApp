@@ -74,6 +74,9 @@
 	  <Compile Update="View\GameJoinPage.xaml.cs">
 	    <DependentUpon>GameJoinPage.xaml</DependentUpon>
 	  </Compile>
+	  <Compile Update="View\GameStatisticsParticipantPage.xaml.cs">
+	    <DependentUpon>GameStatisticsParticipantPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="View\HostJoinParticipantPage.xaml.cs">
 	    <DependentUpon>HostJoinParticipantPage.xaml</DependentUpon>
 	  </Compile>
@@ -92,7 +95,10 @@
 	  <MauiXaml Update="View\GameJoinPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="View\GameStatisticsPage.xaml">
+	  <MauiXaml Update="View\GameStatisticsHostPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\GameStatisticsParticipantPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\HostControlsGamePage.xaml">

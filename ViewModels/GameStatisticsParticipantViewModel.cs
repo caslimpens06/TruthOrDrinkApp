@@ -4,7 +4,7 @@ using TruthOrDrink.Model;
 
 namespace TruthOrDrink.ViewModels
 {
-	public class GameStatisticsViewModel : ObservableObject
+	public class GameStatisticsParticipantViewModel : ObservableObject
 	{
 		private Participant _participant;
 		private string _truthLabel;
@@ -14,7 +14,7 @@ namespace TruthOrDrink.ViewModels
 		private string _topTruthImage;
 		private string _topDrinkImage;
 
-		public GameStatisticsViewModel(Participant participant)
+		public GameStatisticsParticipantViewModel(Participant participant)
 		{
 			_participant = participant;
 			ToMainMenuCommand = new AsyncRelayCommand(ToMainMenu);
@@ -104,7 +104,6 @@ namespace TruthOrDrink.ViewModels
 		private async Task ToMainMenu()
 		{
 			await _participant.RemoveParticipantAsync();
-			await Application.Current.MainPage.Navigation.PopToRootAsync();
 		}
 	}
 }

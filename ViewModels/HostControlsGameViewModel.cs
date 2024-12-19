@@ -67,7 +67,7 @@ namespace TruthOrDrink.ViewModels
 			{
 				if (await CheckIfSessionDone())
 				{
-					await Application.Current.MainPage.Navigation.PushAsync(new GameStatisticsPage(_participant));
+					await Application.Current.MainPage.Navigation.PushAsync(new GameStatisticsHostPage(_participant));
 				}
 			}
 		}
@@ -75,7 +75,7 @@ namespace TruthOrDrink.ViewModels
 		private async Task StopGame()
 		{
 			await _participant.SetGameToClose();
-			await Application.Current.MainPage.Navigation.PushAsync(new GameStatisticsPage(_participant));
+			await Application.Current.MainPage.Navigation.PushAsync(new GameStatisticsHostPage(_participant));
 		}
 
 		private async Task<bool> CheckIfSessionDone()

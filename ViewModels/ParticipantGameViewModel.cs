@@ -158,7 +158,7 @@ public partial class ParticipantGameViewModel : ObservableObject
 			await _participant.SetAllQuestionsToAnswered();
 			if (await CheckIfSessionDoneAsync())
 			{
-				await _navigation.PushAsync(new GameStatisticsPage(_participant));
+				await _navigation.PushAsync(new GameStatisticsParticipantPage(_participant));
 			}
 		}
 	}
@@ -187,7 +187,7 @@ public partial class ParticipantGameViewModel : ObservableObject
 
 		if (isGameClosed)
 		{
-			await _navigation.PushAsync(new GameStatisticsPage(_participant));
+			await _navigation.PushAsync(new GameStatisticsParticipantPage(_participant));
 		}
 	}
 

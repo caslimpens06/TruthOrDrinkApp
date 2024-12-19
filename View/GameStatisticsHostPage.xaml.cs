@@ -3,12 +3,12 @@ using TruthOrDrink.ViewModels;
 
 namespace TruthOrDrink.View
 {
-	public partial class HostControlsGamePage : ContentPage
+	public partial class GameStatisticsHostPage : ContentPage
 	{
-		public HostControlsGamePage(Session session)
+		public GameStatisticsHostPage(Participant participant)
 		{
 			InitializeComponent();
-			BindingContext = new HostControlsGameViewModel(session);
+			BindingContext = new GameStatisticsHostViewModel(participant);
 		}
 		protected override bool OnBackButtonPressed()
 		{
