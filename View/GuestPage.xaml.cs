@@ -1,7 +1,7 @@
 using TruthOrDrink.Model;
 using TruthOrDrink.ViewModels;
 
-namespace TruthOrDrink
+namespace TruthOrDrink.View
 {
 	public partial class GuestPage : ContentPage
 	{

@@ -3,6 +3,7 @@ using System.Windows.Input;
 using TruthOrDrink.DataAccessLayer;
 using TruthOrDrink.Model;
 using TruthOrDrink.Pages;
+using TruthOrDrink.View;
 
 namespace TruthOrDrink.ViewModels
 {
@@ -10,7 +11,6 @@ namespace TruthOrDrink.ViewModels
 	{
 		private readonly SQLiteService _sqliteService = new SQLiteService();
 		private Host _host;
-		private INavigation _navigation;
 
 		public Host Host
 		{
@@ -26,9 +26,8 @@ namespace TruthOrDrink.ViewModels
 		public ICommand NavigateToHostCommand { get; }
 		public ICommand NavigateToParticipantCommand { get; }
 
-		public WelcomePageViewModel(INavigation navigation)
+		public WelcomePageViewModel()
 		{
-			_navigation = navigation;
 
 			NavigateToSignupCommand = new Command(async () => await NavigateToSignup());
 			NavigateToHostCommand = new Command(async () => await NavigateToHost());
@@ -43,23 +42,23 @@ namespace TruthOrDrink.ViewModels
 
 			if (Host != null)
 			{
-				await _navigation.PushAsync(new HostMainPage(Host));
+				await App.Current.MainPage.Navigation.PushAsync(new HostMainPage(Host));
 			}
 		}
 
 		private async Task NavigateToSignup()
 		{
-			await _navigation.PushAsync(new SignUpPage());
+			await App.Current.MainPage.Navigation.PushAsync(new SignUpPage());
 		}
 
 		private async Task NavigateToHost()
 		{
-			await _navigation.PushAsync(new LoginPage());
+			await App.Current.MainPage.Navigation.PushAsync(new LoginPage());
 		}
 
 		private async Task NavigateToParticipant()
 		{
-			await _navigation.PushAsync(new GuestIdentifierPage());
+			await App.Current.MainPage.Navigation.PushAsync(new GuestIdentifierPage());
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

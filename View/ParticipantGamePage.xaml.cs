@@ -1,7 +1,7 @@
 using TruthOrDrink.Model;
 using TruthOrDrink.ViewModels;
 
-namespace TruthOrDrink.Pages
+namespace TruthOrDrink.View
 {
 	public partial class ParticipantGamePage : ContentPage
 	{
@@ -9,6 +9,11 @@ namespace TruthOrDrink.Pages
 		{
 			InitializeComponent();
 			BindingContext = new ParticipantGameViewModel(participant);
+		}
+
+		protected override bool OnBackButtonPressed()
+		{
+			return true;
 		}
 	}
 }

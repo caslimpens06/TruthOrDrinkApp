@@ -1,10 +1,27 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TruthOrDrink.QRScannerPage"
-             Title="QR Scanner">
+             xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.Maui.Controls"
+             x:Class="TruthOrDrink.View.QRScannerPage"
+             NavigationPage.HasBackButton="True">
 
-    <StackLayout>
-        <Label Text="Scan a QR Code" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
-        <Button Text="Start Scanning" Command="{Binding ProcessBarcodeCommand}" />
-    </StackLayout>
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource StandardSpacing}">
+
+            <Image
+                Style="{StaticResource LogoImage}" />
+
+            <Label 
+                Text="Scan de QR-Code"
+                Style="{StaticResource BoldTitleText}" />
+            
+            <Label 
+                Margin="50" /> 
+            
+            <zxing:CameraBarcodeReaderView
+                x:Name="BarcodeReader"
+                Style="{StaticResource QRScanWindow}"
+                BarcodesDetected="OnBarcodesDetected" />
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

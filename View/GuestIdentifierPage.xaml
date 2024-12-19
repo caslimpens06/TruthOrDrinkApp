@@ -1,17 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TruthOrDrink.GuestIdentifierPage"
-             BackgroundColor="White"
-             NavigationPage.HasBackButton="True">
+             xmlns:vm="clr-namespace:TruthOrDrink.ViewModels"
+             x:Class="TruthOrDrink.GuestIdentifierPage">
 
-    <VerticalStackLayout Padding="20">
-        <Label Text="Guest Identifier" FontSize="24" HorizontalOptions="Center"/>
-        <Entry x:Name="NameEntry" Placeholder="Enter your name"/>
-        <Label Text="Choose your gender:"/>
-        <StackLayout Orientation="Horizontal">
-            <Button Text="Male" Command="{Binding ChooseMaleCommand}"/>
-            <Button Text="Female" Command="{Binding ChooseFemaleCommand}"/>
-        </StackLayout>
-        <Button Text="Continue" Command="{Binding ContinueCommand}"/>
-    </VerticalStackLayout>
+    <ContentPage.BindingContext>
+        <vm:GuestIdentifierViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource StandardSpacing}">
+
+            <Image
+                x:Name="LogoImage"
+                Style="{StaticResource LogoImage}"/>
+
+            <Label 
+                Text="Vul je naam in"
+                Style="{StaticResource BoldTitleText}" />
+
+            <Entry 
+                Placeholder="Typ je naam hier" 
+                Text="{Binding ParticipantName}" 
+                Style="{StaticResource StandardEntry}" />
+
+            <Label 
+                Text="Vul je geslacht in"
+                Style="{StaticResource BoldTitleText}" />
+
+            <HorizontalStackLayout Spacing="20" HorizontalOptions="Center">
+                <Button
+                    Text="Man"
+                    Style="{StaticResource StandardMaleButton}"
+                    Command="{Binding ChooseMaleCommand}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsMaleSelected}" Value="true">
+                            <Setter Property="Opacity" Value="1" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsMaleSelected}" Value="false">
+                            <Setter Property="Opacity" Value="0.5" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+
+                <Button
+                    Text="Vrouw"
+                    Style="{StaticResource StandardFemaleButton}"
+                    Command="{Binding ChooseFemaleCommand}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsFemaleSelected}" Value="true">
+                            <Setter Property="Opacity" Value="1" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsFemaleSelected}" Value="false">
+                            <Setter Property="Opacity" Value="0.5" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+
+            </HorizontalStackLayout>
+
+            <Button 
+                Text="Ga verder" 
+                Style="{StaticResource SelectButtonStyle}"  
+                Command="{Binding ContinueCommand}" />
+
+            <Label 
+                Text="Je naam en geslacht worden gebruikt in het spel." 
+                Style="{StaticResource StandardCommentText}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

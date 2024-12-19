@@ -1,14 +1,14 @@
 using TruthOrDrink.Model;
 using TruthOrDrink.ViewModels;
 
-namespace TruthOrDrink.Pages
+namespace TruthOrDrink.View
 {
 	public partial class WaitOnHostPage : ContentPage
 	{
 		public WaitOnHostPage(Participant participant)
 		{
 			InitializeComponent();
-			BindingContext = new WaitOnHostViewModel(participant, Navigation);
+			BindingContext = new WaitOnHostViewModel(participant);
 		}
 
 		protected override bool OnBackButtonPressed()

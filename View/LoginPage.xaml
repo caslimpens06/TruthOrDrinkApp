@@ -1,21 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TruthOrDrink.LoginPage"
-             Title="Login">
+             x:Class="TruthOrDrink.LoginPage">
 
-    <StackLayout Padding="20">
-        <Label Text="Login" FontSize="32" HorizontalOptions="Center" />
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource StandardSpacing}">
 
-        <Entry x:Name="EmailEntry" 
-               Placeholder="Email" 
-               Text="{Binding Email}" 
-               Keyboard="Email" />
+            <Image
+                x:Name="LogoImage"
+                Style="{StaticResource LogoImage}" />
+            
+            <Label
+                Text="Login"
+                Style="{StaticResource BoldTitleText}" />
+            
+            <Entry
+                   Placeholder="Typ je email hier" 
+                   Text="{Binding Email}"
+                   Style="{StaticResource StandardEntry}"/>
 
-        <Entry x:Name="PasswordEntry" 
-               Placeholder="Password" 
-               Text="{Binding Password}" 
-               IsPassword="True" />
+            <Entry 
+                   Placeholder="Typ je wachtwoord hier" 
+                   IsPassword="True" 
+                   Text="{Binding Password}"
+                   Style="{StaticResource StandardEntry}"/>
 
-        <Button Text="Login" Command="{Binding LoginCommand}" />
-    </StackLayout>
+            <Button 
+                    Text="Inloggen" 
+                    Style="{StaticResource SelectButtonStyle}" 
+                    Command="{Binding LoginCommand}" />
+
+            <Label Text="Bij vergeten inloggegevens kan het account niet hersteld worden."
+                   Style="{StaticResource StandardCommentText}"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

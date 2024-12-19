@@ -1,45 +1,72 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TruthOrDrink.Model;
-using TruthOrDrink.Pages;
+using TruthOrDrink.View;
 
-namespace TruthOrDrink.ViewModels
+namespace TruthOrDrink.ViewModels;
+
+public partial class QRScannerViewModel : ObservableObject
 {
-	public class QRScannerViewModel : ObservableObject
+	private readonly Participant _participant;
+
+	public QRScannerViewModel(Participant participant)
 	{
-		private readonly Participant _participant;
+		_participant = participant;
+	}
 
-		public QRScannerViewModel(Participant participant)
+	private bool _isProcessing;
+	private string _lastProcessedBarcode;
+
+	[RelayCommand]
+	public async Task ProcessBarcode(string barcodeValue)
+	{
+		if (_isProcessing || barcodeValue == _lastProcessedBarcode) return;
+
+		_isProcessing = true;
+		_lastProcessedBarcode = barcodeValue;
+
+		try
 		{
-			_participant = participant;
-			ProcessBarcodeCommand = new RelayCommand<string>(ProcessBarcode);
-		}
-
-		public IRelayCommand<string> ProcessBarcodeCommand { get; }
-
-		private async void ProcessBarcode(string barcodeValue)
-		{
-			if (!string.IsNullOrEmpty(barcodeValue))
+			if (int.TryParse(barcodeValue, out int sessionCode))
 			{
-				int sessionCode;
-				if (int.TryParse(barcodeValue, out sessionCode))
+				Session session = new Session(sessionCode);
+
+				if (await session.CheckIfSessionExistsAsync())
 				{
-					Session session = new Session(sessionCode);
-					if (await session.CheckIfSessionExistsAsync())
+					bool hasStarted = await session.CheckIfSessionHasStarted();
+					if (!hasStarted)
 					{
-						// Proceed to join the session or navigate to the appropriate page
-						await App.Current.MainPage.Navigation.PushAsync(new ParticipantGamePage(_participant));
+						Participant participant = new Participant(_participant.ParticipantId, sessionCode);
+						await participant.JoinParticipantToSession();
+
+						if (await session.CheckIfCustomGame())
+						{
+							await Application.Current.MainPage.Navigation.PushAsync(new QuestionInputPage(participant));
+						}
+						else 
+						{
+							await Application.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(participant));
+						}
 					}
 					else
 					{
-						await App.Current.MainPage.DisplayAlert("Invalid Session", "The session does not exist.", "OK");
+						await Application.Current.MainPage.DisplayAlert("Fout", "Je kan niet meer deelnemen, het spel is al gestart.", "OK");
+						await Application.Current.MainPage.Navigation.PopAsync();
 					}
 				}
 				else
 				{
-					await App.Current.MainPage.DisplayAlert("Invalid Code", "The scanned code is not valid.", "OK");
+					await Application.Current.MainPage.DisplayAlert("Ongeldige sessiecode", "Verifieer of de host al een spel heeft gemaakt.", "OK");
 				}
 			}
+			else
+			{
+				await Application.Current.MainPage.DisplayAlert("Ongeldige sessiecode", "De gescande code is niet geldig.", "OK");
+			}
+		}
+		finally
+		{
+			_isProcessing = false;
 		}
 	}
 }

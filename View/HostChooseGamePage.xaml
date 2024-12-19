@@ -1,15 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TruthOrDrink.HostChooseGamePage"
              NavigationPage.HasBackButton="True">
 
-    <VerticalStackLayout Padding="20">
-        <Label Text="Choose Game" FontSize="24" HorizontalOptions="Center"/>
-        <Button Text="Game 1" Command="{Binding NavigateToGame1Command}"/>
-        <Button Text="Game 2" Command="{Binding NavigateToGame2Command}"/>
-        <Button Text="Game 3" Command="{Binding NavigateToGame3Command}"/>
-        <Button Text="Game 4" Command="{Binding NavigateToGame4Command}"/>
-        <Button Text="Game 5" Command="{Binding NavigateToGame5Command}"/>
-        <Button Text="Leave Game" Command="{Binding LeaveGameCommand}"/>
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource StandardSpacing}">
+
+            <Label Text="Vragensets"
+                   Style="{StaticResource BoldTitleText}"/>
+
+            <Button Text="Geheimen ☆☆☆☆" 
+                    BackgroundColor="#4CAF50"  
+                    Style="{StaticResource QuestionLists}" 
+                    Command="{Binding NavigateToGame1Command}" />
+
+            <Button Text="Relaties en Liefde ☆☆☆☆☆"
+                    BackgroundColor="#2196F3"  
+                    Style="{StaticResource QuestionLists}"  
+                    Command="{Binding NavigateToGame2Command}" />
+
+            <Button Text="Drank en Feestjes ☆☆☆" 
+                    BackgroundColor="#FF5722"  
+                    Style="{StaticResource QuestionLists}" 
+                    Command="{Binding NavigateToGame3Command}" />
+
+            <Button Text="Geld ☆☆☆" 
+                    BackgroundColor="#9C27B0"  
+                    Style="{StaticResource QuestionLists}" 
+                    Command="{Binding NavigateToGame4Command}" />
+
+            <Button Text="Custom vragenset maken ☆" 
+                    BackgroundColor="#FF8C00"  
+                    Style="{StaticResource QuestionLists}" 
+                    Command="{Binding NavigateToGame5Command}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

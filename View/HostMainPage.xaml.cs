@@ -1,8 +1,7 @@
-using Microsoft.Maui.Controls;
 using TruthOrDrink.Model;
 using TruthOrDrink.ViewModels;
 
-namespace TruthOrDrink.Pages
+namespace TruthOrDrink.View
 {
 	public partial class HostMainPage : FlyoutPage
 	{
@@ -14,8 +13,8 @@ namespace TruthOrDrink.Pages
 
 		protected override bool OnBackButtonPressed()
 		{
-			IsPresented = !IsPresented; // Toggle the flyout menu
-			return true; // Prevent back navigation
+			IsPresented = !IsPresented;
+			return true;
 		}
 	}
 }

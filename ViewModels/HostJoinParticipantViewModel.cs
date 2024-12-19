@@ -2,13 +2,13 @@
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using TruthOrDrink.Model;
-using TruthOrDrink.Pages;
+using TruthOrDrink.View;
 
 namespace TruthOrDrink.ViewModels
 {
 	public class HostJoinParticipantViewModel : ObservableObject
 	{
-		private readonly Session _session;
+		private Session _session;
 		private readonly ObservableCollection<Participant> _participants = new ObservableCollection<Participant>();
 
 		public HostJoinParticipantViewModel(Session session)
@@ -27,7 +27,13 @@ namespace TruthOrDrink.ViewModels
 
 		public async Task RefreshContent()
 		{
-			var participants = await _session.GetParticipantsBySession();
+			List<Participant> participants = await _session.GetParticipantsBySession();
+			foreach (Participant participant in participants) { Console.WriteLine(participant.Name); }
+			if (participants == null || !participants.Any())
+			{
+				Console.WriteLine("No participants found!");
+			}
+
 			_participants.Clear();
 			foreach (var participant in participants)
 			{
@@ -37,8 +43,7 @@ namespace TruthOrDrink.ViewModels
 
 		public async Task StartGame()
 		{
-			_session.StartGame();
-			// Navigate to HostControlsGamePage
+			await _session.StartGame();
 			await App.Current.MainPage.Navigation.PushAsync(new HostControlsGamePage(_session));
 		}
 

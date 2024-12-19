@@ -1,7 +1,7 @@
 using TruthOrDrink.ViewModels;
 using TruthOrDrink.Model;
 
-namespace TruthOrDrink
+namespace TruthOrDrink.View
 {
 	public partial class GameJoinPage : ContentPage
 	{
