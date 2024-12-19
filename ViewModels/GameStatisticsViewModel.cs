@@ -74,7 +74,7 @@ namespace TruthOrDrink.ViewModels
 			{
 				TruthLabel = "Geen Data";
 				TopTruthCount = "Geen Data";
-				TopTruthImage = null;
+				TopTruthImage = "blankimage.png";
 			}
 
 			if (drinkParticipant != null)
@@ -87,7 +87,7 @@ namespace TruthOrDrink.ViewModels
 			{
 				DrinkLabel = "Geen Data";
 				TopDrinkCount = "Geen Data";
-				TopDrinkImage = null;
+				TopDrinkImage = "blankimage.png";
 			}
 		}
 

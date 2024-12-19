@@ -2,109 +2,148 @@
 using CommunityToolkit.Mvvm.Input;
 using TruthOrDrink.DataAccessLayer;
 using TruthOrDrink.Model;
+using System.Threading.Tasks;
 
 namespace TruthOrDrink.ViewModels
 {
 	public class ProfileViewModel : ObservableObject
 	{
 		private readonly SQLiteService _sqliteService = new SQLiteService();
-		private Host _host;
+		private readonly Host _originalHost;
+
+		private bool _isNameReadOnly;
+		private bool _isPasswordReadOnly;
+		private string _confirmPassword;
+		private string _password;
 
 		public ProfileViewModel(Host host)
 		{
-			_host = host;
-			Name = _host.Name;
-			Email = _host.Email;
+			_originalHost = new Host(host.HostId, host.Name, host.Email, host.Password);
+			Host = new Host(host.HostId, host.Name, host.Email, host.Password);
+
+			Password = string.Empty;
+			ConfirmPassword = string.Empty;
+
 			IsNameReadOnly = true;
 			IsPasswordReadOnly = true;
-			EditNameCommand = new AsyncRelayCommand(EditName);
-			ShowPasswordCommand = new AsyncRelayCommand(ShowPassword);
+
+			EditNameCommand = new RelayCommand(EditName);
+			EditPasswordCommand = new RelayCommand(EditPassword);
 			SaveCommand = new AsyncRelayCommand(Save);
 		}
 
-		public string Name { get; set; }
-		public string Email { get; set; }
-		public string Password { get; set; }
-		public string ConfirmPassword { get; set; }
+		public Host Host { get; }
 
-		public bool IsNameReadOnly { get; private set; }
-		public bool IsPasswordReadOnly { get; private set; }
-
-		public string NameButtonText => IsNameReadOnly ? "Edit" : "Done";
-
-		public IAsyncRelayCommand EditNameCommand { get; }
-		public IAsyncRelayCommand ShowPasswordCommand { get; }
-		public IAsyncRelayCommand SaveCommand { get; }
-
-		private Task EditName()
+		public string Password
 		{
-			IsNameReadOnly = !IsNameReadOnly;
-			OnPropertyChanged(nameof(IsNameReadOnly));
-			OnPropertyChanged(nameof(NameButtonText));
-			return Task.CompletedTask; // Return a completed task
+			get => _password;
+			set => SetProperty(ref _password, value);
 		}
 
-		private async Task ShowPassword()
+		public string ConfirmPassword
+		{
+			get => _confirmPassword;
+			set => SetProperty(ref _confirmPassword, value);
+		}
+
+		public bool IsNameReadOnly
+		{
+			get => _isNameReadOnly;
+			set => SetProperty(ref _isNameReadOnly, value);
+		}
+
+		public bool IsPasswordReadOnly
+		{
+			get => _isPasswordReadOnly;
+			set => SetProperty(ref _isPasswordReadOnly, value);
+		}
+
+		public string NameButtonText => IsNameReadOnly ? "Bewerk" : "Klaar";
+		public string PasswordButtonText => IsPasswordReadOnly ? "Bewerk" : "Klaar";
+
+		public IRelayCommand EditNameCommand { get; }
+		public IRelayCommand EditPasswordCommand { get; }
+		public IAsyncRelayCommand SaveCommand { get; }
+
+		private void EditName()
+		{
+			IsNameReadOnly = !IsNameReadOnly;
+			OnPropertyChanged(nameof(NameButtonText));
+		}
+
+		private void EditPassword()
 		{
 			IsPasswordReadOnly = !IsPasswordReadOnly;
-			OnPropertyChanged(nameof(IsPasswordReadOnly));
+			OnPropertyChanged(nameof(PasswordButtonText));
+
+			if (!IsPasswordReadOnly)
+			{
+				Password = string.Empty;
+				ConfirmPassword = string.Empty;
+			}
 		}
 
 		private async Task Save()
 		{
-			if (string.IsNullOrEmpty(Name))
+			bool isNameChanged = Host.Name != _originalHost.Name;
+			bool isPasswordChanged = !string.IsNullOrWhiteSpace(Password);
+
+			if (!isNameChanged && !isPasswordChanged)
 			{
-				await App.Current.MainPage.DisplayAlert("Invalid Input", "Please enter a valid name.", "OK");
+				await App.Current.MainPage.DisplayAlert("Geen Wijzigingen", "Er zijn geen wijzigingen gedetecteerd.", "OK");
 				return;
 			}
 
-			if (string.IsNullOrWhiteSpace(Password))
+			if (isNameChanged && string.IsNullOrEmpty(Host.Name))
 			{
-				await App.Current.MainPage.DisplayAlert("Invalid Input", "Password cannot be empty.", "OK");
+				await App.Current.MainPage.DisplayAlert("Ongeldige Invoer", "Naam mag niet leeg zijn.", "OK");
 				return;
 			}
 
-			if (Password.Length < 8)
-			{
-				await App.Current.MainPage.DisplayAlert("Invalid Input", "Password must be at least 8 characters long.", "OK");
-				return;
-			}
+			string finalPassword = _originalHost.Password;
 
-			bool hasSpecialChar = false;
-			foreach (char ch in Password)
+			if (isPasswordChanged)
 			{
-				if ("@#$%&!".Contains(ch))
+				if (Password != ConfirmPassword)
 				{
-					hasSpecialChar = true;
-					break;
+					await App.Current.MainPage.DisplayAlert("Wachtwoord Mismatch", "De wachtwoorden komen niet overeen.", "OK");
+					return;
 				}
+
+				if (Password.Length < 8)
+				{
+					await App.Current.MainPage.DisplayAlert("Ongeldige Invoer", "Wachtwoord moet minstens 8 tekens lang zijn.", "OK");
+					return;
+				}
+
+				bool hasSpecialChar = Password.Any(ch => "@#$%&!".Contains(ch));
+				if (!hasSpecialChar)
+				{
+					await App.Current.MainPage.DisplayAlert("Ongeldige Invoer", "Wachtwoord moet minstens één speciaal teken bevatten (@#$%&!).", "OK");
+					return;
+				}
+
+				var passwordHasher = new PasswordHasher(Password);
+				finalPassword = passwordHasher.HashPassword();
 			}
 
-			if (!hasSpecialChar)
-			{
-				await App.Current.MainPage.DisplayAlert("Invalid Input", "Password must contain at least one special character.", "OK");
-				return;
-			}
+			var updatedHost = new Host(Host.HostId, Host.Name, Host.Email, finalPassword);
 
-			if (Password != ConfirmPassword)
-			{
-				await App.Current.MainPage.DisplayAlert("Password Mismatch", "Passwords do not match.", "OK");
-				return;
-			}
-
-			// Save the updated host information
-			var passwordHasher = new PasswordHasher(Password);
-			string hashedPassword = passwordHasher.HashPassword();
-
-			Host updatedHost = new Host(_host.HostId, Name, _host.Email, hashedPassword);
 			await _sqliteService.UpdateHostAsync(updatedHost);
 			await updatedHost.UpdateHostCredentials();
 
-			await App.Current.MainPage.DisplayAlert("Saved", "Your profile has been updated.", "OK");
+			await App.Current.MainPage.DisplayAlert("Opgeslagen", "Je profiel is bijgewerkt.", "OK");
+
 			IsNameReadOnly = true;
 			IsPasswordReadOnly = true;
-			OnPropertyChanged(nameof(IsNameReadOnly));
+
 			OnPropertyChanged(nameof(NameButtonText));
+			OnPropertyChanged(nameof(PasswordButtonText));
+
+			Password = string.Empty;
+			ConfirmPassword = string.Empty;
 		}
+
+
 	}
 }

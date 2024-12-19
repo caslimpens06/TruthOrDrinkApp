@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using TruthOrDrink.Model;
 using TruthOrDrink.Pages;
+using TruthOrDrink.View;
 
 namespace TruthOrDrink.ViewModels
 {
@@ -18,6 +19,11 @@ namespace TruthOrDrink.ViewModels
 			LeaveGameCommand = new AsyncRelayCommand(LeaveGame);
 		}
 
+		public GuestViewModel()
+		{
+			// For the object binding to work.
+		}
+
 		public string SessionCode
 		{
 			get => _sessionCode;
@@ -32,11 +38,11 @@ namespace TruthOrDrink.ViewModels
 		{
 			if (string.IsNullOrWhiteSpace(SessionCode) || SessionCode.Length != 6)
 			{
-				await Application.Current.MainPage.DisplayAlert("Invalid Game Code", "Please enter a valid 6-digit game code.", "OK");
+				await Application.Current.MainPage.DisplayAlert("Ongeldige sessiecode", "Voer een geldige 6-cijferige sessiecode in.", "OK");
 				return;
 			}
 
-			int parsedSessionCode = int.Parse(SessionCode);
+			int parsedSessionCode = Int32.Parse(SessionCode);
 			Session session = new Session(parsedSessionCode);
 
 			if (await session.CheckIfSessionExistsAsync())
@@ -44,17 +50,18 @@ namespace TruthOrDrink.ViewModels
 				bool hasStarted = await session.CheckIfSessionHasStarted();
 				if (!hasStarted)
 				{
-					await _participant.JoinParticipantToSession();
-					await Application.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(_participant));
+					Participant participant = new Participant(_participant.ParticipantId, parsedSessionCode);
+					await participant.JoinParticipantToSession();
+					await Application.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(participant));
 				}
 				else
 				{
-					await Application.Current.MainPage.DisplayAlert("Error", "Unfortunately, you cannot join anymore.", "OK");
+					await Application.Current.MainPage.DisplayAlert("Fout", "Je kan niet meer deelnemen, het spel is al gestart.", "OK");
 				}
 			}
 			else
 			{
-				await Application.Current.MainPage.DisplayAlert("Invalid Game Code", "Please verify if the host has created a game.", "OK");
+				await Application.Current.MainPage.DisplayAlert("Ongeldige sessiecode", "Verifieer of de host al een spel heeft gemaakt.", "OK");
 			}
 		}
 

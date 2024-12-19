@@ -1,7 +1,7 @@
 using TruthOrDrink.Model;
 using TruthOrDrink.ViewModels;
 
-namespace TruthOrDrink.Pages
+namespace TruthOrDrink.View
 {
 	public partial class GameStatisticsPage : ContentPage
 	{

@@ -1,22 +1,59 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="TruthOrDrink.Pages.ProfilePage"
-             Title="Profile">
+             x:Class="TruthOrDrink.Pages.ProfilePage">
 
-    <StackLayout Padding="20">
-        <Label Text="Name" FontSize="Medium" />
-        <Entry Text="{Binding Name}" IsReadOnly="{Binding IsNameReadOnly}" />
-        <Button Text="{Binding NameButtonText}" Command="{Binding EditNameCommand}" />
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource StandardSpacing}">
+            <Image Style="{StaticResource LogoImage}" />
 
-        <Label Text="Email" FontSize="Medium" />
-        <Entry Text="{Binding Email}" IsReadOnly="True" />
+            <Label Text="Account" Style="{StaticResource BoldTitleText}" />
 
-        <Label Text="Password" FontSize="Medium" />
-        <Entry Text="{Binding Password}" IsPassword="True" IsReadOnly="{Binding IsPasswordReadOnly}" />
-        <Label Text="Confirm Password" FontSize="Medium" />
-        <Entry Text="{Binding ConfirmPassword}" IsPassword="True" IsReadOnly="{Binding IsPasswordReadOnly}" />
+            <StackLayout>
+                <Label Text="Naam" Style="{StaticResource SmallerBoldTitleText}" />
+                <StackLayout Orientation="Horizontal">
+                    <Entry Text="{Binding Host.Name, Mode=TwoWay}"
+                           IsReadOnly="{Binding IsNameReadOnly}"
+                           Style="{StaticResource StandardEntry}"
+                           HorizontalOptions="FillAndExpand" />
+                    <Button Text="{Binding NameButtonText}"
+                            Command="{Binding EditNameCommand}"
+                            Style="{StaticResource ToggleButton}" />
+                </StackLayout>
+            </StackLayout>
 
-        <Button Text="Show Password" Command="{Binding ShowPasswordCommand}" />
-        <Button Text="Save" Command="{Binding SaveCommand}" />
-    </StackLayout>
+            <StackLayout>
+                <Label Text="Email" Style="{StaticResource SmallerBoldTitleText}" />
+                <Entry Text="{Binding Host.Email}"
+                       IsReadOnly="True"
+                       Style="{StaticResource StandardEntry}" />
+            </StackLayout>
+
+            <StackLayout>
+                <Label Text="Wachtwoord wijzigen" Style="{StaticResource SmallerBoldTitleText}" />
+                    <StackLayout Orientation="Horizontal">
+                        <Entry Text="{Binding Password, Mode=TwoWay}"
+                               Placeholder="Typ je wachtwoord"
+                               IsPassword="True"
+                               IsReadOnly="{Binding IsPasswordReadOnly}"
+                               Style="{StaticResource StandardEntry}"
+                               HorizontalOptions="FillAndExpand" />
+                        <Button Text="{Binding PasswordButtonText}"
+                                Command="{Binding EditPasswordCommand}"
+                                Style="{StaticResource ToggleButton}" />
+                    </StackLayout>
+                        <Entry Text="{Binding ConfirmPassword, Mode=TwoWay}"
+                           Placeholder="Bevestig je wachtwoord"
+                           IsPassword="True"
+                           IsReadOnly="{Binding IsPasswordReadOnly}"
+                           Style="{StaticResource StandardEntry}" />
+            </StackLayout>
+
+            <Button Text="Opslaan"
+                    Command="{Binding SaveCommand}"
+                    BackgroundColor="{StaticResource StandardGreen}"
+                    Style="{StaticResource StandardMaleButton}"
+                    VerticalOptions="End"
+                    Margin="0,20,0,0" />
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

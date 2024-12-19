@@ -22,7 +22,7 @@ public class SupabaseService
 	public async Task<bool> AddParticipantIfNotExists(Participant participant)
 	{
 		
-		string checkQuery = "SELECT 1 FROM \"Participant\" WHERE \"Name\" = @name AND \"Gender\" = @gender LIMIT 1;";
+		string checkQuery = "SELECT 1 FROM \"Participant\" WHERE \"Name\" = @name LIMIT 1;";
 
 		string insertQuery = "INSERT INTO \"Participant\" (\"Name\", \"Gender\") VALUES (@name, @gender);";
 
@@ -425,30 +425,6 @@ public class SupabaseService
 				command.Parameters.AddWithValue("@ParticipantId", answer.ParticipantId);
 
 				await command.ExecuteNonQueryAsync();
-			}
-		}
-	}
-
-	public async Task<bool> CheckIfSessionHasStartedAsync(Participant participant) 
-	{
-		string query = "SELECT \"SessionHasStarted\" FROM \"Session\" WHERE \"SessionId\" = @sessionId";
-
-		using (var connection = new NpgsqlConnection(connectionString))
-		{
-			await connection.OpenAsync();
-
-			using (var command = new NpgsqlCommand(query, connection))
-			{
-				command.Parameters.AddWithValue("@sessionId", participant.SessionCode);
-
-				var result = await command.ExecuteScalarAsync();
-
-				if (result == null || DBNull.Value.Equals(result))
-				{
-					return false;
-				}
-
-				return Convert.ToBoolean(result);
 			}
 		}
 	}

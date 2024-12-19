@@ -1,13 +1,12 @@
 using TruthOrDrink.ViewModels;
 
-namespace TruthOrDrink.Pages
+namespace TruthOrDrink.View;
+
+public partial class OfflineGamePage : ContentPage
 {
-	public partial class OfflineGamePage : ContentPage
+	public OfflineGamePage()
 	{
-		public OfflineGamePage()
-		{
-			InitializeComponent();
-			BindingContext = new OfflineGameViewModel();
-		}
+		InitializeComponent();
+		BindingContext = new OfflineGameViewModel();
 	}
 }

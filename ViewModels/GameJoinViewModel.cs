@@ -11,6 +11,7 @@ namespace TruthOrDrink.ViewModels
 		private readonly int _hostid;
 		private readonly int _gameid;
 		private string _gameCode;
+		private Session _session;
 		private string _qrCodeImage;
 		private bool _isPlayButtonEnabled;
 
@@ -18,6 +19,7 @@ namespace TruthOrDrink.ViewModels
 		{
 			_hostid = session.SessionCode;
 			_gameid = session.GameId;
+			_session = session;
 			GenerateGameCodeCommand = new AsyncRelayCommand(GenerateGameCode);
 			PlayCommand = new AsyncRelayCommand(Play);
 			IsPlayButtonEnabled = false;
@@ -48,12 +50,12 @@ namespace TruthOrDrink.ViewModels
 		private async Task GenerateGameCode()
 		{
 			int newCode = await GenerateUniqueGameCode();
-			GameCode = $"Gamecode: {newCode}";
 			QrCodeImage = GenerateQrCode(newCode);
 			IsPlayButtonEnabled = true;
+			GameCode = "Sessiecode: " + newCode.ToString();
 
-			Session session = new Session(newCode, _hostid, _gameid);
-			session.AddSessionToDatabase();
+			_session = new Session(newCode, _hostid, _gameid);
+			_session.AddSessionToDatabase();
 		}
 
 		private async Task<int> GenerateUniqueGameCode()
@@ -76,14 +78,17 @@ namespace TruthOrDrink.ViewModels
 		{
 			QRCodeGenerator qrGenerator = new QRCodeGenerator();
 			QRCodeData qrCodeData = qrGenerator.CreateQrCode(code.ToString(), QRCodeGenerator.ECCLevel.L);
-			PngByteQRCode qRCode = new PngByteQRCode(qrCodeData);
-			byte[] qrCodeBytes = qRCode.GetGraphic(20);
-			return Convert.ToBase64String(qrCodeBytes); // Assuming you want to display it as a base64 string
+
+			// Generate the QR code as a PNG byte array
+			PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+			byte[] qrCodeBytes = qrCode.GetGraphic(20);
+
+			return $"data:image/png;base64,{Convert.ToBase64String(qrCodeBytes)}";
 		}
 
 		private async Task Play()
 		{
-			await Application.Current.MainPage.Navigation.PushAsync(new HostJoinParticipantPage(new Session(int.Parse(GameCode.Split(':')[1].Trim()))));
+			await Application.Current.MainPage.Navigation.PushAsync(new HostJoinParticipantPage(_session));
 		}
 	}
 }

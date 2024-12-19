@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TruthOrDrink.DataAccessLayer;
+﻿using TruthOrDrink.DataAccessLayer;
 
 namespace TruthOrDrink.Model
 {
@@ -14,11 +9,6 @@ namespace TruthOrDrink.Model
 		private int _gameid;
 		private int _sessioncode;
 		private readonly SupabaseService _supabaseService = new SupabaseService();
-
-		public Host Host
-		{
-			get { return _host; }
-		}
 
 		public int SessionCode
 		{

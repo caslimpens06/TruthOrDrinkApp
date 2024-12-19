@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using TruthOrDrink.Model;
 using TruthOrDrink.DataAccessLayer;
 using TruthOrDrink.Pages;
+using TruthOrDrink.View;
 
 namespace TruthOrDrink.ViewModels
 {
@@ -38,13 +39,13 @@ namespace TruthOrDrink.ViewModels
 		{
 			if (string.IsNullOrWhiteSpace(Email) || !IsValidEmail(Email))
 			{
-				await App.Current.MainPage.DisplayAlert("Invalid Input", "Please enter a valid email.", "OK");
+				await App.Current.MainPage.DisplayAlert("Ongeldige invoer", "Voer een geldig e-mailadres in.", "OK");
 				return;
 			}
 
 			if (string.IsNullOrWhiteSpace(Password))
 			{
-				await App.Current.MainPage.DisplayAlert("Invalid Password", "Please enter your password.", "OK");
+				await App.Current.MainPage.DisplayAlert("Ongeldig wachtwoord", "Voer je wachtwoord in.", "OK");
 				return;
 			}
 
@@ -64,7 +65,7 @@ namespace TruthOrDrink.ViewModels
 			}
 			else
 			{
-				await App.Current.MainPage.DisplayAlert("Login Failed", "Email or password is incorrect.", "OK");
+				await App.Current.MainPage.DisplayAlert("Login Mislukt", "Email of wachtwoord is incorrect.", "OK");
 			}
 		}
 
@@ -72,6 +73,7 @@ namespace TruthOrDrink.ViewModels
 		{
 			try
 			{
+				email = email.Trim();
 				var addr = new System.Net.Mail.MailAddress(email);
 				return addr.Address == email;
 			}

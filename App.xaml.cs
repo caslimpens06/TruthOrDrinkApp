@@ -1,6 +1,6 @@
-﻿using TruthOrDrink.Model;
-using TruthOrDrink.DataAccessLayer;
+﻿using TruthOrDrink.DataAccessLayer;
 using TruthOrDrink.Pages;
+using TruthOrDrink.View;
 
 namespace TruthOrDrink
 {
