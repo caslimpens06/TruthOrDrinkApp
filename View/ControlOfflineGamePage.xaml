@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:TruthOrDrink.View"
+             x:Class="TruthOrDrink.View.ControlOfflineGamePage"
+             NavigationPage.HasBackButton="False">
+
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource StandardSpacing}">
+
+            <Image Style="{StaticResource LogoImage}" />
+
+            <Label 
+                Text="Kies een vraag voor de spelers"
+                Style="{StaticResource BoldTitleText}"
+                FontSize="20" />
+
+            <CollectionView x:Name="QuestionsListView"
+                ItemsSource="{Binding Questions}"
+                SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame x:Name="QuestionFrame"
+                                Padding="15"
+                                Margin="8"
+                                BorderColor="#6200EE"
+                                BackgroundColor="{Binding BackgroundColor}" 
+                                CornerRadius="15"
+                                HasShadow="True"
+                                IsEnabled="{Binding IsEnabled}">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OnQuestionTappedCommand}" 
+                              CommandParameter="{Binding}" />
+                            </Frame.GestureRecognizers>
+
+                            <VerticalStackLayout Padding="15" VerticalOptions="Center">
+                                <Label Text="{Binding Text}" 
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="Black"
+                                       LineBreakMode="WordWrap" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button 
+                Text="Stop Spel"
+                Style="{StaticResource LeaveGameButtonStyle}"
+                Command="{Binding StopGameCommand}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

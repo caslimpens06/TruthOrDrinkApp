@@ -7,6 +7,7 @@ namespace TruthOrDrink.ViewModels
 	public class GameStatisticsParticipantViewModel : ObservableObject
 	{
 		private Participant _participant;
+		private List<Participant> _participants;
 		private string _truthLabel;
 		private string _topTruthCount;
 		private string _drinkLabel;
@@ -17,6 +18,13 @@ namespace TruthOrDrink.ViewModels
 		public GameStatisticsParticipantViewModel(Participant participant)
 		{
 			_participant = participant;
+			ToMainMenuCommand = new AsyncRelayCommand(ToMainMenu);
+			InitializeData();
+		}
+
+		public GameStatisticsParticipantViewModel(List<Participant> participants)
+		{
+			_participants = participants;
 			ToMainMenuCommand = new AsyncRelayCommand(ToMainMenu);
 			InitializeData();
 		}

@@ -13,6 +13,7 @@ namespace TruthOrDrink.Model
 		private int _hostid;
 		private string _name;
 		private readonly SupabaseService _supabaseService = new SupabaseService();
+		private readonly SQLiteService _sqliteService = new SQLiteService();
 		private Host _host;
 
 		public int GameId

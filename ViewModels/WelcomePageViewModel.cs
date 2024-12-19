@@ -93,7 +93,7 @@ namespace TruthOrDrink.ViewModels
 			if (_countdown > 0)
 			{
 				_countdown--;
-				HostButtonText = $"Schud om in te loggen als {_host.Name} ({_countdown})";
+				HostButtonText = $"Schud je apparaat om in te loggen als {_host.Name} ({_countdown})";
 			}
 			else
 			{
@@ -105,7 +105,7 @@ namespace TruthOrDrink.ViewModels
 
 		private async void DetectShake(object sender, AccelerometerChangedEventArgs e)
 		{
-			const double shakeThreshold = 2.5;
+			const double shakeThreshold = 3.0;
 
 			double x = e.Reading.Acceleration.X;
 			double y = e.Reading.Acceleration.Y;
