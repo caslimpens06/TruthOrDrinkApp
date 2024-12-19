@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using TruthOrDrink.Model;
 using TruthOrDrink.DataAccessLayer;
+using TruthOrDrink.View;
 
 namespace TruthOrDrink.ViewModels
 {
@@ -87,6 +88,9 @@ namespace TruthOrDrink.ViewModels
 				return;
 			}
 
+			// Convert the email to lowercase and trim any extra spaces
+			Email = Email.Trim().ToLower();
+
 			if (string.IsNullOrWhiteSpace(Password))
 			{
 				await Application.Current.MainPage.DisplayAlert("Onjuiste invoer", "Wachtwoord mag niet leeg zijn.", "OK");
@@ -130,16 +134,18 @@ namespace TruthOrDrink.ViewModels
 				await host.AddHostAsync();
 				int hostId = await host.GetHostPrimaryKey();
 
-				Host savedHost = new Host(hostId, Name, Email, Password);
-				await _sqliteService.SaveHostAsync(savedHost);
+				Host savedHost = new Host(hostId, Name, Email, hashedPassword);
+				await savedHost.SaveHostLocallyAsync();
 
 				await Application.Current.MainPage.DisplayAlert("Account", "Je account is gemaakt! Je wordt meteen ingelogd.", "OK");
 
 				IsOverlayVisible = false;
 
 				NavigationRequested?.Invoke(this, savedHost);
+				await App.Current.MainPage.Navigation.PushAsync(new HostMainPage(savedHost));
 			}
 		}
+
 
 		private bool IsValidEmail(string email)
 		{

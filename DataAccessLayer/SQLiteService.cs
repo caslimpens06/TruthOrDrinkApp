@@ -29,7 +29,7 @@ namespace TruthOrDrink.DataAccessLayer
 			}
 		}
 
-		public async Task SaveHostAsync(Host host)
+		public async Task SaveHostLocallyAsync(Host host)
 		{
 			try
 			{

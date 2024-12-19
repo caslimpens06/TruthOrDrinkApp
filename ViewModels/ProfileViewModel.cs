@@ -87,8 +87,9 @@ namespace TruthOrDrink.ViewModels
 		{
 			bool isNameChanged = Host.Name != _originalHost.Name;
 			bool isPasswordChanged = !string.IsNullOrWhiteSpace(Password);
+			bool isEmailChanged = Host.Email != _originalHost.Email;
 
-			if (!isNameChanged && !isPasswordChanged)
+			if (!isNameChanged && !isPasswordChanged && !isEmailChanged)
 			{
 				await App.Current.MainPage.DisplayAlert("Geen Wijzigingen", "Er zijn geen wijzigingen gedetecteerd.", "OK");
 				return;
@@ -100,7 +101,7 @@ namespace TruthOrDrink.ViewModels
 				return;
 			}
 
-			string finalPassword = _originalHost.Password;
+			string finalPassword;
 
 			if (isPasswordChanged)
 			{
@@ -126,8 +127,15 @@ namespace TruthOrDrink.ViewModels
 				var passwordHasher = new PasswordHasher(Password);
 				finalPassword = passwordHasher.HashPassword();
 			}
+			else
+			{
+				var passwordHasher = new PasswordHasher(_originalHost.Password);
+				finalPassword = passwordHasher.HashPassword();
+			}
 
-			var updatedHost = new Host(Host.HostId, Host.Name, Host.Email, finalPassword);
+			string finalEmail = Host.Email.Trim().ToLower();
+
+			var updatedHost = new Host(Host.HostId, Host.Name, finalEmail, finalPassword);
 
 			await _sqliteService.UpdateHostAsync(updatedHost);
 			await updatedHost.UpdateHostCredentials();
@@ -143,6 +151,7 @@ namespace TruthOrDrink.ViewModels
 			Password = string.Empty;
 			ConfirmPassword = string.Empty;
 		}
+
 
 
 	}

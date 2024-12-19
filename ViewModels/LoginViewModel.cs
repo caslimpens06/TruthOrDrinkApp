@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using TruthOrDrink.Model;
 using TruthOrDrink.DataAccessLayer;
-using TruthOrDrink.Pages;
 using TruthOrDrink.View;
 
 namespace TruthOrDrink.ViewModels
@@ -11,13 +10,9 @@ namespace TruthOrDrink.ViewModels
 	{
 		private string _email;
 		private string _password;
-		private readonly SQLiteService _sqliteservice;
-		private readonly INavigation _navigation;
 
-		public LoginViewModel(INavigation navigation)
+		public LoginViewModel()
 		{
-			_navigation = navigation;
-			_sqliteservice = new SQLiteService();
 			LoginCommand = new AsyncRelayCommand(Login);
 		}
 
@@ -37,11 +32,15 @@ namespace TruthOrDrink.ViewModels
 
 		private async Task Login()
 		{
+			// Normalize the email to lowercase and trim spaces
 			if (string.IsNullOrWhiteSpace(Email) || !IsValidEmail(Email))
 			{
 				await App.Current.MainPage.DisplayAlert("Ongeldige invoer", "Voer een geldig e-mailadres in.", "OK");
 				return;
 			}
+
+			// Trim and convert the email to lowercase
+			Email = Email.Trim().ToLower();
 
 			if (string.IsNullOrWhiteSpace(Password))
 			{
@@ -49,6 +48,7 @@ namespace TruthOrDrink.ViewModels
 				return;
 			}
 
+			// Check credentials using normalized email
 			Host host = new Host(Email);
 			string storedOnlineHash = await host.ValidateCredentialsAsync();
 
@@ -60,8 +60,8 @@ namespace TruthOrDrink.ViewModels
 				int hostId = await host.GetHostPrimaryKey();
 				string name = await host.GetHostName();
 				Host newHost = new Host(hostId, name, Email, Password);
-				await _sqliteservice.SaveHostAsync(newHost);
-				await _navigation.PushAsync(new HostMainPage(newHost));
+				await newHost.SaveHostLocallyAsync();
+				await App.Current.MainPage.Navigation.PushAsync(new HostMainPage(newHost));
 			}
 			else
 			{

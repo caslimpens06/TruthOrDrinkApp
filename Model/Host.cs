@@ -11,6 +11,7 @@ namespace TruthOrDrink.Model
 		private string _email;
 		private string _password;
 		private readonly SupabaseService _supabaseService = new SupabaseService();
+		private readonly SQLiteService _sqliteService = new SQLiteService();
 
 		[PrimaryKey]
 		public int HostId
@@ -108,6 +109,9 @@ namespace TruthOrDrink.Model
 		{
 			return await _supabaseService.LoadHostData(this);
 		}
-
+		public async Task SaveHostLocallyAsync()
+		{ 
+			await _sqliteService.SaveHostLocallyAsync(this);
+		}
 	}
 }
