@@ -29,7 +29,7 @@ namespace TruthOrDrink.ViewModels
 
 		private async Task LeaveGame()
 		{
-			await App.Current.MainPage.DisplayAlert("Leave Game", "You have left the game.", "OK");
+			await App.Current.MainPage.DisplayAlert("Verlaat spel", "Je hebt het spel verlaten.", "OK");
 			await App.Current.MainPage.Navigation.PopToRootAsync();
 		}
 	}
