@@ -23,7 +23,7 @@
                         <Frame x:Name="QuestionFrame"
                                 Padding="15"
                                 Margin="8"
-                                BorderColor="#6200EE"
+                                BorderColor="{StaticResource FrameBorder}"
                                 BackgroundColor="{Binding BackgroundColor}" 
                                 CornerRadius="15"
                                 HasShadow="True"

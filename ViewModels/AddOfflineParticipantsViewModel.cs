@@ -11,6 +11,7 @@ namespace TruthOrDrink.ViewModels
 		private readonly Participant _participant;
 		private ObservableCollection<Participant> _participants = new ObservableCollection<Participant>();
 		private Session _session;
+		private bool _isOverlayVisible;
 
 		public IAsyncRelayCommand ContinueCommand { get; }
 		public IAsyncRelayCommand AddCommand { get; }
@@ -57,6 +58,16 @@ namespace TruthOrDrink.ViewModels
 					OnPropertyChanged(nameof(IsMaleSelected));
 					OnPropertyChanged(nameof(IsFemaleSelected));
 				}
+			}
+		}
+
+		public bool IsOverlayVisible
+		{
+			get => _isOverlayVisible;
+			set
+			{
+				_isOverlayVisible = value;
+				OnPropertyChanged(nameof(IsOverlayVisible));
 			}
 		}
 
@@ -122,7 +133,9 @@ namespace TruthOrDrink.ViewModels
 		{
 			if (_participants.Count > 0)
 			{
-				await Application.Current.MainPage.Navigation.PushAsync(new ControlOfflineGamePage(_session, _participants.ToList())); //only session.gameid and _participants are passed
+				IsOverlayVisible = true;
+				await Application.Current.MainPage.Navigation.PushAsync(new ChooseDrinksPage(_session, _participants.ToList())); //only session.gameid and _participants are passed
+				IsOverlayVisible = false;
 			}
 			else
 			{

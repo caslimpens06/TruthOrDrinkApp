@@ -1,12 +1,14 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using TruthOrDrink.Model;
+using CommunityToolkit.Mvvm.ComponentModel;
+using TruthOrDrink.View;
 
 namespace TruthOrDrink.ViewModels
 {
-	public class GameStatisticsParticipantViewModel : ObservableObject
+	public class OfflineGameStatisticsViewModel : ObservableObject
 	{
 		private Participant _participant;
+		private List<Participant> _participants;
 		private string _truthLabel;
 		private string _topTruthCount;
 		private string _drinkLabel;
@@ -14,9 +16,9 @@ namespace TruthOrDrink.ViewModels
 		private string _topTruthImage;
 		private string _topDrinkImage;
 
-		public GameStatisticsParticipantViewModel(Participant participant)
+		public OfflineGameStatisticsViewModel(List<Participant> participants)
 		{
-			_participant = participant;
+			_participants = participants;
 			ToMainMenuCommand = new AsyncRelayCommand(ToMainMenu);
 			InitializeData();
 		}
@@ -93,17 +95,18 @@ namespace TruthOrDrink.ViewModels
 
 		private async Task<Participant> GetParticipantWithMostTruthAnswers()
 		{
-			return await _participant.GetMostTruths();
+			return _participants.OrderByDescending(p => p.TruthCount).FirstOrDefault();
 		}
 
 		private async Task<Participant> GetParticipantWithMostDrinkAnswers()
 		{
-			return await _participant.GetMostDrinks();
+			return _participants.OrderByDescending(p => p.DrinkCount).FirstOrDefault();
 		}
 
 		private async Task ToMainMenu()
 		{
-			await _participant.RemoveParticipantAsync();
+			await App.Current.MainPage.Navigation.PushAsync(new OfflineMode());
 		}
 	}
 }
+

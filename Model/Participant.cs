@@ -8,7 +8,8 @@ namespace TruthOrDrink.Model
 		private string _name;
 		private string _gender;
 		private int _sessioncode;
-		private int _truthordrinkcount;
+		private int _truthcount;
+		private int _drinkcount;
 		private SupabaseService _supabaseService = new SupabaseService();
 
 		public int ParticipantId
@@ -35,11 +36,19 @@ namespace TruthOrDrink.Model
 			set { _sessioncode = value; }
 		}
 
-		public int TruthOrDrinkCount
+		public int TruthCount
 		{
-			get { return _truthordrinkcount; }
-			set { _truthordrinkcount = value; }
+			get { return _truthcount; }
+			set { _truthcount = value; }
 		}
+		public int DrinkCount
+		{
+			get { return _drinkcount; }
+			set { _drinkcount = value; }
+		}
+
+		public bool HasAnswered { get; set; }
+		public string Answer { get; set; }
 
 		public Participant(int participantid, int sessioncode)
 		{
@@ -68,7 +77,7 @@ namespace TruthOrDrink.Model
 		{
 			_name = name;
 			_gender = gender;
-			_truthordrinkcount = truthordrinkcount;
+			_truthcount = truthordrinkcount;
 		}
 
 		public string GenderImage => GetImageSourceForGender(Gender);

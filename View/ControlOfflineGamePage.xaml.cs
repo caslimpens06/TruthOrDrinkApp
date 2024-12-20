@@ -5,9 +5,9 @@ namespace TruthOrDrink.View;
 
 public partial class ControlOfflineGamePage : ContentPage
 {
-	public ControlOfflineGamePage(Session session, List<Participant> participants)
+	public ControlOfflineGamePage(Session session, List<Participant> participants, List<Drink> drinks)
 	{
 		InitializeComponent();
-		BindingContext = new ControlOfflineGameViewModel(session, participants);
+		BindingContext = new ControlOfflineGameViewModel(session, participants, drinks);
 	}
 }

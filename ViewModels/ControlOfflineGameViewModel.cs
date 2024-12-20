@@ -8,84 +8,169 @@ namespace TruthOrDrink.ViewModels
 {
 	public partial class ControlOfflineGameViewModel : ObservableObject
 	{
-		private bool _questionsAreClickable = true;
-		private readonly List<int> _tappedQuestionIds = new();
+		private readonly Session _session;
+		private readonly List<Drink> _drinks;
 		private readonly List<Participant> _participants;
-		private int _currentPlayerIndex = 0;
-		private List<Question> _questions;
-		private Session _session;
+		private List<Question> _questionList;
+		private int _currentParticipantIndex = 0;
+		private bool _waitingForNewQuestion = false;
+		private List<Question> _answeredQuestions = new List<Question>() {};
 
-		public ControlOfflineGameViewModel(Session session, List<Participant> participants)
+		public ObservableCollection<Question> Questions { get; } = new();
+
+		[ObservableProperty]
+		private string currentParticipantName;
+		[ObservableProperty]
+		private bool participantShown = true;
+
+		[ObservableProperty]
+		private string currentQuestionText;
+
+		[ObservableProperty]
+		private bool isQuestionVisible;
+
+		[ObservableProperty]
+		private bool areButtonsEnabled = true;
+		
+		[ObservableProperty]
+		private bool isQuestionListVisible = true;
+
+		[ObservableProperty]
+		private Color backgroundColor;
+
+		public IRelayCommand StopGameCommand { get; }
+		public IRelayCommand<string> AnswerCommand { get; }
+		public IRelayCommand<Question> OnQuestionTappedCommand { get; }
+
+		public ControlOfflineGameViewModel(Session session, List<Participant> participants, List<Drink> drinks)
 		{
 			_session = session;
-			LoadLocalQuestions();
 			_participants = participants;
+			_drinks = drinks;
+			_waitingForNewQuestion = true;
+			StopGameCommand = new RelayCommand(StopGame);
+			AnswerCommand = new RelayCommand<string>(OnAnswer);
+			OnQuestionTappedCommand = new RelayCommand<Question>(OnQuestionTapped);
 
-			OnQuestionTappedCommand = new AsyncRelayCommand<Question>(OnQuestionTapped);
-			StopGameCommand = new AsyncRelayCommand(StopGame);
+			InitializeGame();
 		}
 
-		public ObservableCollection<Question> Questions { get; } = new ObservableCollection<Question>();
-		public IAsyncRelayCommand<Question> OnQuestionTappedCommand { get; }
-		public IAsyncRelayCommand StopGameCommand { get; }
-
-		private async void LoadLocalQuestions()
+		private async void InitializeGame()
 		{
-			_questions = await _session.GetLocalQuestions();
+			await LoadQuestionsAsync();
+		}
 
-			foreach (var question in _questions)
+		private async Task LoadQuestionsAsync()
+		{
+			try
 			{
-				Questions.Add(question);
+				var questionList = await _session.GetLocalQuestions();
+				if (questionList != null && questionList.Any())
+				{
+					foreach (var question in questionList)
+					{
+						Questions.Add(question);
+					}
+					_questionList = questionList;
+					Console.WriteLine("Questions loaded successfully.");
+				}
+				else
+				{
+					Console.WriteLine("No questions found.");
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Error loading questions: {ex.Message}");
 			}
 		}
 
-		private async Task OnQuestionTapped(Question tappedQuestion)
+		private void OnQuestionTapped(Question question)
 		{
-			if (!_questionsAreClickable || tappedQuestion == null || tappedQuestion.IsTapped)
+			if (!_answeredQuestions.Contains(question))
 			{
-				await Application.Current.MainPage.DisplayAlert("Waarschuwing", "Deze vraag is al gespeeld. Je kan hem niet nog een keer spelen.", "OK");
-				return;
-			}
+				// Mark the question as tapped
+				question.IsTapped = true;
 
-			_questionsAreClickable = false;
+				// Hide the question list
+				IsQuestionListVisible = false;
 
-			tappedQuestion.IsTapped = true;
-			tappedQuestion.IsEnabled = false;
+				if (_waitingForNewQuestion)
+				{
+					_waitingForNewQuestion = false;
 
-			_tappedQuestionIds.Add(tappedQuestion.QuestionId);
+					// Reset the participants' answered states
+					foreach (var participant in _participants)
+					{
+						participant.HasAnswered = false;
+					}
+					_answeredQuestions.Add(question);
 
-			await SetCurrentQuestion(tappedQuestion);
+					// Enable buttons and show the question
+					AreButtonsEnabled = true;
+					IsQuestionVisible = true;
+					CurrentQuestionText = question.Text;
 
-			if (await CheckIfPlayerAnswered())
-			{
-				_questionsAreClickable = true;
-			}
-
-			_currentPlayerIndex = (_currentPlayerIndex + 1) % _participants.Count;
-
-			if (Questions.All(q => q.IsTapped))
-			{
-				await Application.Current.MainPage.Navigation.PushAsync(new GameStatisticsParticipantPage(_participants));
+					// Start the turn for the first participant
+					_currentParticipantIndex = 0;
+					ParticipantShown = true;
+					CurrentParticipantName = $"It's {_participants[_currentParticipantIndex].Name}'s turn!";
+				}
 			}
 		}
 
-		private async Task StopGame()
+
+
+
+		private void OnAnswer(string answer)
 		{
-			await Application.Current.MainPage.Navigation.PushAsync(new GameStatisticsParticipantPage(_participants));
+			if (!AreButtonsEnabled || _waitingForNewQuestion) return;
+
+			var currentParticipant = _participants[_currentParticipantIndex];
+
+			if (answer.Equals("Drink", StringComparison.OrdinalIgnoreCase))
+			{
+				currentParticipant.DrinkCount++;
+			}
+			else
+			{
+				currentParticipant.TruthCount++;
+				currentParticipant.HasAnswered = true;
+			}
+
+			MoveToNextParticipantOrEndTurn();
 		}
 
-		private async Task<bool> CheckIfPlayerAnswered()
+		private async void MoveToNextParticipantOrEndTurn()
 		{
-			// Logic to check if the current player has answered
-			// In offline mode, just simulate answering and wait for some time (e.g., 2 seconds)
-			await Task.Delay(2000);
-			return true;
+			if (_currentParticipantIndex + 1 < _participants.Count)
+			{
+				_currentParticipantIndex++;
+				CurrentParticipantName = $"It's {_participants[_currentParticipantIndex].Name}'s turn!";
+			}
+			else
+			{
+				ParticipantShown = false;
+				CurrentParticipantName = "";
+
+				AreButtonsEnabled = false;
+				IsQuestionVisible = false;
+				_waitingForNewQuestion = true;
+				IsQuestionListVisible = !IsQuestionListVisible;
+
+				if (_answeredQuestions.Count == _questionList.Count)
+				{
+					await App.Current.MainPage.Navigation.PushAsync(new OfflineGameStatisticsPage(_participants));
+				}
+			}
 		}
 
 
-		private async Task SetCurrentQuestion(Question tappedQuestion)
+		private async void StopGame()
 		{
-			//await tappedQuestion.SetCurrentQuestion(new Session());  // Here we use a new Session object as a placeholder
+			IsQuestionVisible = false;
+			AreButtonsEnabled = false;
+			await Application.Current.MainPage.Navigation.PushAsync(new OfflineGameStatisticsPage(_participants));
 		}
 	}
 }

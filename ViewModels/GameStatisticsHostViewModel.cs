@@ -71,7 +71,7 @@ namespace TruthOrDrink.ViewModels
 			if (truthParticipant != null)
 			{
 				TruthLabel = truthParticipant.Name ?? "Geen Data";
-				TopTruthCount = $"Meeste keren Truth: {truthParticipant.TruthOrDrinkCount}";
+				TopTruthCount = $"Meeste keren Truth: {truthParticipant.TruthCount}";
 				TopTruthImage = truthParticipant.GenderImage;
 			}
 			else
@@ -84,7 +84,7 @@ namespace TruthOrDrink.ViewModels
 			if (drinkParticipant != null)
 			{
 				DrinkLabel = drinkParticipant.Name ?? "Geen Data";
-				TopDrinkCount = $"Meeste keren Drink: {drinkParticipant.TruthOrDrinkCount}";
+				TopDrinkCount = $"Meeste keren Drink: {drinkParticipant.DrinkCount}";
 				TopDrinkImage = drinkParticipant.GenderImage;
 			}
 			else

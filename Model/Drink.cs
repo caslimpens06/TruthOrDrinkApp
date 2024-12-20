@@ -1,41 +1,48 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using SQLite;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TruthOrDrink.Model
 {
 	[Table("Drink")]
-	public class Drink
+	public partial class Drink : ObservableObject
 	{
-		// The _name and _type fields can be null or empty now
 		private string _name;
 		private string _type;
+		private bool _isSelected;
+		public Color BackgroundColor => IsSelected ? Colors.LightGreen : Colors.White;
 
-		// Primary key for the Drink table
 		[PrimaryKey]
 		[JsonPropertyName("name")]
 		public string Name
 		{
-			get { return _name; }
-			set { _name = value ?? string.Empty; } // Ensure name isn't null
+			get => _name;
+			set => SetProperty(ref _name, value ?? string.Empty);
 		}
 
-		// Type property with no nullable constraints
 		[JsonPropertyName("type")]
 		public string Type
 		{
-			get { return _type; }
-			set { _type = value ?? string.Empty; } // Default to empty if null
+			get => _type;
+			set => SetProperty(ref _type, value ?? string.Empty);
 		}
 
-		// Parameterized constructor
+		public bool IsSelected
+		{
+			get => _isSelected;
+			set
+			{
+				SetProperty(ref _isSelected, value);
+				OnPropertyChanged(nameof(BackgroundColor));
+			}
+		}
+
 		public Drink(string name, string type)
 		{
-			_name = name ?? string.Empty;  // Ensure name isn't null
-			_type = type ?? string.Empty;  // Ensure type isn't null
+			_name = name ?? string.Empty;
+			_type = type ?? string.Empty;
 		}
 
-		// Default constructor for SQLite and other usages
 		public Drink() { }
 	}
 }

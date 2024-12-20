@@ -17,7 +17,7 @@
 
             <Frame Padding="10"
                    Margin="5"
-                   BorderColor="#6200EE"
+                   BorderColor="{StaticResource FrameBorder}"
                    BackgroundColor="White"
                    CornerRadius="15"
                    HasShadow="True">
@@ -27,7 +27,7 @@
                            WidthRequest="60"
                            CornerRadius="30"
                            HasShadow="False"
-                           BorderColor="#6200EE"
+                           BorderColor="{StaticResource FrameBorder}"
                            BackgroundColor="White">
                         <Image Source="{Binding TopTruthImage}" HeightRequest="50" WidthRequest="50" />
                     </Frame>
@@ -46,7 +46,7 @@
 
             <Frame Padding="10"
                    Margin="5"
-                   BorderColor="#6200EE"
+                   BorderColor="{StaticResource FrameBorder}"
                    BackgroundColor="White"
                    CornerRadius="15"
                    HasShadow="True">
@@ -56,7 +56,7 @@
                            WidthRequest="60"
                            CornerRadius="30"
                            HasShadow="False"
-                           BorderColor="#6200EE"
+                           BorderColor="{StaticResource FrameBorder}"
                            BackgroundColor="White">
                         <Image Source="{Binding TopDrinkImage}" HeightRequest="50" WidthRequest="50" />
                     </Frame>
