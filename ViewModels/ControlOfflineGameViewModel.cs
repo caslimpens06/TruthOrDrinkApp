@@ -85,44 +85,43 @@ namespace TruthOrDrink.ViewModels
 			}
 		}
 
+		private Task<string> RandomDrink()
+		{
+			Random random = new Random();
+			var randomDrink = _drinks[random.Next(_drinks.Count)];
+			return Task.FromResult(randomDrink.Name);
+		}
+
 		private void OnQuestionTapped(Question question)
 		{
 			if (!_answeredQuestions.Contains(question))
 			{
-				// Mark the question as tapped
 				question.IsTapped = true;
 
-				// Hide the question list
 				IsQuestionListVisible = false;
 
 				if (_waitingForNewQuestion)
 				{
 					_waitingForNewQuestion = false;
 
-					// Reset the participants' answered states
 					foreach (var participant in _participants)
 					{
 						participant.HasAnswered = false;
 					}
 					_answeredQuestions.Add(question);
 
-					// Enable buttons and show the question
 					AreButtonsEnabled = true;
 					IsQuestionVisible = true;
 					CurrentQuestionText = question.Text;
 
-					// Start the turn for the first participant
 					_currentParticipantIndex = 0;
 					ParticipantShown = true;
-					CurrentParticipantName = $"It's {_participants[_currentParticipantIndex].Name}'s turn!";
+					CurrentParticipantName = $"Het is {_participants[_currentParticipantIndex].Name} zijn beurt!";
 				}
 			}
 		}
 
-
-
-
-		private void OnAnswer(string answer)
+		private async void OnAnswer(string answer)
 		{
 			if (!AreButtonsEnabled || _waitingForNewQuestion) return;
 
@@ -130,10 +129,12 @@ namespace TruthOrDrink.ViewModels
 
 			if (answer.Equals("Drink", StringComparison.OrdinalIgnoreCase))
 			{
+				await App.Current.MainPage.DisplayAlert("Oei!", $"{currentParticipant.Name}, je moet een slok {await RandomDrink()} drinken!", "OK");
 				currentParticipant.DrinkCount++;
 			}
 			else
 			{
+				await App.Current.MainPage.DisplayAlert("Oei", $"{currentParticipant.Name}, je moet de waarheid vertellen!", "OK");
 				currentParticipant.TruthCount++;
 				currentParticipant.HasAnswered = true;
 			}
@@ -146,7 +147,7 @@ namespace TruthOrDrink.ViewModels
 			if (_currentParticipantIndex + 1 < _participants.Count)
 			{
 				_currentParticipantIndex++;
-				CurrentParticipantName = $"It's {_participants[_currentParticipantIndex].Name}'s turn!";
+				CurrentParticipantName = $"Het is {_participants[_currentParticipantIndex].Name} zijn beurt!";
 			}
 			else
 			{

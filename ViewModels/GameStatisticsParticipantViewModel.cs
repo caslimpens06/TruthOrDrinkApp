@@ -80,7 +80,7 @@ namespace TruthOrDrink.ViewModels
 			if (drinkParticipant != null)
 			{
 				DrinkLabel = drinkParticipant.Name ?? "Geen Data";
-				TopDrinkCount = $"Meeste keren Drink: {drinkParticipant.DrinkCount}";
+				TopDrinkCount = $"Meeste keren Drink: {drinkParticipant.TruthCount}";
 				TopDrinkImage = drinkParticipant.GenderImage;
 			}
 			else
@@ -104,6 +104,9 @@ namespace TruthOrDrink.ViewModels
 		private async Task ToMainMenu()
 		{
 			await _participant.RemoveParticipantAsync();
+
+			await App.Current.MainPage.Navigation.PopToRootAsync();
+			
 		}
 	}
 }
