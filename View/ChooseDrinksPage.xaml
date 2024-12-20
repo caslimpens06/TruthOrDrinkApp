@@ -1,0 +1,54 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:TruthOrDrink.ViewModels"
+             x:Class="TruthOrDrink.View.ChooseDrinksPage"
+             NavigationPage.HasBackButton="True">
+
+    <ContentPage.BindingContext>
+        <vm:ChooseDrinksViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView>
+        <VerticalStackLayout Style="{StaticResource StandardSpacing}" Spacing="15">
+
+            <Image
+                   x:Name="LogoImage"
+                   Style="{StaticResource LogoImage}" />
+
+            <Label Text="{Binding SelectedDrinksCountDisplay}" 
+                   Style="{StaticResource BoldTitleText}" 
+                   Margin="10,20,10,5" />
+
+            <CollectionView ItemsSource="{Binding AvailableDrinks}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="5"
+                               BorderColor="{StaticResource FrameBorder}"
+                               CornerRadius="10"
+                               BackgroundColor="{Binding BackgroundColor}">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                    Command="{Binding BindingContext.ToggleDrinkSelectionCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
+                                    CommandParameter="{Binding}" />
+                            </Frame.GestureRecognizers>
+                            <Grid ColumnDefinitions="*, Auto">
+                                <VerticalStackLayout Grid.Column="0">
+                                    <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" />
+                                    <Label Text="{Binding Type}" FontSize="14" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+
+
+            <Button 
+                Text="Ga verder" 
+                Style="{StaticResource SelectButtonStyle}"  
+                Command="{Binding ContinueCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

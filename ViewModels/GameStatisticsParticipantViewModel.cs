@@ -7,7 +7,6 @@ namespace TruthOrDrink.ViewModels
 	public class GameStatisticsParticipantViewModel : ObservableObject
 	{
 		private Participant _participant;
-		private List<Participant> _participants;
 		private string _truthLabel;
 		private string _topTruthCount;
 		private string _drinkLabel;
@@ -18,13 +17,6 @@ namespace TruthOrDrink.ViewModels
 		public GameStatisticsParticipantViewModel(Participant participant)
 		{
 			_participant = participant;
-			ToMainMenuCommand = new AsyncRelayCommand(ToMainMenu);
-			InitializeData();
-		}
-
-		public GameStatisticsParticipantViewModel(List<Participant> participants)
-		{
-			_participants = participants;
 			ToMainMenuCommand = new AsyncRelayCommand(ToMainMenu);
 			InitializeData();
 		}
@@ -75,7 +67,7 @@ namespace TruthOrDrink.ViewModels
 			if (truthParticipant != null)
 			{
 				TruthLabel = truthParticipant.Name ?? "Geen Data";
-				TopTruthCount = $"Meeste keren Truth: {truthParticipant.TruthOrDrinkCount}";
+				TopTruthCount = $"Meeste keren Truth: {truthParticipant.TruthCount}";
 				TopTruthImage = truthParticipant.GenderImage;
 			}
 			else
@@ -88,7 +80,7 @@ namespace TruthOrDrink.ViewModels
 			if (drinkParticipant != null)
 			{
 				DrinkLabel = drinkParticipant.Name ?? "Geen Data";
-				TopDrinkCount = $"Meeste keren Drink: {drinkParticipant.TruthOrDrinkCount}";
+				TopDrinkCount = $"Meeste keren Drink: {drinkParticipant.TruthCount}";
 				TopDrinkImage = drinkParticipant.GenderImage;
 			}
 			else
@@ -112,6 +104,9 @@ namespace TruthOrDrink.ViewModels
 		private async Task ToMainMenu()
 		{
 			await _participant.RemoveParticipantAsync();
+
+			await App.Current.MainPage.Navigation.PopToRootAsync();
+			
 		}
 	}
 }

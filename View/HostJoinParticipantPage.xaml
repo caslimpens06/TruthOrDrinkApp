@@ -25,7 +25,7 @@
                     <DataTemplate>
                         <Frame Padding="10"
                                Margin="5"
-                               BorderColor="#6200EE"
+                               BorderColor="{StaticResource FrameBorder}"
                                BackgroundColor="White"
                                CornerRadius="15"
                                HasShadow="True">

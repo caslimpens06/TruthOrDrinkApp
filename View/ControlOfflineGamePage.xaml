@@ -11,44 +11,71 @@
             <Image Style="{StaticResource LogoImage}" />
 
             <Label 
-                Text="Kies een vraag voor de spelers"
-                Style="{StaticResource BoldTitleText}"
-                FontSize="20" />
+                Text="Kies een vraag"
+                IsVisible="{Binding IsQuestionListVisible}"
+                Style="{StaticResource BoldTitleText}"/>
+
+            <Label 
+                Text="{Binding CurrentParticipantName}"
+                IsVisible="{Binding ParticipantShown}"
+                Style="{StaticResource BoldTitleText}"/>
 
             <CollectionView x:Name="QuestionsListView"
                 ItemsSource="{Binding Questions}"
-                SelectionMode="None">
+                SelectionMode="None"
+                IsVisible="{Binding IsQuestionListVisible}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame x:Name="QuestionFrame"
-                                Padding="15"
-                                Margin="8"
-                                BorderColor="#6200EE"
-                                BackgroundColor="{Binding BackgroundColor}" 
-                                CornerRadius="15"
-                                HasShadow="True"
-                                IsEnabled="{Binding IsEnabled}">
+                        <Frame Padding="15"
+                   Margin="8"
+                   BorderColor="{StaticResource FrameBorder}"
+                   BackgroundColor="{Binding BackgroundColor}" 
+                   CornerRadius="15"
+                   HasShadow="True"
+                   IsEnabled="{Binding IsEnabled}">
+
                             <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OnQuestionTappedCommand}" 
-                              CommandParameter="{Binding}" />
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OnQuestionTappedCommand}"
+                                          CommandParameter="{Binding}" />
                             </Frame.GestureRecognizers>
 
                             <VerticalStackLayout Padding="15" VerticalOptions="Center">
                                 <Label Text="{Binding Text}" 
-                                       FontSize="18"
-                                       FontAttributes="Bold"
-                                       TextColor="Black"
-                                       LineBreakMode="WordWrap" />
+                           FontSize="18"
+                           BackgroundColor="{StaticResource Binding}"
+                           FontAttributes="Bold"
+                           TextColor="Black"
+                           LineBreakMode="WordWrap" />
                             </VerticalStackLayout>
                         </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <Button 
-                Text="Stop Spel"
-                Style="{StaticResource LeaveGameButtonStyle}"
-                Command="{Binding StopGameCommand}" />
+            <StackLayout IsVisible="{Binding IsQuestionVisible}" Padding="10">
+                <Label Text="{Binding CurrentQuestionText}" 
+                       FontSize="20" 
+                       HorizontalTextAlignment="Center" />
+
+                <Button Text="Truth"
+                        Command="{Binding AnswerCommand}"
+                        CommandParameter="Truth"
+                        IsEnabled="{Binding AreButtonsEnabled}" 
+                        Style="{StaticResource TruthButtonStyle}" 
+                        IsVisible="{Binding IsQuestionVisible}" />
+
+                <Button Text="Drink"
+                        Command="{Binding AnswerCommand}"
+                        CommandParameter="Drink"
+                        IsEnabled="{Binding AreButtonsEnabled}" 
+                        Style="{StaticResource DrinkButtonStyle}" 
+                        IsVisible="{Binding IsQuestionVisible}" />
+            </StackLayout>
+
+            <Button Text="Stop Spel"
+                    Style="{StaticResource LeaveGameButtonStyle}"
+                    Command="{Binding StopGameCommand}" />
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

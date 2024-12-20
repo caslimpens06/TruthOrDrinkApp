@@ -1,4 +1,6 @@
-﻿using SQLite;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using SQLite;
 using TruthOrDrink.DataAccessLayer;
 
 namespace TruthOrDrink.Model
@@ -68,7 +70,7 @@ namespace TruthOrDrink.Model
 			_text = text;
 		}
 
-		public Question() { } // Required for SQLite and other ORM frameworks
+		public Question() { }
 
 		public async Task AddQuestionByParticipant()
 		{

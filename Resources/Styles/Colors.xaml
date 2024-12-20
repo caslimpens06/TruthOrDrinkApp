@@ -16,8 +16,9 @@
     <Color x:Key="StandardGreen">Green</Color>
     <Color x:Key="StandardRed">Red</Color>
     <Color x:Key="StandardOption">#d7655c</Color>
+    <Color x:Key="FrameBorder">Blue</Color>
 
-    <Color x:Key="Primary">#512BD4</Color>
+    <Color x:Key="Primary">#0b395a</Color>
     <Color x:Key="PrimaryDark">#ac99ea</Color>
     <Color x:Key="PrimaryDarkText">#242424</Color>
     <Color x:Key="Secondary">#DFD8F7</Color>

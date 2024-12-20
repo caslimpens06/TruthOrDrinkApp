@@ -71,6 +71,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="View\ChooseDrinksPage.xaml.cs">
+	    <DependentUpon>ChooseDrinksPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="View\GameJoinPage.xaml.cs">
 	    <DependentUpon>GameJoinPage.xaml</DependentUpon>
 	  </Compile>
@@ -95,6 +98,9 @@
 	  <MauiXaml Update="View\AddOfflineParticipantsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="View\ChooseDrinksPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="View\ControlOfflineGamePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
@@ -117,6 +123,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\OfflineGamePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="View\OfflineGameStatisticsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="View\OfflineMode.xaml">

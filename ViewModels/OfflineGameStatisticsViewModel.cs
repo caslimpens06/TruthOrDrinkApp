@@ -1,27 +1,25 @@
-﻿using TruthOrDrink.Model;
-using CommunityToolkit.Mvvm.Input;
-using TruthOrDrink.View;
-using TruthOrDrink.DataAccessLayer;
+﻿using CommunityToolkit.Mvvm.Input;
+using TruthOrDrink.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
+using TruthOrDrink.View;
 
 namespace TruthOrDrink.ViewModels
 {
-	public class GameStatisticsHostViewModel : ObservableObject
+	public class OfflineGameStatisticsViewModel : ObservableObject
 	{
 		private Participant _participant;
+		private List<Participant> _participants;
 		private string _truthLabel;
 		private string _topTruthCount;
 		private string _drinkLabel;
 		private string _topDrinkCount;
 		private string _topTruthImage;
 		private string _topDrinkImage;
-		private Host _host;
-		private readonly SQLiteService _sqliteService = new SQLiteService();
 
-		public GameStatisticsHostViewModel(Participant participant)
+		public OfflineGameStatisticsViewModel(List<Participant> participants)
 		{
-			_participant = participant;
-			ToMainHostMenuCommand = new AsyncRelayCommand(ToMainMenu);
+			_participants = participants;
+			ToMainMenuCommand = new AsyncRelayCommand(ToMainMenu);
 			InitializeData();
 		}
 
@@ -61,7 +59,7 @@ namespace TruthOrDrink.ViewModels
 			set => SetProperty(ref _topDrinkImage, value);
 		}
 
-		public IAsyncRelayCommand ToMainHostMenuCommand { get; }
+		public IAsyncRelayCommand ToMainMenuCommand { get; }
 
 		private async void InitializeData()
 		{
@@ -97,34 +95,18 @@ namespace TruthOrDrink.ViewModels
 
 		private async Task<Participant> GetParticipantWithMostTruthAnswers()
 		{
-			return await _participant.GetMostTruths();
+			return _participants.OrderByDescending(p => p.TruthCount).FirstOrDefault();
 		}
 
 		private async Task<Participant> GetParticipantWithMostDrinkAnswers()
 		{
-			return await _participant.GetMostDrinks();
+			return _participants.OrderByDescending(p => p.DrinkCount).FirstOrDefault();
 		}
 
 		private async Task ToMainMenu()
 		{
-			_host = await _sqliteService.GetHostAsync();
-
-			if (_host == null)
-			{
-				await App.Current.MainPage.Navigation.PopToRootAsync();
-			}
-			else
-			{
-				try
-				{
-					await App.Current.MainPage.Navigation.PushAsync(new HostMainPage(_host));
-				}
-				catch (Exception ex)
-				{
-					await App.Current.MainPage.Navigation.PopToRootAsync();
-				}
-			}
+			await App.Current.MainPage.Navigation.PushAsync(new OfflineMode());
 		}
-
 	}
 }
+
