@@ -3,52 +3,67 @@ using CommunityToolkit.Mvvm.Input;
 using TruthOrDrink.Model;
 using TruthOrDrink.DataAccessLayer;
 using TruthOrDrink.View;
+using TruthOrDrink;
 
-namespace TruthOrDrink.ViewModels
+public class LoginViewModel : ObservableObject
 {
-	public class LoginViewModel : ObservableObject
+	private string _email;
+	private string _password;
+	private bool _isOverlayVisible;
+	private bool _isBackButtonDisabled;
+
+	public LoginViewModel()
 	{
-		private string _email;
-		private string _password;
+		LoginCommand = new AsyncRelayCommand(Login);
+	}
 
-		public LoginViewModel()
+	public string Email
+	{
+		get => _email;
+		set => SetProperty(ref _email, value);
+	}
+
+	public string Password
+	{
+		get => _password;
+		set => SetProperty(ref _password, value);
+	}
+
+	public bool IsOverlayVisible
+	{
+		get => _isOverlayVisible;
+		set => SetProperty(ref _isOverlayVisible, value);
+	}
+
+	public bool IsBackButtonDisabled
+	{
+		get => _isBackButtonDisabled;
+		set => SetProperty(ref _isBackButtonDisabled, value);
+	}
+
+	public IAsyncRelayCommand LoginCommand { get; }
+
+	private async Task Login()
+	{
+		if (string.IsNullOrWhiteSpace(Email) || !IsValidEmail(Email))
 		{
-			LoginCommand = new AsyncRelayCommand(Login);
+			await App.Current.MainPage.DisplayAlert("Ongeldige invoer", "Voer een geldig e-mailadres in.", "OK");
+			return;
 		}
 
-		public string Email
+		Email = Email.Trim().ToLower();
+
+		if (string.IsNullOrWhiteSpace(Password))
 		{
-			get => _email;
-			set => SetProperty(ref _email, value);
+			await App.Current.MainPage.DisplayAlert("Ongeldig wachtwoord", "Voer je wachtwoord in.", "OK");
+			return;
 		}
 
-		public string Password
+		IsOverlayVisible = true;
+		IsBackButtonDisabled = true; // Disable back button during login
+
+		try
 		{
-			get => _password;
-			set => SetProperty(ref _password, value);
-		}
-
-		public IAsyncRelayCommand LoginCommand { get; }
-
-		private async Task Login()
-		{
-			// Normalize the email to lowercase and trim spaces
-			if (string.IsNullOrWhiteSpace(Email) || !IsValidEmail(Email))
-			{
-				await App.Current.MainPage.DisplayAlert("Ongeldige invoer", "Voer een geldig e-mailadres in.", "OK");
-				return;
-			}
-
-			// Trim and convert the email to lowercase
-			Email = Email.Trim().ToLower();
-
-			if (string.IsNullOrWhiteSpace(Password))
-			{
-				await App.Current.MainPage.DisplayAlert("Ongeldig wachtwoord", "Voer je wachtwoord in.", "OK");
-				return;
-			}
-
-			// Check credentials using normalized email
 			Host host = new Host(Email);
 			string storedOnlineHash = await host.ValidateCredentialsAsync();
 
@@ -68,19 +83,24 @@ namespace TruthOrDrink.ViewModels
 				await App.Current.MainPage.DisplayAlert("Login Mislukt", "Email of wachtwoord is incorrect.", "OK");
 			}
 		}
-
-		private static bool IsValidEmail(string email)
+		finally
 		{
-			try
-			{
-				email = email.Trim();
-				var addr = new System.Net.Mail.MailAddress(email);
-				return addr.Address == email;
-			}
-			catch
-			{
-				return false;
-			}
+			IsOverlayVisible = false;
+			IsBackButtonDisabled = false; // Re-enable back button
+		}
+	}
+
+	private static bool IsValidEmail(string email)
+	{
+		try
+		{
+			email = email.Trim();
+			var addr = new System.Net.Mail.MailAddress(email);
+			return addr.Address == email;
+		}
+		catch
+		{
+			return false;
 		}
 	}
 }

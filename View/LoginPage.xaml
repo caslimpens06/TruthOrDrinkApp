@@ -3,36 +3,41 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TruthOrDrink.LoginPage">
 
-    <ScrollView>
-        <VerticalStackLayout Style="{StaticResource StandardSpacing}">
+    <Grid>
+        <ScrollView>
+            <VerticalStackLayout Style="{StaticResource StandardSpacing}">
 
-            <Image
+                <Image
                 x:Name="LogoImage"
                 Style="{StaticResource LogoImage}" />
-            
-            <Label
+
+                <Label
                 Text="Login"
                 Style="{StaticResource BoldTitleText}" />
-            
-            <Entry
+
+                <Entry
                    Placeholder="Typ je email hier" 
                    Text="{Binding Email}"
                    Style="{StaticResource StandardEntry}"/>
 
-            <Entry 
+                <Entry 
                    Placeholder="Typ je wachtwoord hier" 
                    IsPassword="True" 
                    Text="{Binding Password}"
                    Style="{StaticResource StandardEntry}"/>
 
-            <Button 
+                <Button 
                     Text="Inloggen" 
                     Style="{StaticResource SelectButtonStyle}" 
                     Command="{Binding LoginCommand}" />
 
-            <Label Text="Bij vergeten inloggegevens kan het account niet hersteld worden."
+                <Label Text="Bij vergeten inloggegevens kan het account niet hersteld worden."
                    Style="{StaticResource StandardCommentText}"/>
 
-        </VerticalStackLayout>
-    </ScrollView>
+            </VerticalStackLayout>
+        </ScrollView>
+        
+        <ContentView ControlTemplate="{StaticResource LoadingOverlayTemplate}" />
+        
+    </Grid>
 </ContentPage>

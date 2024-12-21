@@ -13,12 +13,13 @@
                 x:Name="LogoImage"
                 Style="{StaticResource LogoImage}"/>
 
-            <Label Text="Welkom bij Truth Or Drink"
-                  Style="{StaticResource BoldTitleText}"/>
+            <Label 
+                Text="Welkom bij Truth Or Drink"
+                Style="{StaticResource BoldTitleText}"/>
 
             <Button 
                 Text="{Binding HostButtonText}" 
-                BackgroundColor="{Binding HostButtonBackgroundColor}" 
+                BackgroundColor="{Binding HostButtonBackgroundColor}"
                 Style="{StaticResource SelectButtonStyle}" 
                 Command="{Binding NavigateToHostCommand}" />
 

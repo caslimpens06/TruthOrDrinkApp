@@ -12,6 +12,7 @@ namespace TruthOrDrink.ViewModels
 		private readonly Host _originalHost;
 
 		private bool _isNameReadOnly;
+		private bool _isOverlayVisible;
 		private bool _isPasswordReadOnly;
 		private string _confirmPassword;
 		private string _password;
@@ -38,6 +39,12 @@ namespace TruthOrDrink.ViewModels
 		{
 			get => _password;
 			set => SetProperty(ref _password, value);
+		}
+
+		public bool IsOverlayVisible
+		{
+			get => _isOverlayVisible;
+			set => SetProperty(ref _isOverlayVisible, value);
 		}
 
 		public string ConfirmPassword
@@ -85,18 +92,22 @@ namespace TruthOrDrink.ViewModels
 
 		private async Task Save()
 		{
+			IsOverlayVisible = true;
+
 			bool isNameChanged = Host.Name != _originalHost.Name;
 			bool isPasswordChanged = !string.IsNullOrWhiteSpace(Password);
 			bool isEmailChanged = Host.Email != _originalHost.Email;
 
 			if (!isNameChanged && !isPasswordChanged && !isEmailChanged)
 			{
+				IsOverlayVisible = false;
 				await App.Current.MainPage.DisplayAlert("Geen Wijzigingen", "Er zijn geen wijzigingen gedetecteerd.", "OK");
 				return;
 			}
 
 			if (isNameChanged && string.IsNullOrEmpty(Host.Name))
 			{
+				IsOverlayVisible = false;
 				await App.Current.MainPage.DisplayAlert("Ongeldige Invoer", "Naam mag niet leeg zijn.", "OK");
 				return;
 			}
@@ -107,12 +118,14 @@ namespace TruthOrDrink.ViewModels
 			{
 				if (Password != ConfirmPassword)
 				{
+					IsOverlayVisible = false;
 					await App.Current.MainPage.DisplayAlert("Wachtwoord Mismatch", "De wachtwoorden komen niet overeen.", "OK");
 					return;
 				}
 
 				if (Password.Length < 8)
 				{
+					IsOverlayVisible = false;
 					await App.Current.MainPage.DisplayAlert("Ongeldige Invoer", "Wachtwoord moet minstens 8 tekens lang zijn.", "OK");
 					return;
 				}
@@ -120,6 +133,7 @@ namespace TruthOrDrink.ViewModels
 				bool hasSpecialChar = Password.Any(ch => "@#$%&!".Contains(ch));
 				if (!hasSpecialChar)
 				{
+					IsOverlayVisible = false;
 					await App.Current.MainPage.DisplayAlert("Ongeldige Invoer", "Wachtwoord moet minstens één speciaal teken bevatten (@#$%&!).", "OK");
 					return;
 				}
@@ -140,6 +154,8 @@ namespace TruthOrDrink.ViewModels
 			await _sqliteService.UpdateHostAsync(updatedHost);
 			await updatedHost.UpdateHostCredentials();
 
+			IsOverlayVisible = false;
+
 			await App.Current.MainPage.DisplayAlert("Opgeslagen", "Je profiel is bijgewerkt.", "OK");
 
 			IsNameReadOnly = true;
@@ -151,8 +167,5 @@ namespace TruthOrDrink.ViewModels
 			Password = string.Empty;
 			ConfirmPassword = string.Empty;
 		}
-
-
-
 	}
 }
