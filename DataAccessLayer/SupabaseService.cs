@@ -623,7 +623,7 @@ public class SupabaseService
 				{
 					if (await reader.ReadAsync())
 					{
-						return new Participant(reader.GetString(0), reader.GetString(1), reader.GetInt32(2));
+						return new Participant(reader.GetString(0), reader.GetString(1), reader.GetInt32(2), "this is a placeholder to distinguish the truth/drink count");
 					}
 				}
 			}

@@ -212,6 +212,14 @@
         <Setter Property="HeightRequest" Value="50" />
     </Style>
 
+    <ControlTemplate x:Key="LoadingOverlayTemplate">
+        <Grid IsVisible="{TemplateBinding BindingContext.IsOverlayVisible}" 
+              BackgroundColor="Black" Opacity="0.5" 
+              HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" IsRunning="True" />
+        </Grid>
+    </ControlTemplate>
+    
     <Style TargetType="ActivityIndicator">
         <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
     </Style>

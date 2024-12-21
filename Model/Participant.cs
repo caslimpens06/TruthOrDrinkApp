@@ -48,7 +48,6 @@ namespace TruthOrDrink.Model
 		}
 
 		public bool HasAnswered { get; set; }
-		public string Answer { get; set; }
 
 		public Participant(int participantid, int sessioncode)
 		{
@@ -73,11 +72,18 @@ namespace TruthOrDrink.Model
 			_gender = gender;
 		}
 
-		public Participant(string name, string gender, int truthordrinkcount)
+		public Participant(string name, string gender, int truthcount)
 		{
 			_name = name;
 			_gender = gender;
-			_truthcount = truthordrinkcount;
+			_truthcount = truthcount;
+		}
+
+		public Participant(string name, string gender, int drinkcount, string placeholder)
+		{
+			_name = name;
+			_gender = gender;
+			_drinkcount = drinkcount;
 		}
 
 		public string GenderImage => GetImageSourceForGender(Gender);

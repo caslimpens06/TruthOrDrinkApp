@@ -14,6 +14,7 @@ namespace TruthOrDrink.ViewModels
 		private string _password;
 		private string _confirmPassword;
 		private bool _isOverlayVisible;
+		private bool _isBackButtonDisabled;
 
 		public SignUpViewModel()
 		{
@@ -70,6 +71,16 @@ namespace TruthOrDrink.ViewModels
 			}
 		}
 
+		public bool IsBackButtonDisabled
+		{
+			get => _isBackButtonDisabled;
+			set
+			{
+				_isBackButtonDisabled = value;
+				OnPropertyChanged(nameof(IsBackButtonDisabled));
+			}
+		}
+
 		public ICommand CreateAccountCommand { get; }
 
 		public event EventHandler<Host> NavigationRequested;
@@ -88,7 +99,6 @@ namespace TruthOrDrink.ViewModels
 				return;
 			}
 
-			// Convert the email to lowercase and trim any extra spaces
 			Email = Email.Trim().ToLower();
 
 			if (string.IsNullOrWhiteSpace(Password))
@@ -116,6 +126,7 @@ namespace TruthOrDrink.ViewModels
 			}
 
 			IsOverlayVisible = true;
+			IsBackButtonDisabled = true; // Disable back button during signup
 
 			Host host = new Host(Email);
 			bool exists = await host.CheckIfHostExistsAsync();
@@ -124,6 +135,7 @@ namespace TruthOrDrink.ViewModels
 			{
 				await Application.Current.MainPage.DisplayAlert("Account maken mislukt", "Dit emailadres bestaat al. Log in met je account.", "OK");
 				IsOverlayVisible = false;
+				IsBackButtonDisabled = false; // Re-enable back button
 			}
 			else
 			{
@@ -140,12 +152,12 @@ namespace TruthOrDrink.ViewModels
 				await Application.Current.MainPage.DisplayAlert("Account", "Je account is gemaakt! Je wordt meteen ingelogd.", "OK");
 
 				IsOverlayVisible = false;
+				IsBackButtonDisabled = false; // Re-enable back button
 
 				NavigationRequested?.Invoke(this, savedHost);
 				await App.Current.MainPage.Navigation.PushAsync(new HostMainPage(savedHost));
 			}
 		}
-
 
 		private bool IsValidEmail(string email)
 		{

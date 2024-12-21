@@ -80,7 +80,7 @@ namespace TruthOrDrink.ViewModels
 			if (drinkParticipant != null)
 			{
 				DrinkLabel = drinkParticipant.Name ?? "Geen Data";
-				TopDrinkCount = $"Meeste keren Drink: {drinkParticipant.TruthCount}";
+				TopDrinkCount = $"Meeste keren Drink: {drinkParticipant.DrinkCount}";
 				TopDrinkImage = drinkParticipant.GenderImage;
 			}
 			else

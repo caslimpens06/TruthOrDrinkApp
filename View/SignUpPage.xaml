@@ -49,11 +49,8 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <Grid IsVisible="{Binding IsOverlayVisible}" 
-              BackgroundColor="Black" Opacity="0.5" 
-              HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-            <ActivityIndicator HorizontalOptions="Center" VerticalOptions="Center" IsRunning="True" />
-        </Grid>
+        <ContentView ControlTemplate="{StaticResource LoadingOverlayTemplate}" />
+        
     </Grid>
 
 </ContentPage>
