@@ -36,7 +36,7 @@ public partial class QRScannerViewModel : ObservableObject
 					bool hasStarted = await session.CheckIfSessionHasStarted();
 					if (!hasStarted)
 					{
-						Participant participant = new Participant(_participant.ParticipantId, sessionCode);
+						Participant participant = new Participant(_participant.ParticipantId, sessionCode, _participant.Name);
 						await participant.JoinParticipantToSession();
 
 						if (await session.CheckIfCustomGame())

@@ -49,10 +49,11 @@ namespace TruthOrDrink.Model
 
 		public bool HasAnswered { get; set; }
 
-		public Participant(int participantid, int sessioncode)
+		public Participant(int participantid, int sessioncode, string name)
 		{
 			_participantid = participantid;
 			_sessioncode = sessioncode;
+			_name = name;
 		}
 		public Participant(int sessioncode)
 		{
@@ -165,6 +166,11 @@ namespace TruthOrDrink.Model
 		public async Task<bool> CheckIfGameClosed()
 		{
 			return await _supabaseService.CheckIfGameClosed(this);
+		}
+
+		public async Task<string> GetDrinksBySession()
+		{
+			return await _supabaseService.GetDrinksBySession(this);
 		}
 	}
 }

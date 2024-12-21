@@ -792,5 +792,58 @@ public class SupabaseService
 		return questions;
 	}
 
+	public async Task AddDrinksToSession(Session session)
+	{
+		try
+		{
+			using (var connection = new NpgsqlConnection(connectionString))
+			{
+				await connection.OpenAsync();
+
+				string query = "UPDATE public.\"Session\" SET \"SelectedDrinks\" = @DrinksinJson::jsonb WHERE \"SessionId\" = @SessionId";
+
+				using (var command = new NpgsqlCommand(query, connection))
+				{
+					command.Parameters.AddWithValue("@DrinksinJson", session.SelectedDrinksJson);
+					command.Parameters.AddWithValue("@SessionId", session.SessionCode);
+
+					await command.ExecuteNonQueryAsync();
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error adding drinks to Supabase: {ex.Message}");
+		}
+	}
+
+	public async Task<string> GetDrinksBySession(Participant participant)
+	{
+		try
+		{
+			using (var connection = new NpgsqlConnection(connectionString))
+			{
+				await connection.OpenAsync();
+
+				string query = "SELECT \"SelectedDrinks\" FROM public.\"Session\" WHERE \"SessionId\" = @SessionId";
+
+				using (var command = new NpgsqlCommand(query, connection))
+				{
+					command.Parameters.AddWithValue("@SessionId", participant.SessionCode);
+
+					var result = await command.ExecuteScalarAsync();
+					return result.ToString();
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"Error fetching drinks for session: {ex.Message}");
+			return null;
+		}
+	}
+
+
+
 }
 

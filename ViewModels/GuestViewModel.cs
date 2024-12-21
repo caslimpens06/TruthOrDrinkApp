@@ -50,7 +50,7 @@ namespace TruthOrDrink.ViewModels
 				bool hasStarted = await session.CheckIfSessionHasStarted();
 				if (!hasStarted)
 				{
-					Participant participant = new Participant(_participant.ParticipantId, parsedSessionCode);
+					Participant participant = new Participant(_participant.ParticipantId, parsedSessionCode, _participant.Name);
 					await participant.JoinParticipantToSession();
 					await Application.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(participant));
 				}
