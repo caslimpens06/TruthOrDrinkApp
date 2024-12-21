@@ -4,8 +4,8 @@
              x:Class="TruthOrDrink.HostJoinParticipantPage"
              NavigationPage.HasNavigationBar="False"
              BindingContext="{Binding HostJoinParticipantViewModel}">
-
-    <ScrollView>
+    <Grid>
+        <ScrollView>
         <VerticalStackLayout Style="{StaticResource StandardSpacing}">
 
             <Image
@@ -71,7 +71,7 @@
             </Button>
 
             <Button 
-                Text="Start Spel"
+                Text="Ga verder"
                 Command="{Binding StartGameCommand}"
                 Style="{StaticResource SelectButtonStyle}" />
 
@@ -82,4 +82,8 @@
 
         </VerticalStackLayout>
     </ScrollView>
+
+        <ContentView ControlTemplate="{StaticResource LoadingOverlayTemplate}" />
+        
+    </Grid>
 </ContentPage>

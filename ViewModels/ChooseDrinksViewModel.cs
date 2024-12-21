@@ -4,6 +4,7 @@ using TruthOrDrink.Model;
 using System.Collections.ObjectModel;
 using TruthOrDrink.DataAccessLayer;
 using TruthOrDrink.View;
+using System.Text.Json;
 
 namespace TruthOrDrink.ViewModels
 {
@@ -14,11 +15,21 @@ namespace TruthOrDrink.ViewModels
 		private ObservableCollection<Drink> _selectedDrinks = new ObservableCollection<Drink>();
 		private readonly Session _session;
 		private readonly List<Participant> _participants;
+		private bool _mode; // true is online - false is offline
 
 		public ChooseDrinksViewModel(Session session, List<Participant> participants)
 		{
 			_session = session;
 			_participants = participants;
+			_mode = false;
+			ContinueCommand = new AsyncRelayCommand(Continue);
+			ToggleDrinkSelectionCommand = new RelayCommand<Drink>(ToggleDrinkSelection);
+			LoadDrinksAsync();
+		}
+		public ChooseDrinksViewModel(Session session)
+		{
+			_session = session;
+			_mode = true;
 			ContinueCommand = new AsyncRelayCommand(Continue);
 			ToggleDrinkSelectionCommand = new RelayCommand<Drink>(ToggleDrinkSelection);
 			LoadDrinksAsync();
@@ -75,7 +86,19 @@ namespace TruthOrDrink.ViewModels
 		{
 			if (SelectedDrinks.Count > 0)
 			{
-				await Application.Current.MainPage.Navigation.PushAsync(new ControlOfflineGamePage(_session, _participants, SelectedDrinks.ToList()));
+				if (_mode)
+				{
+					string json = JsonSerializer.Serialize(SelectedDrinks.ToList());
+					Session drinksinjson = new Session(_session.SessionCode, json);
+					await drinksinjson.AddDrinksToSession();
+					await _session.StartGame();
+					await Application.Current.MainPage.Navigation.PushAsync(new HostControlsGamePage(_session));
+					
+				}
+				else 
+				{
+					await Application.Current.MainPage.Navigation.PushAsync(new ControlOfflineGamePage(_session, _participants, SelectedDrinks.ToList()));
+				}
 			}
 			else
 			{

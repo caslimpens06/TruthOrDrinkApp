@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using SQLite;
+using TruthOrDrink.DataAccessLayer;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace TruthOrDrink.Model
@@ -10,7 +11,9 @@ namespace TruthOrDrink.Model
 		private string _name;
 		private string _type;
 		private bool _isSelected;
-		public Color BackgroundColor => IsSelected ? Colors.LightGreen : Colors.White;
+		private readonly SupabaseService _supabaseService = new SupabaseService();
+		
+		
 
 		[PrimaryKey]
 		[JsonPropertyName("name")]
@@ -27,6 +30,7 @@ namespace TruthOrDrink.Model
 			set => SetProperty(ref _type, value ?? string.Empty);
 		}
 
+		[JsonIgnore]
 		public bool IsSelected
 		{
 			get => _isSelected;
@@ -36,6 +40,10 @@ namespace TruthOrDrink.Model
 				OnPropertyChanged(nameof(BackgroundColor));
 			}
 		}
+		
+		[JsonIgnore]
+		public Color BackgroundColor => IsSelected ? Colors.LightGreen : Colors.White;
+
 
 		public Drink(string name, string type)
 		{
@@ -44,5 +52,6 @@ namespace TruthOrDrink.Model
 		}
 
 		public Drink() { }
+
 	}
 }

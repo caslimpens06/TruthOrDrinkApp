@@ -8,6 +8,7 @@ namespace TruthOrDrink.Model
 		private int _hostid;
 		private int _gameid;
 		private int _sessioncode;
+		private string _selectedDrinksJson;
 		private readonly SupabaseService _supabaseService = new SupabaseService();
 		private readonly SQLiteService _sqliteService = new SQLiteService();
 
@@ -25,6 +26,12 @@ namespace TruthOrDrink.Model
 		{
 			get { return _hostid; }
 			set { _hostid = value; }
+		}
+		
+		public string SelectedDrinksJson
+		{
+			get { return _selectedDrinksJson; }
+			set { _selectedDrinksJson = value; }
 		}
 
 		public Session(Host host, int gameid)
@@ -49,6 +56,12 @@ namespace TruthOrDrink.Model
 			_sessioncode = sessioncode;
 			_hostid = hostid;
 			_gameid = gameid;
+		}
+
+		public Session(int sessioncode, string selecteddrinksjson)
+		{
+			_sessioncode = sessioncode;
+			_selectedDrinksJson = selecteddrinksjson;
 		}
 
 		public async void AddSessionToDatabase() 
@@ -83,5 +96,11 @@ namespace TruthOrDrink.Model
 		{
 			return await _sqliteService.GetQuestionsFromLocalDatabase(this);
 		}
+
+		public async Task AddDrinksToSession()
+		{
+			await _supabaseService.AddDrinksToSession(this);
+		}
+
 	}
 }

@@ -2,17 +2,18 @@
 using CommunityToolkit.Mvvm.Input;
 using TruthOrDrink.Model;
 using TruthOrDrink.View;
+using System.Text.Json;
 
 namespace TruthOrDrink.ViewModels;
 
 public partial class ParticipantGameViewModel : ObservableObject
 {
 	private readonly Participant _participant;
-	private readonly INavigation _navigation;
 	private List<Question> _questions;
 	private List<Question> _answeredQuestions = new();
 	private Question _currentQuestion;
 	private Game _game;
+	private List<Drink> _drinks;
 
 	[ObservableProperty]
 	private string gameName;
@@ -32,7 +33,6 @@ public partial class ParticipantGameViewModel : ObservableObject
 	public ParticipantGameViewModel(Participant participant)
 	{
 		_participant = participant;
-		_navigation = Application.Current.MainPage.Navigation;
 
 		AnswerCommand = new RelayCommand<string>(async (response) => await HandleAnswerAsync(response));
 		LeaveGameCommand = new RelayCommand(async () => await LeaveGameAsync());
@@ -45,14 +45,15 @@ public partial class ParticipantGameViewModel : ObservableObject
 	private async Task InitializePageAsync()
 	{
 		await InitializeGameAsync();
+		await LoadDrinks();
 		await LoadQuestionsAsync();
+		
 	}
 
 	private async Task InitializeGameAsync()
 	{
 		Participant participant = new Participant(_participant.SessionCode);
 		Game game = await participant.GetGameBySessionId();
-
 		GameName = game.Name;
 		_game = game;
 	}
@@ -69,6 +70,33 @@ public partial class ParticipantGameViewModel : ObservableObject
 		}
 
 		await SetNextQuestionAsync();
+	}
+
+	private async Task LoadDrinks()
+	{
+		string json = await _participant.GetDrinksBySession();
+		if (string.IsNullOrEmpty(json))
+		{
+			Console.WriteLine("Loading drinks failed");
+			_drinks = new List<Drink>();
+		}
+		try
+		{
+			List<Drink> drinks = JsonSerializer.Deserialize<List<Drink>>(json);
+			_drinks = drinks;
+		}
+		catch (JsonException ex)
+		{
+			Console.WriteLine($"Error deserializing JSON: {ex.Message}");
+			_drinks = new List<Drink>();
+		}
+	}
+
+	private Task<string> RandomDrink()
+	{
+		Random random = new Random();
+		var randomDrink = _drinks[random.Next(_drinks.Count)];
+		return Task.FromResult(randomDrink.Name);
 	}
 
 	private async Task SetNextQuestionAsync()
@@ -134,6 +162,15 @@ public partial class ParticipantGameViewModel : ObservableObject
 
 	private async Task HandleAnswerAsync(string response)
 	{
+		if (response.Equals("Drink", StringComparison.OrdinalIgnoreCase))
+		{
+			await App.Current.MainPage.DisplayAlert("Oei!", $"{_participant.Name}, je moet een slok {await RandomDrink()} drinken!", "OK");
+		}
+		else if (response.Equals("Truth", StringComparison.OrdinalIgnoreCase))
+		{
+			await App.Current.MainPage.DisplayAlert("Oei", $"{_participant.Name}, je moet de waarheid vertellen!", "OK");
+		}
+
 		AreButtonsEnabled = false;
 		IsQuestionAvailable = false;
 		CurrentQuestionText = "Wachten op volgende vraag...";
@@ -157,7 +194,7 @@ public partial class ParticipantGameViewModel : ObservableObject
 			await _participant.SetAllQuestionsToAnswered();
 			if (await CheckIfSessionDoneAsync())
 			{
-				await _navigation.PushAsync(new GameStatisticsParticipantPage(_participant));
+				await App.Current.MainPage.Navigation.PushAsync(new GameStatisticsParticipantPage(_participant));
 			}
 		}
 	}
@@ -186,13 +223,13 @@ public partial class ParticipantGameViewModel : ObservableObject
 
 		if (isGameClosed)
 		{
-			await _navigation.PushAsync(new GameStatisticsParticipantPage(_participant));
+			await App.Current.MainPage.Navigation.PushAsync(new GameStatisticsParticipantPage(_participant));
 		}
 	}
 
 	private async Task LeaveGameAsync()
 	{
 		await _participant.RemoveParticipantAsync();
-		await _navigation.PopToRootAsync();
+		await App.Current.MainPage.Navigation.PopToRootAsync();
 	}
 }

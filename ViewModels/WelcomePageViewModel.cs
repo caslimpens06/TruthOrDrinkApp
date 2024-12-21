@@ -123,7 +123,7 @@ namespace TruthOrDrink.ViewModels
 			{
 				HostButtonEnabled = false;
 				_countdown--;
-				HostButtonText = $"Schud je apparaat om in te loggen als {_host.Name} ({_countdown})";
+				HostButtonText = $"Schud om in te loggen als {_host.Name} ({_countdown})";
 			}
 			else
 			{

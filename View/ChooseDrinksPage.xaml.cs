@@ -10,4 +10,9 @@ public partial class ChooseDrinksPage : ContentPage
 		InitializeComponent();
 		BindingContext = new ChooseDrinksViewModel(session, participants);
 	}
+	public ChooseDrinksPage(Session session)
+	{
+		InitializeComponent();
+		BindingContext = new ChooseDrinksViewModel(session);
+	}
 }

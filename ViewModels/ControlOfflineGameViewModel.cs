@@ -171,7 +171,7 @@ namespace TruthOrDrink.ViewModels
 		{
 			IsQuestionVisible = false;
 			AreButtonsEnabled = false;
-			await Application.Current.MainPage.Navigation.PushAsync(new OfflineGameStatisticsPage(_participants));
+			await App.Current.MainPage.Navigation.PushAsync(new OfflineGameStatisticsPage(_participants));
 		}
 	}
 }

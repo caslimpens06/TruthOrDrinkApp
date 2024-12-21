@@ -10,6 +10,7 @@ namespace TruthOrDrink.ViewModels
 	{
 		private Session _session;
 		private readonly ObservableCollection<Participant> _participants = new ObservableCollection<Participant>();
+		private bool _isOverlayVisible;
 
 		public HostJoinParticipantViewModel(Session session)
 		{
@@ -17,6 +18,8 @@ namespace TruthOrDrink.ViewModels
 			RefreshCommand = new AsyncRelayCommand(RefreshContent);
 			StartGameCommand = new AsyncRelayCommand(StartGame);
 			LeaveGameCommand = new AsyncRelayCommand(LeaveGame);
+
+			RefreshContent().ConfigureAwait(false); // Refresh participants upon pageload
 		}
 
 		public ObservableCollection<Participant> Participants => _participants;
@@ -25,14 +28,19 @@ namespace TruthOrDrink.ViewModels
 		public IAsyncRelayCommand StartGameCommand { get; }
 		public IAsyncRelayCommand LeaveGameCommand { get; }
 
+		public bool IsOverlayVisible
+		{
+			get => _isOverlayVisible;
+			set
+			{
+				_isOverlayVisible = value;
+				OnPropertyChanged(nameof(IsOverlayVisible));
+			}
+		}
+
 		public async Task RefreshContent()
 		{
 			List<Participant> participants = await _session.GetParticipantsBySession();
-			foreach (Participant participant in participants) { Console.WriteLine(participant.Name); }
-			if (participants == null || !participants.Any())
-			{
-				Console.WriteLine("No participants found!");
-			}
 
 			_participants.Clear();
 			foreach (var participant in participants)
@@ -43,8 +51,9 @@ namespace TruthOrDrink.ViewModels
 
 		public async Task StartGame()
 		{
-			await _session.StartGame();
-			await App.Current.MainPage.Navigation.PushAsync(new HostControlsGamePage(_session));
+			IsOverlayVisible = true;
+			await App.Current.MainPage.Navigation.PushAsync(new ChooseDrinksPage(_session));
+			IsOverlayVisible = false;
 		}
 
 		public async Task LeaveGame()
