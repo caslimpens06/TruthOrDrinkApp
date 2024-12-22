@@ -417,7 +417,6 @@ public class SupabaseService
 				}
 			}
 		}
-		if (questions == null) { Console.WriteLine("QUESTIONS NULL SUPABASE"); }
 		return questions;
 	}
 

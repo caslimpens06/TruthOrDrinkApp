@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:TruthOrDrink.ViewModels"
+             x:Class="TruthOrDrink.View.SettingsPage"
+             x:DataType="local:SettingsPageViewModel">
+
+    <ScrollView>
+        <Grid Padding="100" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+              ColumnDefinitions="Auto">
+
+            <Label Text="Instellingen" 
+                   Style="{StaticResource BoldTitleText}"
+                   HorizontalOptions="Center"
+                   Grid.Row="0" />
+
+            <Button Text="Ververs Drinkdata" 
+                    Style="{StaticResource SelectButtonStyle}" 
+                    Command="{Binding RefreshDrinkDataCommand}" 
+                    HorizontalOptions="FillAndExpand"
+                    Grid.Row="1" />
+
+            <Label Text="Volg mij op sociale media" 
+                   Style="{StaticResource SmallerBoldTitleText}" 
+                   HorizontalOptions="Center"
+                   Grid.Row="2" />
+
+            <ImageButton Source="instagram.jpg"
+                         Command="{Binding OpenInstagramCommand}"
+                         HeightRequest="50"
+                         WidthRequest="50"
+                         HorizontalOptions="Center"
+                         Grid.Row="3" />
+
+            <ImageButton Source="facebook.jpg"
+                         Command="{Binding OpenFacebookCommand}"
+                         HeightRequest="50"
+                         WidthRequest="50"
+                         HorizontalOptions="Center"
+                         Grid.Row="4" />
+
+            <ImageButton Source="linkedin.png"
+                         Command="{Binding OpenLinkedInCommand}"
+                         HeightRequest="50"
+                         WidthRequest="50"
+                         HorizontalOptions="Center"
+                         Grid.Row="5" />
+
+        </Grid>
+    </ScrollView>
+</ContentPage>
