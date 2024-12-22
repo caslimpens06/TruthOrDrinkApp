@@ -90,13 +90,13 @@ namespace TruthOrDrink.ViewModels
 		{
 			if (string.IsNullOrWhiteSpace(ParticipantName))
 			{
-				await Application.Current.MainPage.DisplayAlert("Waarschuwing", "Vul je naam in voordat je verdergaat.", "OK");
+				await App.Current.MainPage.DisplayAlert("Waarschuwing", "Vul je naam in voordat je verdergaat.", "OK");
 				return;
 			}
 
 			if (string.IsNullOrWhiteSpace(Gender))
 			{
-				await Application.Current.MainPage.DisplayAlert("Waarschuwing", "Je moet een geslacht kiezen voordat je verdergaat.", "OK");
+				await App.Current.MainPage.DisplayAlert("Waarschuwing", "Je moet een geslacht kiezen voordat je verdergaat.", "OK");
 				return;
 			}
 
@@ -115,7 +115,7 @@ namespace TruthOrDrink.ViewModels
 			}
 			else
 			{
-				await Application.Current.MainPage.DisplayAlert("Waarschuwing", "Deze deelnemer bestaat al.", "OK");
+				await App.Current.MainPage.DisplayAlert("Waarschuwing", "Deze deelnemer bestaat al.", "OK");
 			}
 		}
 
@@ -134,12 +134,12 @@ namespace TruthOrDrink.ViewModels
 			if (_participants.Count > 0)
 			{
 				IsOverlayVisible = true;
-				await Application.Current.MainPage.Navigation.PushAsync(new ChooseDrinksPage(_session, _participants.ToList())); //only session.gameid and _participants are passed
+				await App.Current.MainPage.Navigation.PushAsync(new ChooseDrinksPage(_session, _participants.ToList())); //only session.gameid and _participants are passed
 				IsOverlayVisible = false;
 			}
 			else
 			{
-				await Application.Current.MainPage.DisplayAlert("Waarschuwing", "Je hebt nog geen deelnemers toegevoegd aan het spel.", "OK");
+				await App.Current.MainPage.DisplayAlert("Waarschuwing", "Je hebt nog geen deelnemers toegevoegd aan het spel.", "OK");
 			}
 		}
 	}

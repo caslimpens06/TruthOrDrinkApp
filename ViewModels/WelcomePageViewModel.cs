@@ -190,7 +190,7 @@ namespace TruthOrDrink.ViewModels
 
 		private async void OnNavigateToSettings()
 		{
-			await Application.Current.MainPage.Navigation.PushAsync(new SettingsPage());
+			await App.Current.MainPage.Navigation.PushAsync(new SettingsPage());
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

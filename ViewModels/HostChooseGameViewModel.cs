@@ -36,12 +36,12 @@ namespace TruthOrDrink.ViewModels
 		private async Task NavigateToGame(int gameId)
 		{
 			Session session = new Session(_host.HostId, gameId);
-			await Application.Current.MainPage.Navigation.PushAsync(new GameJoinPage(session));
+			await App.Current.MainPage.Navigation.PushAsync(new GameJoinPage(session));
 		}
 
 		private async Task LeaveGame()
 		{
-			await Application.Current.MainPage.Navigation.PopToRootAsync();
+			await App.Current.MainPage.Navigation.PopToRootAsync();
 		}
 	}
 }

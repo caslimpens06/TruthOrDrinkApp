@@ -89,13 +89,13 @@ namespace TruthOrDrink.ViewModels
 		{
 			if (string.IsNullOrEmpty(Name))
 			{
-				await Application.Current.MainPage.DisplayAlert("Onjuiste invoer", "Geef een geldige naam.", "OK");
+				await App.Current.MainPage.DisplayAlert("Onjuiste invoer", "Geef een geldige naam.", "OK");
 				return;
 			}
 
 			if (string.IsNullOrWhiteSpace(Email) || !IsValidEmail(Email))
 			{
-				await Application.Current.MainPage.DisplayAlert("Onjuiste invoer", "Geef een geldig emailadres.", "OK");
+				await App.Current.MainPage.DisplayAlert("Onjuiste invoer", "Geef een geldig emailadres.", "OK");
 				return;
 			}
 
@@ -103,25 +103,25 @@ namespace TruthOrDrink.ViewModels
 
 			if (string.IsNullOrWhiteSpace(Password))
 			{
-				await Application.Current.MainPage.DisplayAlert("Onjuiste invoer", "Wachtwoord mag niet leeg zijn.", "OK");
+				await App.Current.MainPage.DisplayAlert("Onjuiste invoer", "Wachtwoord mag niet leeg zijn.", "OK");
 				return;
 			}
 
 			if (Password.Length < 8)
 			{
-				await Application.Current.MainPage.DisplayAlert("Onjuiste invoer", "Wachtwoord moet minstens 8 tekens lang zijn.", "OK");
+				await App.Current.MainPage.DisplayAlert("Onjuiste invoer", "Wachtwoord moet minstens 8 tekens lang zijn.", "OK");
 				return;
 			}
 
 			if (!Password.Any(ch => "@#$%&!".Contains(ch)))
 			{
-				await Application.Current.MainPage.DisplayAlert("Onjuiste invoer", "Wachtwoord moet minstens 1 speciaal teken bevatten.", "OK");
+				await App.Current.MainPage.DisplayAlert("Onjuiste invoer", "Wachtwoord moet minstens 1 speciaal teken bevatten.", "OK");
 				return;
 			}
 
 			if (Password != ConfirmPassword)
 			{
-				await Application.Current.MainPage.DisplayAlert("Wachtwoord Mismatch", "Wachtwoorden komen niet overeen.", "OK");
+				await App.Current.MainPage.DisplayAlert("Wachtwoord Mismatch", "Wachtwoorden komen niet overeen.", "OK");
 				return;
 			}
 
@@ -133,7 +133,7 @@ namespace TruthOrDrink.ViewModels
 
 			if (exists)
 			{
-				await Application.Current.MainPage.DisplayAlert("Account maken mislukt", "Dit emailadres bestaat al. Log in met je account.", "OK");
+				await App.Current.MainPage.DisplayAlert("Account maken mislukt", "Dit emailadres bestaat al. Log in met je account.", "OK");
 				IsOverlayVisible = false;
 				IsBackButtonDisabled = false; // Re-enable back button
 			}
@@ -149,7 +149,7 @@ namespace TruthOrDrink.ViewModels
 				Host savedHost = new Host(hostId, Name, Email, hashedPassword);
 				await savedHost.SaveHostLocallyAsync();
 
-				await Application.Current.MainPage.DisplayAlert("Account", "Je account is gemaakt! Je wordt meteen ingelogd.", "OK");
+				await App.Current.MainPage.DisplayAlert("Account", "Je account is gemaakt! Je wordt meteen ingelogd.", "OK");
 
 				IsOverlayVisible = false;
 				IsBackButtonDisabled = false; // Re-enable back button

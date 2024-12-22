@@ -24,12 +24,12 @@ namespace TruthOrDrink.ViewModels
 
 		private async Task JoinGame(Session session)
 		{
-			await Application.Current.MainPage.Navigation.PushAsync(new AddOfflineParticipantsPage(session));
+			await App.Current.MainPage.Navigation.PushAsync(new AddOfflineParticipantsPage(session));
 		}
 
 		private async Task LeaveGame()
 		{
-			await Application.Current.MainPage.DisplayAlert("Verlaat app", "Je hebt de app verlaten.", "OK");
+			await App.Current.MainPage.DisplayAlert("Verlaat app", "Je hebt de app verlaten.", "OK");
 			App.CloseApp();
 		}
 	}

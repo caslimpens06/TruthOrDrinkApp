@@ -35,20 +35,20 @@ namespace TruthOrDrink.ViewModels
 		{
 			if (string.IsNullOrWhiteSpace(QuestionText))
 			{
-				await Application.Current.MainPage.DisplayAlert("Fout", "Voer een vraag in voordat je verder gaat.", "OK");
+				await App.Current.MainPage.DisplayAlert("Fout", "Voer een vraag in voordat je verder gaat.", "OK");
 				return;
 			}
 
 			Question question = new Question(QuestionText);
 			await question.AddQuestionByParticipant(_participant.SessionCode);
-			await Application.Current.MainPage.DisplayAlert("Vraag verzonden", $"De volgende vraag is verstuurd: {question.Text}", "OK");
+			await App.Current.MainPage.DisplayAlert("Vraag verzonden", $"De volgende vraag is verstuurd: {question.Text}", "OK");
 			QuestionText = string.Empty;
 		}
 
 		private async void OnDoneAddingQuestions()
 		{
 			await _participant.SetDoneAddingQuestions();
-			await Application.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(_participant));
+			await App.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(_participant));
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

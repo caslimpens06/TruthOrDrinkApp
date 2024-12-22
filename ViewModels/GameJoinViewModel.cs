@@ -88,7 +88,7 @@ namespace TruthOrDrink.ViewModels
 
 		private async Task Play()
 		{
-			await Application.Current.MainPage.Navigation.PushAsync(new HostJoinParticipantPage(_session));
+			await App.Current.MainPage.Navigation.PushAsync(new HostJoinParticipantPage(_session));
 		}
 	}
 }

@@ -41,27 +41,27 @@ public partial class QRScannerViewModel : ObservableObject
 
 						if (await session.CheckIfCustomGame())
 						{
-							await Application.Current.MainPage.Navigation.PushAsync(new QuestionInputPage(participant));
+							await App.Current.MainPage.Navigation.PushAsync(new QuestionInputPage(participant));
 						}
 						else 
 						{
-							await Application.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(participant));
+							await App.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(participant));
 						}
 					}
 					else
 					{
-						await Application.Current.MainPage.DisplayAlert("Fout", "Je kan niet meer deelnemen, het spel is al gestart.", "OK");
-						await Application.Current.MainPage.Navigation.PopAsync();
+						await App.Current.MainPage.DisplayAlert("Fout", "Je kan niet meer deelnemen, het spel is al gestart.", "OK");
+						await App.Current.MainPage.Navigation.PopAsync();
 					}
 				}
 				else
 				{
-					await Application.Current.MainPage.DisplayAlert("Ongeldige sessiecode", "Verifieer of de host al een spel heeft gemaakt.", "OK");
+					await App.Current.MainPage.DisplayAlert("Ongeldige sessiecode", "Verifieer of de host al een spel heeft gemaakt.", "OK");
 				}
 			}
 			else
 			{
-				await Application.Current.MainPage.DisplayAlert("Ongeldige sessiecode", "De gescande code is niet geldig.", "OK");
+				await App.Current.MainPage.DisplayAlert("Ongeldige sessiecode", "De gescande code is niet geldig.", "OK");
 			}
 		}
 		finally
