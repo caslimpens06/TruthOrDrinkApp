@@ -19,8 +19,6 @@ namespace TruthOrDrink.ViewModels
 		{
 			_session = session;
 
-			_game = new Game(_session.GameId, _session.SessionCode); //game is valid
-
 			_participant = new Participant(session.SessionCode);
 
 			StopGameCommand = new AsyncRelayCommand(StopGame);
@@ -38,6 +36,7 @@ namespace TruthOrDrink.ViewModels
 			try
 			{
 				Questions.Clear();
+				Game _game = await _participant.GetGameBySessionId();
 				_questions = await _game.GetQuestionsAsync();
 
 				if (_questions == null || _questions.Count == 0)
@@ -48,7 +47,7 @@ namespace TruthOrDrink.ViewModels
 
 				foreach (Question question in _questions)
 				{
-					var questionViewModel = new QuestionViewModel(question);
+					QuestionViewModel questionViewModel = new QuestionViewModel(question);
 					Questions.Add(questionViewModel);
 					Console.WriteLine(question.Text + "  --  " + question.QuestionId);
 				}
