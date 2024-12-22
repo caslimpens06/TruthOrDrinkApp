@@ -7,57 +7,42 @@
 
     <ScrollView>
         <VerticalStackLayout>
-            
-                <Label Text="Instellingen" 
+            <Label Text="Instellingen" 
                    Style="{StaticResource BoldTitleText}"/>
-            
-            <VerticalStackLayout Margin="40" Spacing="10" HorizontalOptions="Center">
-                <Label
-                    Text="Worden de drankjes niet goed weergegeven of zijn ze niet meer actueel? Probeer ze te verversen!"
-                    Style="{StaticResource StandardCommentText}"
-                    FontSize="13"
-                    />
-                <Button Text="Ververs drankjes" 
-                    Style="{StaticResource StartSessionButtonStyle}" 
-                    Command="{Binding RefreshDrinkDataCommand}" 
-                    HorizontalOptions="FillAndExpand"/>
 
+            <VerticalStackLayout Margin="40" Spacing="10" HorizontalOptions="Center">
                 <Label Text="Maximale aantal deelnemers" Style="{StaticResource SmallerBoldTitleText}" />
 
-                    <Entry Text="{Binding PlayerNumber, Mode=TwoWay}"
-                           Placeholder="Kies het aantal deelnemers (0 - 8)"
-                           IsReadOnly="{Binding PlayerNumberReadOnly}"
-                           HorizontalOptions="FillAndExpand" />
-                    <Button Text="{Binding ToggleButtonText}"
-                            Command="{Binding TogglePlayerCommand}"
-                            Style="{StaticResource ToggleButton}" />
-
+                <Entry Text="{Binding MaxPlayerCount, Mode=TwoWay}"
+                       Placeholder="Kies het aantal deelnemers (1 - 8)"
+                       Keyboard="Numeric"
+                       IsReadOnly="{Binding IsPlayerNumberReadOnly}"
+                       HorizontalOptions="FillAndExpand" />
+                <Button Text="{Binding PlayerNumberButtonText}"
+                        Command="{Binding TogglePlayerEditCommand}"
+                        BackgroundColor="{Binding ButtonColor}"
+                        Style="{StaticResource ToggleButton}" />
 
             </VerticalStackLayout>
-            
-                <Label Text="--- Volg mij op sociale media ---" 
+
+            <Label Text="--- Volg mij op sociale media ---" 
                    Style="{StaticResource SmallerBoldTitleText}" 
                    HorizontalOptions="Center"/>
 
             <HorizontalStackLayout HorizontalOptions="Center">
                 <ImageButton Source="instagram.jpg"
-                         Command="{Binding OpenInstagramCommand}"
-                         HeightRequest="50"
-                         WidthRequest="80"/>
-            
-
+                             Command="{Binding OpenInstagramCommand}"
+                             HeightRequest="50"
+                             WidthRequest="80"/>
                 <ImageButton Source="facebook.jpg"
-                         Command="{Binding OpenFacebookCommand}"
-                         HeightRequest="50"
-                         WidthRequest="80"/>
-
+                             Command="{Binding OpenFacebookCommand}"
+                             HeightRequest="50"
+                             WidthRequest="80"/>
                 <ImageButton Source="linkedin.png"
-                         Command="{Binding OpenLinkedInCommand}"
-                         HeightRequest="80"
-                         WidthRequest="80"/>
+                             Command="{Binding OpenLinkedInCommand}"
+                             HeightRequest="80"
+                             WidthRequest="80"/>
             </HorizontalStackLayout>
-            
-            
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

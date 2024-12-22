@@ -1,70 +1,152 @@
-﻿using System.Windows.Input;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using TruthOrDrink.Model;
+using TruthOrDrink.DataAccessLayer;
+using SQLite;
+using Newtonsoft.Json.Linq;
 
-namespace TruthOrDrink.ViewModels;
-
-public partial class SettingsPageViewModel : ObservableObject
+namespace TruthOrDrink.ViewModels
 {
-	private int _playerNumber;
-	private bool _playerNumberReadOnly = true;
-	private string _toggleButtonText = "Bewerk";
-	private string _exampleSetting = "Default Setting Value";
-
-	public int PlayerNumber
+	public partial class SettingsPageViewModel : ObservableObject
 	{
-		get => _playerNumber;
-		set => SetProperty(ref _playerNumber, value);
-	}
+		private int _maxPlayerCount;
+		private bool _isPlayerNumberReadOnly = true;
+		private Settings _settings;
+		private Color _buttonColor = Colors.Gray;
+		private readonly SQLiteService _sqliteService = new SQLiteService();
+		
 
-	public bool PlayerNumberReadOnly
-	{
-		get => _playerNumberReadOnly;
-		set => SetProperty(ref _playerNumberReadOnly, value);
-	}
-
-	public string ToggleButtonText
-	{
-		get => _toggleButtonText;
-		set => SetProperty(ref _toggleButtonText, value);
-	}
-
-	public string ExampleSetting
-	{
-		get => _exampleSetting;
-		set => SetProperty(ref _exampleSetting, value);
-	}
-
-	public ICommand RefreshDrinkDataCommand { get; }
-	public ICommand OpenInstagramCommand { get; }
-	public ICommand OpenFacebookCommand { get; }
-	public ICommand OpenLinkedInCommand { get; }
-	public ICommand TogglePlayerCommand { get; }
-
-	public SettingsPageViewModel()
-	{
-		RefreshDrinkDataCommand = new Command(RefreshDrinkData);
-		OpenInstagramCommand = new Command(async () => await OpenUrlAsync("https://www.instagram.com/cas_limpens"));
-		OpenFacebookCommand = new Command(async () => await OpenUrlAsync("https://www.facebook.com/profile.php?id=100076414400998"));
-		OpenLinkedInCommand = new Command(async () => await OpenUrlAsync("https://www.linkedin.com/in/cas-limpens-a091742b1/"));
-		TogglePlayerCommand = new Command(TogglePlayerNumberReadOnly);
-	}
-
-	private void RefreshDrinkData()
-	{
-		// Voeg hier je logica toe om de drankgegevens te verversen.
-	}
-
-	private async Task OpenUrlAsync(string url)
-	{
-		if (Uri.TryCreate(url, UriKind.Absolute, out var uriResult))
+		public SettingsPageViewModel()
 		{
-			await Launcher.OpenAsync(uriResult);
-		}
-	}
+			TogglePlayerEditCommand = new RelayCommand(TogglePlayerEdit);
+			OpenInstagramCommand = new AsyncRelayCommand(OpenInstagram);
+			OpenFacebookCommand = new AsyncRelayCommand(OpenFacebook);
+			OpenLinkedInCommand = new AsyncRelayCommand(OpenLinkedIn);
 
-	private void TogglePlayerNumberReadOnly()
-	{
-		_playerNumberReadOnly = !_playerNumberReadOnly;
-		_toggleButtonText = _playerNumberReadOnly ? "Bewerk" : "Klaar";
+			SetProperty(ref _maxPlayerCount, 1);
+
+			LoadSettings();
+		}
+
+
+
+		public int MaxPlayerCount
+		{
+			get => _maxPlayerCount;
+			set
+			{
+				if (value < 1 || value > 10)
+				{
+					SetProperty(ref _maxPlayerCount, 5);
+					ShowError("Ongeldige Invoer", "Je kan maar 1 tot en met 10 deelnemers koppelen aan je sessie.");
+					return;
+				}
+
+				// If the value is valid, update it
+				SetProperty(ref _maxPlayerCount, value);
+			}
+		}
+
+		public bool IsPlayerNumberReadOnly
+		{
+			get => _isPlayerNumberReadOnly;
+			set
+			{
+				SetProperty(ref _isPlayerNumberReadOnly, value);
+				OnPropertyChanged(nameof(PlayerNumberButtonText));
+
+				ButtonColor = value ? Colors.Gray : Colors.Green; // Gray when read-only and green when editable
+			}
+		}
+
+		public Color ButtonColor
+		{
+			get => _buttonColor;
+			set
+			{
+				SetProperty(ref _buttonColor, value);
+				OnPropertyChanged(nameof(ButtonColor));
+			}
+		}
+
+		public string PlayerNumberButtonText => IsPlayerNumberReadOnly ? "Bewerk" : "Opslaan";
+
+		public RelayCommand ToggleEmailEditCommand { get; }
+		public RelayCommand TogglePlayerEditCommand { get; }
+
+		public IAsyncRelayCommand OpenInstagramCommand { get; }
+		public IAsyncRelayCommand OpenFacebookCommand { get; }
+		public IAsyncRelayCommand OpenLinkedInCommand { get; }
+
+		private async Task LoadSettings()
+		{
+			_settings = await _sqliteService.GetSettingsAsync();
+			if (_settings != null)
+			{
+				MaxPlayerCount = _settings.MaxPlayerCount;
+			}
+		}
+		private void TogglePlayerEdit()
+		{
+			if (!IsPlayerNumberReadOnly)
+			{
+				SavePlayerNumber();
+			}
+			IsPlayerNumberReadOnly = !IsPlayerNumberReadOnly;
+		}
+
+		private async Task OpenInstagram()
+		{
+			await OpenUrlAsync("https://www.instagram.com");
+		}
+
+		private async Task OpenFacebook()
+		{
+			await OpenUrlAsync("https://www.facebook.com");
+		}
+
+		private async Task OpenLinkedIn()
+		{
+			await OpenUrlAsync("https://www.linkedin.com");
+		}
+
+		private async void ShowError(string title, string message)
+		{
+			await App.Current.MainPage.DisplayAlert(title, message, "OK");
+		}
+
+		private async void SavePlayerNumber()
+		{
+			if (_maxPlayerCount < 1 || _maxPlayerCount > 11)
+			{
+				ShowError("Ongeldige Invoer", "Je kan maar 1 tot en met 10 deelnemers koppelen aan je sessie.");
+				return;
+			}
+			else
+			{
+				Settings _settings = new Settings(_maxPlayerCount);
+				bool succes = await _settings.SaveSettingsAsync();
+				if (!succes)
+				{
+					ShowError("Systeemfout", "Voorkeuren konden niet opgeslagen worden.");
+				}
+				else
+				{
+					ShowError("Gelukt", "Instellingen zijn opgeslagen.");
+				}
+			}
+		}
+
+		private async Task OpenUrlAsync(string url)
+		{
+			try
+			{
+				await Browser.OpenAsync(url, BrowserLaunchMode.SystemPreferred);
+			}
+			catch
+			{
+				ShowError("Systeemfout", "Link openen mislukt.");
+			}
+		}
 	}
 }
