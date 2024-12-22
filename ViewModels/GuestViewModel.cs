@@ -38,7 +38,7 @@ namespace TruthOrDrink.ViewModels
 		{
 			if (string.IsNullOrWhiteSpace(SessionCode) || SessionCode.Length != 6)
 			{
-				await Application.Current.MainPage.DisplayAlert("Ongeldige sessiecode", "Voer een geldige 6-cijferige sessiecode in.", "OK");
+				await App.Current.MainPage.DisplayAlert("Ongeldige sessiecode", "Voer een geldige 6-cijferige sessiecode in.", "OK");
 				return;
 			}
 
@@ -55,33 +55,33 @@ namespace TruthOrDrink.ViewModels
 
 					if (await session.CheckIfCustomGame())
 					{
-						await Application.Current.MainPage.Navigation.PushAsync(new QuestionInputPage(participant));
+						await App.Current.MainPage.Navigation.PushAsync(new QuestionInputPage(participant));
 					}
 					else
 					{
-						await Application.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(participant));
+						await App.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(participant));
 					}
 				}
 				else
 				{
-					await Application.Current.MainPage.DisplayAlert("Fout", "Je kan niet meer deelnemen, het spel is al gestart.", "OK");
+					await App.Current.MainPage.DisplayAlert("Fout", "Je kan niet meer deelnemen, het spel is al gestart.", "OK");
 				}
 			}
 			else
 			{
-				await Application.Current.MainPage.DisplayAlert("Ongeldige sessiecode", "Verifieer of de host al een spel heeft gemaakt.", "OK");
+				await App.Current.MainPage.DisplayAlert("Ongeldige sessiecode", "Verifieer of de host al een spel heeft gemaakt.", "OK");
 			}
 		}
 
 		private async Task ScanQRCode()
 		{
-			await Application.Current.MainPage.Navigation.PushAsync(new QRScannerPage(_participant));
+			await App.Current.MainPage.Navigation.PushAsync(new QRScannerPage(_participant));
 		}
 
 		private async Task LeaveGame()
 		{
 			await _participant.RemoveParticipantAsync();
-			await Application.Current.MainPage.Navigation.PopToRootAsync();
+			await App.Current.MainPage.Navigation.PopToRootAsync();
 		}
 	}
 }

@@ -92,17 +92,17 @@ namespace TruthOrDrink.ViewModels
 					Session drinksinjson = new Session(_session.SessionCode, json);
 					await drinksinjson.AddDrinksToSession();
 					await _session.StartGame();
-					await Application.Current.MainPage.Navigation.PushAsync(new HostControlsGamePage(_session));
+					await App.Current.MainPage.Navigation.PushAsync(new HostControlsGamePage(_session));
 					
 				}
 				else 
 				{
-					await Application.Current.MainPage.Navigation.PushAsync(new ControlOfflineGamePage(_session, _participants, SelectedDrinks.ToList()));
+					await App.Current.MainPage.Navigation.PushAsync(new ControlOfflineGamePage(_session, _participants, SelectedDrinks.ToList()));
 				}
 			}
 			else
 			{
-				await Application.Current.MainPage.DisplayAlert("Waarschuwing", "Je moet minstens één drankje selecteren.", "OK");
+				await App.Current.MainPage.DisplayAlert("Waarschuwing", "Je moet minstens één drankje selecteren.", "OK");
 			}
 		}
 	}

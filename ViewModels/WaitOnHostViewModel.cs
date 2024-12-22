@@ -52,7 +52,7 @@ namespace TruthOrDrink.ViewModels
 				{
 					_notStarted = false;
 					StopFlickering();
-					await Application.Current.MainPage.Navigation.PushAsync(new ParticipantGamePage(_participant));
+					await App.Current.MainPage.Navigation.PushAsync(new ParticipantGamePage(_participant));
 				}
 
 				await Task.Delay(2000);
@@ -81,7 +81,7 @@ namespace TruthOrDrink.ViewModels
 		private async Task LeaveGame()
 		{
 			await _participant.RemoveParticipantAsync();
-			await Application.Current.MainPage.Navigation.PopToRootAsync();
+			await App.Current.MainPage.Navigation.PopToRootAsync();
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

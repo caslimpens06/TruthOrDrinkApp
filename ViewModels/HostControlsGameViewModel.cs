@@ -62,7 +62,7 @@ namespace TruthOrDrink.ViewModels
 		{
 			if (!_questionsAreClickable || tappedQuestion == null || tappedQuestion.IsTapped)
 			{
-				await Application.Current.MainPage.DisplayAlert("Waarschuwing", "Deze vraag is al gespeeld. Je kan hem niet nog een keer spelen.", "OK");
+				await App.Current.MainPage.DisplayAlert("Waarschuwing", "Deze vraag is al gespeeld. Je kan hem niet nog een keer spelen.", "OK");
 				return;
 			}
 
@@ -84,7 +84,7 @@ namespace TruthOrDrink.ViewModels
 			{
 				if (await CheckIfSessionDone())
 				{
-					await Application.Current.MainPage.Navigation.PushAsync(new GameStatisticsHostPage(_participant));
+					await App.Current.MainPage.Navigation.PushAsync(new GameStatisticsHostPage(_participant));
 				}
 			}
 		}
@@ -92,7 +92,7 @@ namespace TruthOrDrink.ViewModels
 		private async Task StopGame()
 		{
 			await _participant.SetGameToClose();
-			await Application.Current.MainPage.Navigation.PushAsync(new GameStatisticsHostPage(_participant));
+			await App.Current.MainPage.Navigation.PushAsync(new GameStatisticsHostPage(_participant));
 		}
 
 		private async Task<bool> CheckIfSessionDone()

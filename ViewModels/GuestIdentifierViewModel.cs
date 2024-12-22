@@ -64,13 +64,13 @@ public partial class GuestIdentifierViewModel : ObservableObject
 	{
 		if (string.IsNullOrWhiteSpace(ParticipantName))
 		{
-			await Application.Current.MainPage.DisplayAlert("Waarschuwing", "Vul je naam in voordat je verdergaat.", "OK");
+			await App.Current.MainPage.DisplayAlert("Waarschuwing", "Vul je naam in voordat je verdergaat.", "OK");
 			return;
 		}
 
 		if (string.IsNullOrWhiteSpace(Gender))
 		{
-			await Application.Current.MainPage.DisplayAlert("Waarschuwing", "Je moet een geslacht kiezen voordat je verdergaat.", "OK");
+			await App.Current.MainPage.DisplayAlert("Waarschuwing", "Je moet een geslacht kiezen voordat je verdergaat.", "OK");
 			return;
 		}
 
@@ -83,11 +83,11 @@ public partial class GuestIdentifierViewModel : ObservableObject
 			int participantId = await _participant.GetParticipantPrimarykey();
 			_participant.ParticipantId = participantId;
 
-			await Application.Current.MainPage.Navigation.PushAsync(new GuestPage(_participant));
+			await App.Current.MainPage.Navigation.PushAsync(new GuestPage(_participant));
 		}
 		else
 		{
-			await Application.Current.MainPage.DisplayAlert("Waarschuwing", "Gebruiker bestaat al. Vul een andere gebruikersnaam in.", "OK");
+			await App.Current.MainPage.DisplayAlert("Waarschuwing", "Gebruiker bestaat al. Vul een andere gebruikersnaam in.", "OK");
 		}
 	}
 
