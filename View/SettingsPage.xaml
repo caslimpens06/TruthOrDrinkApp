@@ -6,46 +6,58 @@
              x:DataType="local:SettingsPageViewModel">
 
     <ScrollView>
-        <Grid Padding="100" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
-              ColumnDefinitions="Auto">
-
-            <Label Text="Instellingen" 
-                   Style="{StaticResource BoldTitleText}"
-                   HorizontalOptions="Center"
-                   Grid.Row="0" />
-
-            <Button Text="Ververs Drinkdata" 
-                    Style="{StaticResource SelectButtonStyle}" 
+        <VerticalStackLayout>
+            
+                <Label Text="Instellingen" 
+                   Style="{StaticResource BoldTitleText}"/>
+            
+            <VerticalStackLayout Margin="40" Spacing="10" HorizontalOptions="Center">
+                <Label
+                    Text="Worden de drankjes niet goed weergegeven of zijn ze niet meer actueel? Probeer ze te verversen!"
+                    Style="{StaticResource StandardCommentText}"
+                    FontSize="13"
+                    />
+                <Button Text="Ververs drankjes" 
+                    Style="{StaticResource StartSessionButtonStyle}" 
                     Command="{Binding RefreshDrinkDataCommand}" 
-                    HorizontalOptions="FillAndExpand"
-                    Grid.Row="1" />
+                    HorizontalOptions="FillAndExpand"/>
 
-            <Label Text="Volg mij op sociale media" 
+                <Label Text="Maximale aantal deelnemers" Style="{StaticResource SmallerBoldTitleText}" />
+
+                    <Entry Text="{Binding PlayerNumber, Mode=TwoWay}"
+                           Placeholder="Kies het aantal deelnemers (0 - 8)"
+                           IsReadOnly="{Binding PlayerNumberReadOnly}"
+                           HorizontalOptions="FillAndExpand" />
+                    <Button Text="{Binding ToggleButtonText}"
+                            Command="{Binding TogglePlayerCommand}"
+                            Style="{StaticResource ToggleButton}" />
+
+
+            </VerticalStackLayout>
+            
+                <Label Text="--- Volg mij op sociale media ---" 
                    Style="{StaticResource SmallerBoldTitleText}" 
-                   HorizontalOptions="Center"
-                   Grid.Row="2" />
+                   HorizontalOptions="Center"/>
 
-            <ImageButton Source="instagram.jpg"
+            <HorizontalStackLayout HorizontalOptions="Center">
+                <ImageButton Source="instagram.jpg"
                          Command="{Binding OpenInstagramCommand}"
                          HeightRequest="50"
-                         WidthRequest="50"
-                         HorizontalOptions="Center"
-                         Grid.Row="3" />
+                         WidthRequest="80"/>
+            
 
-            <ImageButton Source="facebook.jpg"
+                <ImageButton Source="facebook.jpg"
                          Command="{Binding OpenFacebookCommand}"
                          HeightRequest="50"
-                         WidthRequest="50"
-                         HorizontalOptions="Center"
-                         Grid.Row="4" />
+                         WidthRequest="80"/>
 
-            <ImageButton Source="linkedin.png"
+                <ImageButton Source="linkedin.png"
                          Command="{Binding OpenLinkedInCommand}"
-                         HeightRequest="50"
-                         WidthRequest="50"
-                         HorizontalOptions="Center"
-                         Grid.Row="5" />
-
-        </Grid>
+                         HeightRequest="80"
+                         WidthRequest="80"/>
+            </HorizontalStackLayout>
+            
+            
+        </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

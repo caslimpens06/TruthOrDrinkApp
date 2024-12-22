@@ -4,6 +4,7 @@
     <Grid>
         <ScrollView>
             <VerticalStackLayout Style="{StaticResource StandardSpacing}">
+                
                 <Image Style="{StaticResource LogoImage}" />
 
                 <Label Text="Account" Style="{StaticResource BoldTitleText}" />
