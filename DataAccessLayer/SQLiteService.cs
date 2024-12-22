@@ -19,7 +19,7 @@ namespace TruthOrDrink.DataAccessLayer
 		{
 			try
 			{
-				await _database.CreateTablesAsync<Host, Question, Drink>();
+				await _database.CreateTablesAsync<Host, Question, Drink, Settings>();
 
 				Console.WriteLine("Create Table Success");
 			}
@@ -211,6 +211,50 @@ namespace TruthOrDrink.DataAccessLayer
 			}
 		}
 
+		public async Task<bool> SaveSettingsAsync(Settings settings)
+		{
+			try
+			{
+				var existingSettings = await _database.Table<Settings>().FirstOrDefaultAsync();
 
+				if (existingSettings != null)
+				{
+					int rowsAffected = await _database.UpdateAsync(settings);
+					return rowsAffected > 0;
+				}
+				else
+				{
+					await _database.InsertAsync(settings);
+					return true;
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("Error saving settings: " + ex.Message);
+				return false;
+			}
+		}
+
+
+		public async Task<Settings> GetSettingsAsync()
+		{
+			try
+			{
+				var settings = await _database.Table<Settings>().FirstOrDefaultAsync();
+
+				if (settings == null)
+				{
+					Console.WriteLine("No settings found in the database. Returning default settings.");
+					settings = new Settings(5);  // Default maxplayercount is 5
+				}
+
+				return settings;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("Error retrieving settings from database: " + ex.Message);
+				return null;
+			}
+		}
 	}
 }

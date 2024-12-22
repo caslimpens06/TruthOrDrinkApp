@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:TruthOrDrink.ViewModels"
+             x:Class="TruthOrDrink.View.SettingsPage"
+             x:DataType="local:SettingsPageViewModel">
+
+    <ScrollView>
+        <VerticalStackLayout>
+            <Label Text="Instellingen" 
+                   Style="{StaticResource BoldTitleText}"/>
+
+            <VerticalStackLayout Margin="40" Spacing="10" HorizontalOptions="Center">
+                <Label Text="Maximale aantal deelnemers" Style="{StaticResource SmallerBoldTitleText}" />
+
+                <Entry Text="{Binding MaxPlayerCount, Mode=TwoWay}"
+                       Placeholder="Kies het aantal deelnemers (1 - 8)"
+                       Keyboard="Numeric"
+                       IsReadOnly="{Binding IsPlayerNumberReadOnly}"
+                       HorizontalOptions="FillAndExpand" />
+                <Button Text="{Binding PlayerNumberButtonText}"
+                        Command="{Binding TogglePlayerEditCommand}"
+                        BackgroundColor="{Binding ButtonColor}"
+                        Style="{StaticResource ToggleButton}" />
+
+            </VerticalStackLayout>
+
+            <Label Text="--- Volg mij op sociale media ---" 
+                   Style="{StaticResource SmallerBoldTitleText}" 
+                   HorizontalOptions="Center"/>
+
+            <HorizontalStackLayout HorizontalOptions="Center">
+                <ImageButton Source="instagram.jpg"
+                             Command="{Binding OpenInstagramCommand}"
+                             HeightRequest="50"
+                             WidthRequest="80"/>
+                <ImageButton Source="facebook.jpg"
+                             Command="{Binding OpenFacebookCommand}"
+                             HeightRequest="50"
+                             WidthRequest="80"/>
+                <ImageButton Source="linkedin.png"
+                             Command="{Binding OpenLinkedInCommand}"
+                             HeightRequest="80"
+                             WidthRequest="80"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

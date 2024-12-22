@@ -4,6 +4,7 @@ using TruthOrDrink.DataAccessLayer;
 using TruthOrDrink.Model;
 using TruthOrDrink.View;
 using System.Timers;
+using CommunityToolkit.Mvvm.Input;
 
 namespace TruthOrDrink.ViewModels
 {
@@ -56,12 +57,14 @@ namespace TruthOrDrink.ViewModels
 		public ICommand NavigateToSignupCommand { get; }
 		public ICommand NavigateToHostCommand { get; }
 		public ICommand NavigateToParticipantCommand { get; }
+		public ICommand NavigateToSettingsCommand { get; }
 
 		public WelcomePageViewModel()
 		{
 			NavigateToSignupCommand = new Command(async () => await NavigateToSignup());
 			NavigateToHostCommand = new Command(async () => await ExecuteNavigateToHostCommand(), CanExecuteNavigateToHost);
 			NavigateToParticipantCommand = new Command(async () => await NavigateToParticipant());
+			NavigateToSettingsCommand = new RelayCommand(OnNavigateToSettings);
 
 			CheckLoginStatus();
 		}
@@ -183,6 +186,11 @@ namespace TruthOrDrink.ViewModels
 		private async Task NavigateToParticipant()
 		{
 			await App.Current.MainPage.Navigation.PushAsync(new GuestIdentifierPage());
+		}
+
+		private async void OnNavigateToSettings()
+		{
+			await Application.Current.MainPage.Navigation.PushAsync(new SettingsPage());
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

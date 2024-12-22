@@ -5,7 +5,13 @@
              x:Class="TruthOrDrink.View.WelcomePage"
              x:DataType="local:WelcomePageViewModel"
              NavigationPage.HasBackButton="False">
-
+   
+    <ContentPage.ToolbarItems>
+        <ToolbarItem 
+            IconImageSource="gear.png"
+            Command="{Binding NavigateToSettingsCommand}" />
+    </ContentPage.ToolbarItems>
+        
     <ScrollView>
         <VerticalStackLayout Style="{StaticResource StandardSpacing}">
 
