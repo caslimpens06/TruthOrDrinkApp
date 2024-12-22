@@ -10,6 +10,7 @@ namespace TruthOrDrink.Model
 	public class Game
 	{
 		private int _gameid;
+		private int _sessioncode;
 		private int _hostid;
 		private string _name;
 		private readonly SupabaseService _supabaseService = new SupabaseService();
@@ -19,6 +20,12 @@ namespace TruthOrDrink.Model
 		{
 			get { return _gameid; }
 			set { _gameid = value; }
+		}
+
+		public int SessionCode
+		{
+			get { return _sessioncode; }
+			set { _sessioncode = value; }
 		}
 
 		public int HostId
@@ -50,6 +57,14 @@ namespace TruthOrDrink.Model
 			_gameid = gameid;
 			_name = name;
 		}
+
+		public Game(int gameid, string name, int sessioncode)
+		{
+			_gameid = gameid;
+			_name = name;
+			_sessioncode = sessioncode;
+		}
+
 		public Game(int gameid)
 		{
 			_gameid = gameid;
@@ -57,7 +72,7 @@ namespace TruthOrDrink.Model
 
 		public async Task<List<Question>> GetQuestionsAsync()
 		{
-			return await _supabaseService.GetQuestionsByGameIdAsync(this);
+			return await _supabaseService.GetQuestionsAsync(this);
 		}
 
 	}

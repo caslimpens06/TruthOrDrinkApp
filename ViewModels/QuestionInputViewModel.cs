@@ -40,7 +40,7 @@ namespace TruthOrDrink.ViewModels
 			}
 
 			Question question = new Question(QuestionText);
-			await question.AddQuestionByParticipant();
+			await question.AddQuestionByParticipant(_participant.SessionCode);
 			await Application.Current.MainPage.DisplayAlert("Vraag verzonden", $"De volgende vraag is verstuurd: {question.Text}", "OK");
 			QuestionText = string.Empty;
 		}
@@ -48,7 +48,7 @@ namespace TruthOrDrink.ViewModels
 		private async void OnDoneAddingQuestions()
 		{
 			await _participant.SetDoneAddingQuestions();
-			await Application.Current.MainPage.Navigation.PushModalAsync(new WaitOnHostPage(_participant));
+			await Application.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(_participant));
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

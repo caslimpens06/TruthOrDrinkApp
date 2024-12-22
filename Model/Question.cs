@@ -72,14 +72,14 @@ namespace TruthOrDrink.Model
 
 		public Question() { }
 
-		public async Task AddQuestionByParticipant()
+		public async Task AddQuestionByParticipant(int sessioncode)
 		{
-			_supabaseService.AddQuestionByParticipant(this);
+			await _supabaseService.AddQuestionByParticipant(this, sessioncode);
 		}
 
 		public async Task SetCurrentQuestion(Session session)
 		{
-			_supabaseService.SetCurrentQuestion(this, session);
+			await _supabaseService.SetCurrentQuestion(this, session);
 		}
 
 		public async Task<bool> CheckIfAnswerHasBeenGiven(Session session)
