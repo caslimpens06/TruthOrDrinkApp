@@ -366,10 +366,7 @@ public class SupabaseService
 					{
 						if (await reader.ReadAsync())
 						{
-							return new Game(
-								reader.GetInt32(reader.GetOrdinal("GameId")),
-								reader.GetString(reader.GetOrdinal("Name"))
-							);
+						return new Game(reader.GetInt32(reader.GetOrdinal("GameId")), reader.GetString(reader.GetOrdinal("Name")), participant.SessionCode);
 						}
 					}
 				}
@@ -381,7 +378,7 @@ public class SupabaseService
 
 
 
-	public async Task<List<Question>> GetQuestionsByGameIdAsync(Game game)
+	public async Task<List<Question>> GetQuestionsAsync(Game game)
 	{
 		var questions = new List<Question>();
 
@@ -389,26 +386,42 @@ public class SupabaseService
 		{
 			await connection.OpenAsync();
 
-			string sqlQuery = "SELECT \"QuestionId\", \"QuestionText\", \"GameId\" FROM \"Question\" WHERE \"GameId\" = @GameId;";
+			string sqlQuery;
+
+			if (game.GameId == 5)
+			{
+				sqlQuery = "SELECT \"QuestionId\", \"QuestionText\", \"GameId\" FROM \"Question\" WHERE \"GameId\" = @GameId AND \"SessionId\" = @SessionCode;";
+			}
+			else
+			{
+				sqlQuery = "SELECT \"QuestionId\", \"QuestionText\", \"GameId\" FROM \"Question\" WHERE \"GameId\" = @GameId;";
+			}
 
 			await using (var command = new NpgsqlCommand(sqlQuery, connection))
 			{
 				command.Parameters.AddWithValue("@GameId", game.GameId);
 
+				if (game.GameId == 5)
+				{
+					command.Parameters.AddWithValue("@SessionCode", game.SessionCode);
+				}
+
 				await using (var reader = await command.ExecuteReaderAsync())
 				{
 					while (await reader.ReadAsync())
 					{
-						Question question = new Question(Convert.ToInt32(reader["QuestionId"]),reader["QuestionText"].ToString(), Convert.ToInt32(reader["GameId"]));
+						Question question = new Question(Convert.ToInt32(reader["QuestionId"]), reader["QuestionText"].ToString(), Convert.ToInt32(reader["GameId"]));
 
 						questions.Add(question);
 					}
 				}
 			}
 		}
-
+		if (questions == null) { Console.WriteLine("QUESTIONS NULL SUPABASE"); }
 		return questions;
 	}
+
+
 
 	public async Task SaveAnswerAsync(Answer answer)
 	{
@@ -495,17 +508,18 @@ public class SupabaseService
 		}
 	}
 
-	public async void AddQuestionByParticipant(Question question)
+	public async Task AddQuestionByParticipant(Question question, int sessioncode)
 	{
 		using (var connection = new NpgsqlConnection(connectionString))
 		{
 			await connection.OpenAsync();
 
-			string query = "INSERT INTO public.\"Question\" (\"QuestionText\", \"GameId\") VALUES (@QuestionText, 5)";
+			string query = "INSERT INTO public.\"Question\" (\"QuestionText\", \"GameId\", \"SessionId\") VALUES (@QuestionText, 5, @SessionCode)";
 
 			using (var command = new NpgsqlCommand(query, connection))
 			{
 				command.Parameters.AddWithValue("@QuestionText", question.Text);
+				command.Parameters.AddWithValue("@SessionCode", sessioncode);
 				await command.ExecuteNonQueryAsync();
 			}
 		}
@@ -555,7 +569,7 @@ public class SupabaseService
 		return question;
 	}
 
-	public async void SetCurrentQuestion(Question question, Session session)
+	public async Task SetCurrentQuestion(Question question, Session session)
 	{
 		using (var connection = new NpgsqlConnection(connectionString))
 		{

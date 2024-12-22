@@ -52,7 +52,15 @@ namespace TruthOrDrink.ViewModels
 				{
 					Participant participant = new Participant(_participant.ParticipantId, parsedSessionCode, _participant.Name);
 					await participant.JoinParticipantToSession();
-					await Application.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(participant));
+
+					if (await session.CheckIfCustomGame())
+					{
+						await Application.Current.MainPage.Navigation.PushAsync(new QuestionInputPage(participant));
+					}
+					else
+					{
+						await Application.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(participant));
+					}
 				}
 				else
 				{

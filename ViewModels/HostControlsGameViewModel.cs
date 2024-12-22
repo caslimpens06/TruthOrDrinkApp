@@ -13,11 +13,14 @@ namespace TruthOrDrink.ViewModels
 		private readonly Participant _participant;
 		private bool _questionsAreClickable = true;
 		private readonly List<int> _tappedQuestionIds = new();
+		private List<Question> _questions;
 
 		public HostControlsGameViewModel(Session session)
 		{
 			_session = session;
-			_game = new Game(session.GameId);
+
+			_game = new Game(_session.GameId, _session.SessionCode); //game is valid
+
 			_participant = new Participant(session.SessionCode);
 
 			StopGameCommand = new AsyncRelayCommand(StopGame);
@@ -32,12 +35,27 @@ namespace TruthOrDrink.ViewModels
 
 		private async Task LoadQuestionsAsync()
 		{
-			Questions.Clear();
-			var questionsList = await _game.GetQuestionsAsync();
-
-			foreach (var question in questionsList)
+			try
 			{
-				Questions.Add(new QuestionViewModel(question));
+				Questions.Clear();
+				_questions = await _game.GetQuestionsAsync();
+
+				if (_questions == null || _questions.Count == 0)
+				{
+					Console.WriteLine("No questions loaded.");
+					return;
+				}
+
+				foreach (Question question in _questions)
+				{
+					var questionViewModel = new QuestionViewModel(question);
+					Questions.Add(questionViewModel);
+					Console.WriteLine(question.Text + "  --  " + question.QuestionId);
+				}
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("Error loading questions: " + ex.Message);
 			}
 		}
 
