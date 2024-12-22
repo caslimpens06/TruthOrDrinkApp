@@ -60,7 +60,7 @@ public partial class ParticipantGameViewModel : ObservableObject
 	private async Task LoadQuestionsAsync()
 	{
 		_questions = await _game.GetQuestionsAsync();
-		foreach (Question q in _questions) { Console.WriteLine(q.Text + q.QuestionId); }
+
 		if (_questions == null || _questions.Count == 0)
 		{
 			CurrentQuestionText = "Het spel is afgelopen.";
