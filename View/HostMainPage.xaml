@@ -41,9 +41,14 @@
             <x:Arguments>
                 <ContentPage>
                     <ContentPage.ToolbarItems>
-                        <ToolbarItem IconImageSource="custom_back_icon.png" 
-                                     Command="{Binding BackCommand}" />
+                        <ToolbarItem 
+                            IconImageSource="custom_back_icon.png" 
+                            Command="{Binding BackCommand}" />
+                        <ToolbarItem 
+                            IconImageSource="gear.png"
+                            Command="{Binding NavigateToSettingsCommand}" />
                     </ContentPage.ToolbarItems>
+                    
                     <ScrollView Padding="20">
                         <StackLayout Spacing="20">
                             <Label Text="Truth or Drink" 

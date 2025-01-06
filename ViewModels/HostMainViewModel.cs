@@ -2,6 +2,8 @@
 using CommunityToolkit.Mvvm.Input;
 using TruthOrDrink.Model;
 using TruthOrDrink.DataAccessLayer;
+using System.Windows.Input;
+using TruthOrDrink.View;
 using TruthOrDrink.Pages;
 
 namespace TruthOrDrink.ViewModels
@@ -17,6 +19,7 @@ namespace TruthOrDrink.ViewModels
 			NavigateToChooseGamePageCommand = new AsyncRelayCommand(NavigateToChooseGamePage);
 			NavigateToProfilePageCommand = new AsyncRelayCommand(NavigateToProfilePage);
 			LogoutCommand = new AsyncRelayCommand(Logout);
+			NavigateToSettingsCommand = new RelayCommand(OnNavigateToSettings);
 		}
 
 		public string HostName => _host.Name;
@@ -24,6 +27,7 @@ namespace TruthOrDrink.ViewModels
 		public IAsyncRelayCommand NavigateToChooseGamePageCommand { get; }
 		public IAsyncRelayCommand NavigateToProfilePageCommand { get; }
 		public IAsyncRelayCommand LogoutCommand { get; }
+		public ICommand NavigateToSettingsCommand { get; }
 
 		private async Task NavigateToChooseGamePage()
 		{
@@ -33,6 +37,11 @@ namespace TruthOrDrink.ViewModels
 		private async Task NavigateToProfilePage()
 		{
 			await App.Current.MainPage.Navigation.PushAsync(new ProfilePage(_host));
+		}
+
+		private async void OnNavigateToSettings()
+		{
+			await App.Current.MainPage.Navigation.PushAsync(new SettingsPage());
 		}
 
 		private async Task Logout()
