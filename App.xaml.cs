@@ -105,6 +105,11 @@ namespace TruthOrDrink
 			sqliteservice.PopulateDrinks(); // don't await because system can continue without fully loading the drinks
 		}
 
+		public static void Vibrate() 
+		{
+			Vibration.Vibrate(TimeSpan.FromMilliseconds(500));
+			Vibration.Cancel();
+		}
 
 		public static void CloseApp()
 		{

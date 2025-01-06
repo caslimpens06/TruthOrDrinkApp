@@ -78,6 +78,7 @@ namespace TruthOrDrink.ViewModels
 				_hostButtonEnabled = false;
 				HostButtonText = $"Schud om in te loggen als {_host.Name} ({_countdown})";
 				HostButtonBackgroundColor = Colors.Green;
+				App.Vibrate();
 
 				StartShakeDetection();
 				StartCountdown();

@@ -129,8 +129,9 @@ namespace TruthOrDrink.ViewModels
 					ShowError("Systeemfout", "Voorkeuren konden niet opgeslagen worden.");
 				}
 				else
-				{
+				{	
 					ShowError("Gelukt", "Instellingen zijn opgeslagen.");
+					App.Vibrate();
 				}
 			}
 		}

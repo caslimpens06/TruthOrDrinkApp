@@ -48,6 +48,7 @@ namespace TruthOrDrink.ViewModels
 		private async void OnDoneAddingQuestions()
 		{
 			await _participant.SetDoneAddingQuestions();
+			App.Vibrate();
 			await App.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(_participant));
 		}
 

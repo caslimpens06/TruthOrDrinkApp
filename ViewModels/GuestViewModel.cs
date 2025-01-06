@@ -59,6 +59,7 @@ namespace TruthOrDrink.ViewModels
 					}
 					else
 					{
+						App.Vibrate();
 						await App.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(participant));
 					}
 				}

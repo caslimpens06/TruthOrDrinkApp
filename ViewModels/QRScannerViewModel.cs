@@ -45,6 +45,7 @@ public partial class QRScannerViewModel : ObservableObject
 						}
 						else 
 						{
+							App.Vibrate();
 							await App.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(participant));
 						}
 					}
