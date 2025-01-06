@@ -219,6 +219,9 @@ namespace TruthOrDrink.DataAccessLayer
 
 				if (existingSettings != null)
 				{
+					settings.PrimaryKey = existingSettings.PrimaryKey;
+					settings.Country = existingSettings.Country;
+					settings.Area = existingSettings.Area;
 					int rowsAffected = await _database.UpdateAsync(settings);
 					return rowsAffected > 0;
 				}
@@ -256,5 +259,26 @@ namespace TruthOrDrink.DataAccessLayer
 				return null;
 			}
 		}
+
+		public async Task SaveLocationLocallyAsync(Settings locationSettings)
+		{
+			var existingSettings = await _database.Table<Settings>().FirstOrDefaultAsync();
+
+			if (existingSettings != null)
+			{
+				existingSettings.Country = locationSettings.Country;
+				existingSettings.Area = locationSettings.Area;
+				
+				await _database.UpdateAsync(existingSettings);
+				Console.WriteLine("Updated location");
+			}
+			else
+			{
+				locationSettings.MaxPlayerCount = 5;
+				await _database.InsertAsync(locationSettings);
+				Console.WriteLine("Inserted location");
+			}
+		}
+
 	}
 }

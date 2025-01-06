@@ -2,8 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using TruthOrDrink.Model;
 using TruthOrDrink.DataAccessLayer;
-using SQLite;
-using Newtonsoft.Json.Linq;
 
 namespace TruthOrDrink.ViewModels
 {

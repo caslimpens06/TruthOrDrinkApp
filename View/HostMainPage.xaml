@@ -18,6 +18,9 @@
                     </Frame>
                     <Label Text="{Binding HostName}" 
                            Style="{StaticResource ProfileNameStyle}" />
+                    <Label Text="{Binding Location}" 
+                           Style="{StaticResource ProfileNameStyle}" 
+                           FontSize="18"/>
                 </StackLayout>
 
                 <StackLayout Padding="30" Spacing="15" HorizontalOptions="CenterAndExpand">
