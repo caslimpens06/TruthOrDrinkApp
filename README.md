@@ -10,3 +10,6 @@ Kies drankjes die je mee wilt nemen in het spel.
 Host-modus: Begeleid de game door de vragen en de drankjes te kiezen die voorkomen in het spel.
 Deelnemer-modus: Laat alle deelnemers op hun eigen telefoon spelen.
 Kies Waarheid of Drinken: Beantwoord de vraag of neem een slok!
+
+Voor deze applicatie is een eigen API ontwikkeld voor het ophalen van de te kiezen drankjes.
+Zie => https://github.com/caslimpens06/BoozeLab-API
