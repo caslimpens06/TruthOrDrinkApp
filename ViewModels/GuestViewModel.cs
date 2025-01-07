@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TruthOrDrink.Model;
-using TruthOrDrink.Pages;
 using TruthOrDrink.View;
 
 namespace TruthOrDrink.ViewModels
@@ -50,7 +49,9 @@ namespace TruthOrDrink.ViewModels
 				bool hasStarted = await session.CheckIfSessionHasStarted();
 				if (!hasStarted)
 				{
-					Participant participant = new Participant(_participant.ParticipantId, parsedSessionCode, _participant.Name);
+					if (await session.CheckMaxPlayerCount())
+					{
+						Participant participant = new Participant(_participant.ParticipantId, parsedSessionCode, _participant.Name);
 					await participant.JoinParticipantToSession();
 
 					if (await session.CheckIfCustomGame())
@@ -61,6 +62,11 @@ namespace TruthOrDrink.ViewModels
 					{
 						App.Vibrate();
 						await App.Current.MainPage.Navigation.PushAsync(new WaitOnHostPage(participant));
+					}
+					}
+					else
+					{
+						await App.Current.MainPage.DisplayAlert("Fout", "Je kan niet meer deelnemen, er zitten teveel deelnemers in het spel.", "OK");
 					}
 				}
 				else

@@ -20,7 +20,7 @@
                            Style="{StaticResource ProfileNameStyle}" />
                     <Label Text="{Binding Location}" 
                            Style="{StaticResource ProfileNameStyle}" 
-                           FontSize="18"/>
+                           FontSize="16"/>
                 </StackLayout>
 
                 <StackLayout Padding="30" Spacing="15" HorizontalOptions="CenterAndExpand">

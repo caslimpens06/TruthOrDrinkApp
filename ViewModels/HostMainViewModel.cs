@@ -51,7 +51,7 @@ namespace TruthOrDrink.ViewModels
 
 		private async void OnNavigateToSettings()
 		{
-			await App.Current.MainPage.Navigation.PushAsync(new SettingsPage());
+			await App.Current.MainPage.Navigation.PushAsync(new SettingsPage(_host));
 		}
 
 		private async void LoadLocation()

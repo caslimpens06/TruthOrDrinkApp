@@ -856,6 +856,41 @@ public class SupabaseService
 		}
 	}
 
+	public async Task<bool> SaveMaxPlayerCountOnline(Settings settings, Host host)
+	{
+		await using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string query = "UPDATE public.\"Host\" SET \"MaxPlayerCount\" = @MaxPlayerCount WHERE \"HostId\" = @HostId;";
+
+			await using (var command = new NpgsqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@MaxPlayerCount", settings.MaxPlayerCount);
+				command.Parameters.AddWithValue("@HostId", host.HostId);
+
+				int rowsAffected = await command.ExecuteNonQueryAsync();
+				return rowsAffected > 0;
+			}
+		}
+	}
+
+	public async Task<bool> CheckMaxPlayerCount(Session session)
+	{
+		await using (var connection = new NpgsqlConnection(connectionString))
+		{
+			await connection.OpenAsync();
+
+			string query = "SELECT CASE WHEN h.\"MaxPlayerCount\" <= (SELECT COUNT(*) FROM \"JoinedParticipant\" p WHERE p.\"SessionId\" = s.\"SessionId\") THEN false ELSE true END AS \"IsMaxPlayerCountValid\" FROM \"Host\" h JOIN \"Session\" s ON h.\"HostId\" = s.\"HostId\" WHERE s.\"SessionId\" = @SessionId;";
+
+			await using (var command = new NpgsqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@SessionId", session.SessionCode);
+				var result = await command.ExecuteScalarAsync();
+				return result != DBNull.Value && Convert.ToBoolean(result);
+			}
+		}
+	}
 
 
 }

@@ -7,6 +7,7 @@ namespace TruthOrDrink.ViewModels
 {
 	public partial class SettingsPageViewModel : ObservableObject
 	{
+		private Host _host;
 		private int _maxPlayerCount;
 		private bool _isPlayerNumberReadOnly = true;
 		private Settings _settings;
@@ -14,8 +15,9 @@ namespace TruthOrDrink.ViewModels
 		private readonly SQLiteService _sqliteService = new SQLiteService();
 		
 
-		public SettingsPageViewModel()
+		public SettingsPageViewModel(Host host)
 		{
+			_host = host;
 			TogglePlayerEditCommand = new RelayCommand(TogglePlayerEdit);
 			OpenInstagramCommand = new AsyncRelayCommand(OpenInstagram);
 			OpenFacebookCommand = new AsyncRelayCommand(OpenFacebook);
@@ -123,15 +125,22 @@ namespace TruthOrDrink.ViewModels
 			else
 			{
 				Settings _settings = new Settings(_maxPlayerCount);
-				bool succes = await _settings.SaveSettingsAsync();
-				if (!succes)
+				bool savesucces = await _settings.SaveSettingsAsync();
+				if (!savesucces)
 				{
 					ShowError("Systeemfout", "Voorkeuren konden niet opgeslagen worden.");
 				}
 				else
-				{	
-					ShowError("Gelukt", "Instellingen zijn opgeslagen.");
-					App.Vibrate();
+				{
+					if (await _settings.SaveMaxPlayerCountOnline(_host))
+					{
+						ShowError("Gelukt", "Instellingen zijn opgeslagen.");
+						App.Vibrate();
+					}
+					else
+					{
+						ShowError("Systeemfout", "Voorkeuren konden niet niet online opgeslagen worden.");
+					}
 				}
 			}
 		}

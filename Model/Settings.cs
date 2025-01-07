@@ -11,6 +11,7 @@ namespace TruthOrDrink.Model
 		private string _country;
 		private string _area;
 		private readonly SQLiteService _sqliteService = new SQLiteService();
+		private readonly SupabaseService _supabaseService = new SupabaseService();
 
 		[PrimaryKey]
 		public int PrimaryKey
@@ -61,5 +62,8 @@ namespace TruthOrDrink.Model
 			await _sqliteService.SaveLocationLocallyAsync(this);
 		}
 
+		public async Task<bool> SaveMaxPlayerCountOnline(Host host) {
+			return await _supabaseService.SaveMaxPlayerCountOnline(this, host);
+		}
 	}
 }

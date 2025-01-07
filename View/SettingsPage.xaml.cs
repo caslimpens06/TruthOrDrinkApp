@@ -1,13 +1,14 @@
 using TruthOrDrink.ViewModels;
+using TruthOrDrink.Model;
 
 namespace TruthOrDrink.View
 {
 	public partial class SettingsPage : ContentPage
 	{
-		public SettingsPage()
+		public SettingsPage(Host host)
 		{
 			InitializeComponent();
-			BindingContext = new SettingsPageViewModel();
+			BindingContext = new SettingsPageViewModel(host);
 		}
 	}
 }
