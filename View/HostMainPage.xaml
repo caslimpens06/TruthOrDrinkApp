@@ -18,6 +18,9 @@
                     </Frame>
                     <Label Text="{Binding HostName}" 
                            Style="{StaticResource ProfileNameStyle}" />
+                    <Label Text="{Binding Location}" 
+                           Style="{StaticResource ProfileNameStyle}" 
+                           FontSize="16"/>
                 </StackLayout>
 
                 <StackLayout Padding="30" Spacing="15" HorizontalOptions="CenterAndExpand">
@@ -41,9 +44,14 @@
             <x:Arguments>
                 <ContentPage>
                     <ContentPage.ToolbarItems>
-                        <ToolbarItem IconImageSource="custom_back_icon.png" 
-                                     Command="{Binding BackCommand}" />
+                        <ToolbarItem 
+                            IconImageSource="custom_back_icon.png" 
+                            Command="{Binding BackCommand}" />
+                        <ToolbarItem 
+                            IconImageSource="gear.png"
+                            Command="{Binding NavigateToSettingsCommand}" />
                     </ContentPage.ToolbarItems>
+                    
                     <ScrollView Padding="20">
                         <StackLayout Spacing="20">
                             <Label Text="Truth or Drink" 

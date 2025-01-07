@@ -8,7 +8,6 @@ namespace TruthOrDrink.ViewModels
 {
 	public partial class HostControlsGameViewModel : ObservableObject
 	{
-		private readonly Game _game;
 		private readonly Session _session;
 		private readonly Participant _participant;
 		private bool _questionsAreClickable = true;

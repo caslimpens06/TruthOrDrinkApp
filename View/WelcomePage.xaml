@@ -5,13 +5,7 @@
              x:Class="TruthOrDrink.View.WelcomePage"
              x:DataType="local:WelcomePageViewModel"
              NavigationPage.HasBackButton="False">
-   
-    <ContentPage.ToolbarItems>
-        <ToolbarItem 
-            IconImageSource="gear.png"
-            Command="{Binding NavigateToSettingsCommand}" />
-    </ContentPage.ToolbarItems>
-        
+
     <ScrollView>
         <VerticalStackLayout Style="{StaticResource StandardSpacing}">
 
@@ -39,7 +33,7 @@
                 Style="{StaticResource SelectButtonStyle}" 
                 Command="{Binding NavigateToSignupCommand}" />
             
-            <Label Text="Ontwikkeld door Cas Limpens - zie credits"
+            <Label Text="Ontwikkeld door Cas Limpens"
                 Style="{StaticResource StandardCommentText}"/>
 
         </VerticalStackLayout>

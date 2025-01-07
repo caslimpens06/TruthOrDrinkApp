@@ -96,10 +96,13 @@ namespace TruthOrDrink.Model
 		{
 			return await _sqliteService.GetQuestionsFromLocalDatabase(this);
 		}
-
 		public async Task AddDrinksToSession()
 		{
 			await _supabaseService.AddDrinksToSession(this);
+		}
+		public async Task<bool> CheckMaxPlayerCount()
+		{
+			return await _supabaseService.CheckMaxPlayerCount(this);
 		}
 
 	}

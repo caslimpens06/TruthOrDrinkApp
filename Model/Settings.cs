@@ -8,7 +8,10 @@ namespace TruthOrDrink.Model
 	{
 		private int _primarykey;
 		private int _maxplayercount;
+		private string _country;
+		private string _area;
 		private readonly SQLiteService _sqliteService = new SQLiteService();
+		private readonly SupabaseService _supabaseService = new SupabaseService();
 
 		[PrimaryKey]
 		public int PrimaryKey
@@ -23,10 +26,28 @@ namespace TruthOrDrink.Model
 			set { _maxplayercount = value; }
 		}
 
+		public string Country
+		{
+			get { return _country; }
+			set { _country = value; }
+		}
+
+		public string Area
+		{
+			get { return _area; }
+			set { _area = value; }
+		}
+
 		public Settings(int maxplayercount) 
 		{
 			_primarykey = 1;
 			_maxplayercount = maxplayercount;
+		}
+
+		public Settings(string country, string area) 
+		{
+			_country = country;
+			_area = area;
 		}
 
 		public Settings() { } // Local database needs parameterless constructor
@@ -36,5 +57,13 @@ namespace TruthOrDrink.Model
 			return await _sqliteService.SaveSettingsAsync(this);
 		}
 
+		public async Task SaveLocationLocallyAsync()
+		{
+			await _sqliteService.SaveLocationLocallyAsync(this);
+		}
+
+		public async Task<bool> SaveMaxPlayerCountOnline(Host host) {
+			return await _supabaseService.SaveMaxPlayerCountOnline(this, host);
+		}
 	}
 }
