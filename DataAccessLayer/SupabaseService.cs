@@ -11,68 +11,70 @@ public class SupabaseService
 	public async Task<string> ValidateCredentialsAsync(Host host)
 	{
 		string query = "SELECT \"Password\" FROM \"Host\" WHERE \"Email\" = @Email;";
-		await using var connection = new NpgsqlConnection(connectionString);
-		await connection.OpenAsync();
-		await using var command = new NpgsqlCommand(query, connection);
-		command.Parameters.AddWithValue("@Email", host.Email);
-		var result = await command.ExecuteScalarAsync();
+			await using var connection = new NpgsqlConnection(connectionString);
+			await connection.OpenAsync();
+			await using var command = new NpgsqlCommand(query, connection);
+			command.Parameters.AddWithValue("@Email", host.Email);
+			var result = await command.ExecuteScalarAsync();
+		
 		return result?.ToString();
+
 	}
 
 	public async Task<bool> AddParticipantIfNotExists(Participant participant)
 	{
-		
-		string checkQuery = "SELECT 1 FROM \"Participant\" WHERE \"Name\" = @name LIMIT 1;";
+			string checkQuery = "SELECT 1 FROM \"Participant\" WHERE \"Name\" = @name LIMIT 1;";
 
-		string insertQuery = "INSERT INTO \"Participant\" (\"Name\", \"Gender\") VALUES (@name, @gender);";
+			string insertQuery = "INSERT INTO \"Participant\" (\"Name\", \"Gender\") VALUES (@name, @gender);";
 
-		await using (var connection = new NpgsqlConnection(connectionString))
-		{
-			await connection.OpenAsync();
-
-
-			await using (var checkCommand = new NpgsqlCommand(checkQuery, connection))
+			await using (var connection = new NpgsqlConnection(connectionString))
 			{
-				checkCommand.Parameters.AddWithValue("@name", participant.Name);
-				checkCommand.Parameters.AddWithValue("@gender", participant.Gender);
+				await connection.OpenAsync();
 
-				var exists = await checkCommand.ExecuteScalarAsync();
-				if (exists != null)
+
+				await using (var checkCommand = new NpgsqlCommand(checkQuery, connection))
 				{
-					return false;
+					checkCommand.Parameters.AddWithValue("@name", participant.Name);
+					checkCommand.Parameters.AddWithValue("@gender", participant.Gender);
+
+					var exists = await checkCommand.ExecuteScalarAsync();
+					if (exists != null)
+					{
+						return false;
+					}
+				}
+
+				await using (var insertCommand = new NpgsqlCommand(insertQuery, connection))
+				{
+					insertCommand.Parameters.AddWithValue("@name", participant.Name);
+					insertCommand.Parameters.AddWithValue("@gender", participant.Gender);
+
+					await insertCommand.ExecuteNonQueryAsync();
 				}
 			}
 
-			await using (var insertCommand = new NpgsqlCommand(insertQuery, connection))
-			{
-				insertCommand.Parameters.AddWithValue("@name", participant.Name);
-				insertCommand.Parameters.AddWithValue("@gender", participant.Gender);
-
-				await insertCommand.ExecuteNonQueryAsync();
-			}
-		}
-
-		return true;
+			return true;
 	}
 
 
 	public async Task AddHostAsync(Host host)
 	{
-		string sqlQuery = "INSERT INTO \"Host\" (\"Name\", \"Email\", \"Password\") VALUES (@name, @email, @password);";
+			string sqlQuery = "INSERT INTO \"Host\" (\"Name\", \"Email\", \"Password\") VALUES (@name, @email, @password);";
 
-		await using (var connection = new NpgsqlConnection(connectionString))
-		{
-			await connection.OpenAsync();
-
-			using (var command = new NpgsqlCommand(sqlQuery, connection))
+			await using (var connection = new NpgsqlConnection(connectionString))
 			{
-				command.Parameters.AddWithValue("@name", host.Name);
-				command.Parameters.AddWithValue("@email", host.Email);
-				command.Parameters.AddWithValue("@password", host.Password);
+				await connection.OpenAsync();
 
-				await command.ExecuteNonQueryAsync();
+				using (var command = new NpgsqlCommand(sqlQuery, connection))
+				{
+					command.Parameters.AddWithValue("@name", host.Name);
+					command.Parameters.AddWithValue("@email", host.Email);
+					command.Parameters.AddWithValue("@password", host.Password);
+
+					await command.ExecuteNonQueryAsync();
+				}
 			}
-		}
+
 	}
 
 	public async Task<bool> CheckIfHostExistsAsync(Host host)
@@ -96,7 +98,7 @@ public class SupabaseService
 
 	public async Task JoinParticipantToSession(Participant participant)
 	{
-		Console.WriteLine("test");
+		try {
 		string query = "INSERT INTO \"JoinedParticipant\" (\"ParticipantId\", \"SessionId\") VALUES (@ParticipantId, @SessionId);";
 
 		await using (var connection = new NpgsqlConnection(connectionString))
@@ -111,6 +113,8 @@ public class SupabaseService
 				await command.ExecuteNonQueryAsync();
 			}
 		}
+		}
+		catch { }
 	}
 
 	public async Task<bool> CheckIfSessionExistsAsync(Session session)
@@ -138,7 +142,6 @@ public class SupabaseService
 		{
 			await connection.OpenAsync();
 
-			// Query to get the ParticipantId based on the Name
 			string sqlQuery = "SELECT \"ParticipantId\" FROM \"Participant\" WHERE \"Name\" = @name LIMIT 1;";
 
 			using (var command = new NpgsqlCommand(sqlQuery, connection))

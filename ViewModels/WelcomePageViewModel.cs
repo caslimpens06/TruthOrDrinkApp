@@ -58,15 +58,25 @@ namespace TruthOrDrink.ViewModels
 
 		public WelcomePageViewModel()
 		{
+			Console.WriteLine("welcomepage");
 			NavigateToSignupCommand = new Command(async () => await NavigateToSignup());
 			NavigateToHostCommand = new Command(async () => await ExecuteNavigateToHostCommand(), CanExecuteNavigateToHost);
 			NavigateToParticipantCommand = new Command(async () => await NavigateToParticipant());
+			Console.WriteLine("welcomepage1");
 
 			CheckLoginStatus();
+			Console.WriteLine("welcomepage2");
 		}
 
 		public async void CheckLoginStatus()
 		{
+			if (Connectivity.NetworkAccess == NetworkAccess.None)
+			{
+				await GoToOfflineGame();
+				Console.WriteLine("Trying to navigate to offline-mode");
+				return;
+			}
+
 			_host = await _sqliteService.GetHostAsync();
 
 			if (_host != null)
@@ -79,6 +89,15 @@ namespace TruthOrDrink.ViewModels
 				StartShakeDetection();
 				StartCountdown();
 			}
+			else
+			{
+				Console.WriteLine("HOST IS NULL");
+			}
+		}
+
+		private async Task GoToOfflineGame()
+		{
+			await App.Current.MainPage.Navigation.PushAsync(new OfflineGamePage());
 		}
 
 		private async Task ExecuteNavigateToHostCommand()

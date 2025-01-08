@@ -13,18 +13,18 @@ namespace TruthOrDrink
 			InitializeComponent();
 
 			Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
+			
+			CreateLocalDatabase();
+			MainPage = new NavigationPage(new WelcomePage());
 			CheckInternetConnectionOnStart();
 
-			CreateLocalDatabase();
-
-			MainPage = new NavigationPage(new WelcomePage());
 		}
 
 		private void Connectivity_ConnectivityChanged(object? sender, ConnectivityChangedEventArgs e)
 		{
-			if (e.NetworkAccess == NetworkAccess.None && MainPage != null)
+			if (e.NetworkAccess == NetworkAccess.None && MainPage != null && MainPage.Dispatcher != null)
 			{
-				MainPage.Dispatcher.Dispatch(async () =>
+				MainPage.Dispatcher.Dispatch(() =>
 				{
 					MainPage = new NavigationPage(new OfflineMode());
 				});
@@ -46,12 +46,16 @@ namespace TruthOrDrink
 		{
 			try
 			{
-				// Get the user's location
+				if (Connectivity.NetworkAccess == NetworkAccess.None)
+				{
+					Console.WriteLine("Geen internetverbinding. Kan locatie niet ophalen.");
+					return;
+				}
+
 				var location = await Geolocation.GetLastKnownLocationAsync();
 
 				if (location == null)
 				{
-					// Get current location
 					location = await Geolocation.GetLocationAsync(new GeolocationRequest
 					{
 						DesiredAccuracy = GeolocationAccuracy.Medium,
@@ -71,7 +75,7 @@ namespace TruthOrDrink
 						{
 							Console.WriteLine($"Province/State: {placemark.AdminArea}");
 							Console.WriteLine($"Country: {placemark.CountryName}");
-							
+
 							Settings settings = new Settings(placemark.CountryName, placemark.AdminArea);
 
 							await settings.SaveLocationLocallyAsync();
@@ -97,18 +101,18 @@ namespace TruthOrDrink
 			}
 		}
 
+
 		private async Task CreateLocalDatabase() 
 		{
 			await sqliteservice.InitializeAsync();
-			GetLocationAsync();
+			GetLocationAsync(); // don't await because system can continue without fully loading the questions for offline mode
 			sqliteservice.PopulateQuestionsForOfflineGame(); // don't await because system can continue without fully loading the questions for offline mode
-			sqliteservice.PopulateDrinks(); // don't await because system can continue without fully loading the drinks
+			sqliteservice.PopulateDrinks(); // don't await because system can continue without fully loading the questions for offline mode
 		}
 
 		public static void Vibrate() 
 		{
 			Vibration.Vibrate(TimeSpan.FromMilliseconds(500));
-			Vibration.Cancel();
 		}
 
 		public static void CloseApp()
