@@ -43,6 +43,7 @@ public partial class QRScannerViewModel : ObservableObject
 
 							if (await session.CheckIfCustomGame())
 							{
+								App.Vibrate();
 								await App.Current.MainPage.Navigation.PushAsync(new QuestionInputPage(participant));
 							}
 							else

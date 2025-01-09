@@ -218,7 +218,7 @@ public partial class ParticipantGameViewModel : ObservableObject
 
 	private async Task MonitorGameClosureAsync()
 	{
-		bool isGameClosed = await _participant.CheckIfGameClosed();
+		bool isGameClosed = await _participant.CheckIfSessionClosed();
 
 		if (isGameClosed)
 		{

@@ -158,12 +158,12 @@ namespace TruthOrDrink.Model
 			await _supabaseService.JoinParticipantToSession(this);
 		}
 
-		public async Task SetGameToClose()
+		public async Task SetSessionToClose()
 		{
 			await _supabaseService.SetSessionToClose(this);
 		}
 
-		public async Task<bool> CheckIfGameClosed()
+		public async Task<bool> CheckIfSessionClosed()
 		{
 			return await _supabaseService.CheckIfGameClosed(this);
 		}

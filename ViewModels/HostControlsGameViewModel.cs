@@ -20,7 +20,7 @@ namespace TruthOrDrink.ViewModels
 
 			_participant = new Participant(session.SessionCode);
 
-			StopGameCommand = new AsyncRelayCommand(StopGame);
+			StopSessionCommand = new AsyncRelayCommand(StopSession);
 			OnQuestionTappedCommand = new AsyncRelayCommand<QuestionViewModel>(OnQuestionTapped);
 
 			LoadQuestionsAsync();
@@ -28,7 +28,7 @@ namespace TruthOrDrink.ViewModels
 
 		public ObservableCollection<QuestionViewModel> Questions { get; } = new();
 		public IAsyncRelayCommand<QuestionViewModel> OnQuestionTappedCommand { get; }
-		public IAsyncRelayCommand StopGameCommand { get; }
+		public IAsyncRelayCommand StopSessionCommand { get; }
 
 		private async Task LoadQuestionsAsync()
 		{
@@ -88,9 +88,9 @@ namespace TruthOrDrink.ViewModels
 			}
 		}
 
-		private async Task StopGame()
+		private async Task StopSession()
 		{
-			await _participant.SetGameToClose();
+			await _participant.SetSessionToClose();
 			await App.Current.MainPage.Navigation.PushAsync(new GameStatisticsHostPage(_participant));
 		}
 

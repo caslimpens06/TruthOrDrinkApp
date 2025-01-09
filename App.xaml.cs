@@ -112,7 +112,7 @@ namespace TruthOrDrink
 
 		public static void Vibrate() 
 		{
-			Vibration.Vibrate(TimeSpan.FromMilliseconds(500));
+			Vibration.Vibrate(TimeSpan.FromMilliseconds(200));
 		}
 
 		public static void CloseApp()
