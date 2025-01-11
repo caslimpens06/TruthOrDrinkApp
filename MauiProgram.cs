@@ -1,7 +1,5 @@
 ﻿using Camera.MAUI;
 using ZXing.Net.Maui.Controls;
-using TruthOrDrink.ViewModels;
-
 namespace TruthOrDrink
 {
     public static class MauiProgram
