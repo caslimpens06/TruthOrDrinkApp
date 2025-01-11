@@ -70,10 +70,7 @@
                                        Style="{StaticResource RuleTextStyle}" />
                                 <Label Text="3. Doel van het spel: Spelers beantwoorden persoonlijke vragen of drinken als ze de vraag niet willen beantwoorden." 
                                        Style="{StaticResource RuleTextStyle}" />
-                                <Label Text="4. Spelverloop: 
-                                       
-                                       - De host kiest een vragenset. 
-                                       - De deelnemers geven antwoord of drinken een slok." 
+                                <Label Text="4. Spelverloop: De host kiest een vragenset. De deelnemers geven antwoord of drinken een slok." 
                                        Style="{StaticResource RuleTextStyle}" />
                                 <Label Text="5. Variaties: Spelers kunnen extra vragen toevoegen." 
                                        Style="{StaticResource RuleTextStyle}" />
