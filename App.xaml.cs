@@ -15,7 +15,6 @@ namespace TruthOrDrink
 			Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
 			
 			CreateLocalDatabase();
-			MainPage = new NavigationPage(new WelcomePage());
 			CheckInternetConnectionOnStart();
 
 		}
@@ -35,10 +34,14 @@ namespace TruthOrDrink
 		{
 			if (Connectivity.NetworkAccess == NetworkAccess.None && MainPage != null)
 			{
-				MainPage.Dispatcher.Dispatch(async () =>
+				MainPage.Dispatcher.Dispatch(() =>
 				{
 					MainPage = new NavigationPage(new OfflineMode());
 				});
+			}
+			else
+			{
+				MainPage = new NavigationPage(new WelcomePage());
 			}
 		}
 
@@ -54,15 +57,6 @@ namespace TruthOrDrink
 
 				var location = await Geolocation.GetLastKnownLocationAsync();
 
-				if (location == null)
-				{
-					location = await Geolocation.GetLocationAsync(new GeolocationRequest
-					{
-						DesiredAccuracy = GeolocationAccuracy.Medium,
-						Timeout = TimeSpan.FromSeconds(5)
-					});
-				}
-
 				if (location != null)
 				{
 					var placemarks = await Geocoding.GetPlacemarksAsync(location);
@@ -70,25 +64,27 @@ namespace TruthOrDrink
 					if (placemarks != null && placemarks.Any())
 					{
 						var placemark = placemarks.FirstOrDefault();
-
 						if (placemark != null)
 						{
 							Console.WriteLine($"Province/State: {placemark.AdminArea}");
 							Console.WriteLine($"Country: {placemark.CountryName}");
 
 							Settings settings = new Settings(placemark.CountryName, placemark.AdminArea);
-
 							await settings.SaveLocationLocallyAsync();
+						}
+						else
+						{
+							Console.WriteLine("No placemarks found.");
 						}
 					}
 					else
 					{
-						Console.WriteLine("Geen placemarks gevonden.");
+						Console.WriteLine("No placemarks found.");
 					}
 				}
 				else
 				{
-					Console.WriteLine("Locatie niet beschikbaar.");
+					Console.WriteLine("Location not available.");
 				}
 			}
 			catch (PermissionException)
@@ -97,7 +93,7 @@ namespace TruthOrDrink
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"Fout bij ophalen locatie: {ex.Message}");
+				Console.WriteLine($"ERROR: {ex.Message}");
 			}
 		}
 
@@ -108,6 +104,7 @@ namespace TruthOrDrink
 			GetLocationAsync(); // don't await because system can continue without fully loading the questions for offline mode
 			sqliteservice.PopulateQuestionsForOfflineGame(); // don't await because system can continue without fully loading the questions for offline mode
 			sqliteservice.PopulateDrinks(); // don't await because system can continue without fully loading the questions for offline mode
+			Console.WriteLine("Initialisation PASS");
 		}
 
 		public static void Vibrate() 

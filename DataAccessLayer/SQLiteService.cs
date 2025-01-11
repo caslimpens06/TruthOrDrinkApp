@@ -86,82 +86,92 @@ namespace TruthOrDrink.DataAccessLayer
 
 		public async Task PopulateQuestionsForOfflineGame() 
 		{
-			_questions = await _database.Table<Question>().ToListAsync();
-			if (_questions == null || _questions.Count == 0)
+			try
 			{
-				try
+
+				_questions = await _database.Table<Question>().ToListAsync();
+				if (_questions == null || _questions.Count == 0)
 				{
-					SupabaseService supabaseService = new SupabaseService();
-					_questions = await supabaseService.GetAllQuestions();
-					if (_questions != null)
+					try
 					{
-						foreach (Question question in _questions)
+						SupabaseService supabaseService = new SupabaseService();
+						_questions = await supabaseService.GetAllQuestions();
+						if (_questions != null)
 						{
-							await _database.InsertAsync(question);
+							foreach (Question question in _questions)
+							{
+								await _database.InsertAsync(question);
+							}
+						}
+						else
+						{
+							Console.WriteLine("Questions is null");
 						}
 					}
-					else
+					catch (Exception ex)
 					{
-						Console.WriteLine("Questions is null");
+						Console.WriteLine($"Error loading/updating questions: {ex.Message}");
 					}
 				}
-				catch (Exception ex)
+				else
 				{
-					Console.WriteLine($"Error loading/updating questions: {ex.Message}");
+					Console.WriteLine("Questions are already populated");
 				}
 			}
-			else
-			{
-				Console.WriteLine("Questions are already populated");
-			}
+			catch { }
 		}
 
 		public async Task PopulateDrinks()
 		{
-			List<Drink> drinkdata = await GetDrinksFromLocalDatabase();
-
-			while (drinkdata == null || drinkdata.Count == 0)
+			try
 			{
-				try
-				{
-					drinkdata = await APIService.GetDrinksData();
+				List<Drink> drinkdata = await GetDrinksFromLocalDatabase();
 
-					if (drinkdata == null || drinkdata.Count == 0)
+				while (drinkdata == null || drinkdata.Count == 0)
+				{
+					try
 					{
-						Console.WriteLine("No drink data received. Retrying...");
+						drinkdata = await APIService.GetDrinksData();
+
+						if (drinkdata == null || drinkdata.Count == 0)
+						{
+							Console.WriteLine("No drink data received. Retrying...");
+							await Task.Delay(3000);
+						}
+					}
+					catch (Exception ex)
+					{
+						Console.WriteLine($"Error while fetching drink data: {ex.Message}");
 						await Task.Delay(3000);
 					}
-				}
-				catch (Exception ex)
-				{
-					Console.WriteLine($"Error while fetching drink data: {ex.Message}");
-					await Task.Delay(3000);
-				}
 
 
-				try
-				{
-					foreach (var drink in drinkdata)
+					try
 					{
-						if (string.IsNullOrEmpty(drink.Name) || string.IsNullOrEmpty(drink.Type))
+						foreach (var drink in drinkdata)
 						{
-							Console.WriteLine($"Skipping drink with invalid data: Name = {drink.Name}, Type = {drink.Type}");
-							continue;
+							if (string.IsNullOrEmpty(drink.Name) || string.IsNullOrEmpty(drink.Type))
+							{
+								Console.WriteLine($"Skipping drink with invalid data: Name = {drink.Name}, Type = {drink.Type}");
+								continue;
+							}
+
+							drink.Name = drink.Name.Trim();
+							drink.Type = drink.Type.Trim();
+
+							await _database.InsertAsync(drink);
 						}
 
-						drink.Name = drink.Name.Trim();
-						drink.Type = drink.Type.Trim();
-
-						await _database.InsertAsync(drink);
+						Console.WriteLine("Inserted all valid drink data.");
 					}
-
-					Console.WriteLine("Inserted all valid drink data.");
+					catch (Exception ex)
+					{
+						Console.WriteLine($"Error loading/updating drinks: {ex.Message}");
+					}
 				}
-				catch (Exception ex)
-				{
-					Console.WriteLine($"Error loading/updating drinks: {ex.Message}");
-				}
+			
 			}
+			catch { }
 		}
 
 		public async Task<List<Drink>> GetDrinksFromLocalDatabase()
