@@ -14,12 +14,13 @@ namespace TruthOrDrink.ViewModels
 		private List<Question> _questionList;
 		private int _currentParticipantIndex = 0;
 		private bool _waitingForNewQuestion = false;
-		private List<Question> _answeredQuestions = new List<Question>() {};
+		private List<Question> _answeredQuestions = new List<Question>() { };
 
-		public ObservableCollection<Question> Questions { get; } = new();
+		public ObservableCollection<OfflineQuestionViewModel> Questions { get; } = new();
 
 		[ObservableProperty]
 		private string currentParticipantName;
+
 		[ObservableProperty]
 		private bool participantShown = true;
 
@@ -31,16 +32,13 @@ namespace TruthOrDrink.ViewModels
 
 		[ObservableProperty]
 		private bool areButtonsEnabled = true;
-		
+
 		[ObservableProperty]
 		private bool isQuestionListVisible = true;
 
-		[ObservableProperty]
-		private Color backgroundColor;
-
 		public IRelayCommand StopGameCommand { get; }
 		public IRelayCommand<string> AnswerCommand { get; }
-		public IRelayCommand<Question> OnQuestionTappedCommand { get; }
+		public IRelayCommand<OfflineQuestionViewModel> OnQuestionTappedCommand { get; }
 
 		public ControlOfflineGameViewModel(Session session, List<Participant> participants, List<Drink> drinks)
 		{
@@ -50,7 +48,7 @@ namespace TruthOrDrink.ViewModels
 			_waitingForNewQuestion = true;
 			StopGameCommand = new RelayCommand(StopGame);
 			AnswerCommand = new RelayCommand<string>(OnAnswer);
-			OnQuestionTappedCommand = new RelayCommand<Question>(OnQuestionTapped);
+			OnQuestionTappedCommand = new RelayCommand<OfflineQuestionViewModel>(OnQuestionTapped);
 
 			InitializeGame();
 		}
@@ -69,7 +67,8 @@ namespace TruthOrDrink.ViewModels
 				{
 					foreach (var question in questionList)
 					{
-						Questions.Add(question);
+						var questionViewModel = new OfflineQuestionViewModel(question);
+						Questions.Add(questionViewModel);
 					}
 					_questionList = questionList;
 					Console.WriteLine("Questions loaded successfully.");
@@ -77,6 +76,8 @@ namespace TruthOrDrink.ViewModels
 				else
 				{
 					Console.WriteLine("No questions found.");
+					Question noquestionsfound = new Question(100, "Er konden geen vragen opgehaald worden. Sluit het spel en start de app opnieuw met internetverbinding.");
+					Questions.Add(new OfflineQuestionViewModel(noquestionsfound));
 				}
 			}
 			catch (Exception ex)
@@ -85,18 +86,20 @@ namespace TruthOrDrink.ViewModels
 			}
 		}
 
-		private Task<string> RandomDrink()
+		private async Task<string> RandomDrink()
 		{
 			Random random = new Random();
 			var randomDrink = _drinks[random.Next(_drinks.Count)];
-			return Task.FromResult(randomDrink.Name);
+			return randomDrink.Name;
 		}
 
-		private void OnQuestionTapped(Question question)
+		private void OnQuestionTapped(OfflineQuestionViewModel tappedQuestion)
 		{
-			if (!_answeredQuestions.Contains(question))
+			if (!_answeredQuestions.Contains(tappedQuestion.Question))
 			{
-				question.IsTapped = true;
+				tappedQuestion.IsTapped = true;
+				tappedQuestion.BackgroundColor = Colors.Green; // Change color to green
+				OnPropertyChanged(nameof(tappedQuestion.BackgroundColor)); // Update view
 
 				IsQuestionListVisible = false;
 
@@ -108,16 +111,20 @@ namespace TruthOrDrink.ViewModels
 					{
 						participant.HasAnswered = false;
 					}
-					_answeredQuestions.Add(question);
+					_answeredQuestions.Add(tappedQuestion.Question);
 
 					AreButtonsEnabled = true;
 					IsQuestionVisible = true;
-					CurrentQuestionText = question.Text;
+					CurrentQuestionText = tappedQuestion.Text;
 
 					_currentParticipantIndex = 0;
 					ParticipantShown = true;
 					CurrentParticipantName = $"Het is {_participants[_currentParticipantIndex].Name} zijn beurt!";
 				}
+			}
+			else
+			{
+				App.Current.MainPage.DisplayAlert("Helaas!", "Deze vraag is al gespeeld.", "Ok");
 			}
 		}
 
@@ -166,12 +173,40 @@ namespace TruthOrDrink.ViewModels
 			}
 		}
 
-
 		private async void StopGame()
 		{
 			IsQuestionVisible = false;
 			AreButtonsEnabled = false;
 			await App.Current.MainPage.Navigation.PushAsync(new OfflineGameStatisticsPage(_participants));
+		}
+	}
+
+	// OfflineQuestionViewModel definition
+	public partial class OfflineQuestionViewModel : ObservableObject
+	{
+		private readonly Question _question;
+		private Color _backgroundColor = Colors.White;
+		private bool _isTapped;
+
+		public OfflineQuestionViewModel(Question question)
+		{
+			_question = question;
+		}
+
+		public int QuestionId => _question.QuestionId;
+		public string Text => _question.Text;
+		public Question Question => _question;
+
+		public Color BackgroundColor
+		{
+			get => _backgroundColor;
+			set => SetProperty(ref _backgroundColor, value);
+		}
+
+		public bool IsTapped
+		{
+			get => _isTapped;
+			set => SetProperty(ref _isTapped, value);
 		}
 	}
 }
