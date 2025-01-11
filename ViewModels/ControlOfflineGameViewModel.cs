@@ -181,7 +181,7 @@ namespace TruthOrDrink.ViewModels
 		}
 	}
 
-	// OfflineQuestionViewModel definition
+
 	public partial class OfflineQuestionViewModel : ObservableObject
 	{
 		private readonly Question _question;
