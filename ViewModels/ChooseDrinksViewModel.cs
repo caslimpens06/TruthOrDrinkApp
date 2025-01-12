@@ -16,6 +16,20 @@ namespace TruthOrDrink.ViewModels
 		private readonly Session _session;
 		private readonly List<Participant> _participants;
 		private bool _mode; // true is online - false is offline
+		private bool _nodrinks = false;
+
+		private string _buttonText = "Ga verder";
+		public string ButtonText
+		{
+			get => _buttonText;
+			set => SetProperty(ref _buttonText, value);
+		}
+
+		public IAsyncRelayCommand ContinueCommand { get; }
+
+		public IRelayCommand BackToMainMenuCommand { get; }
+
+		public IRelayCommand<Drink> ToggleDrinkSelectionCommand { get; }
 
 		public ChooseDrinksViewModel(Session session, List<Participant> participants)
 		{
@@ -23,14 +37,17 @@ namespace TruthOrDrink.ViewModels
 			_participants = participants;
 			_mode = false;
 			ContinueCommand = new AsyncRelayCommand(Continue);
+			BackToMainMenuCommand = new RelayCommand(OnBackToMainMenuClicked);
 			ToggleDrinkSelectionCommand = new RelayCommand<Drink>(ToggleDrinkSelection);
 			LoadDrinksAsync();
 		}
+
 		public ChooseDrinksViewModel(Session session)
 		{
 			_session = session;
 			_mode = true;
 			ContinueCommand = new AsyncRelayCommand(Continue);
+			BackToMainMenuCommand = new RelayCommand(OnBackToMainMenuClicked);
 			ToggleDrinkSelectionCommand = new RelayCommand<Drink>(ToggleDrinkSelection);
 			LoadDrinksAsync();
 		}
@@ -51,13 +68,21 @@ namespace TruthOrDrink.ViewModels
 
 		public string SelectedDrinksCountDisplay => $"Geselecteerde drankjes ({SelectedDrinks.Count})";
 
-		public IAsyncRelayCommand ContinueCommand { get; }
-		public IRelayCommand<Drink> ToggleDrinkSelectionCommand { get; }
-
 		private async Task LoadDrinksAsync()
 		{
 			var drinks = await _sqliteService.GetDrinksFromLocalDatabase();
-			AvailableDrinks = new ObservableCollection<Drink>(drinks);
+
+			if (drinks == null || drinks.Count == 0)
+			{
+				AvailableDrinks = new ObservableCollection<Drink> { new Drink("Fout", "Geen dranken gevonden...") };
+				ButtonText = "Terug naar hoofdmenu";
+				_nodrinks = true;
+			}
+			else
+			{
+				AvailableDrinks = new ObservableCollection<Drink>(drinks);
+				ButtonText = "Ga verder";
+			}
 		}
 
 		private void ToggleDrinkSelection(Drink drink)
@@ -78,13 +103,11 @@ namespace TruthOrDrink.ViewModels
 			OnPropertyChanged(nameof(SelectedDrinksCountDisplay));
 		}
 
-
-
 		public bool IsDrinkSelected(Drink drink) => SelectedDrinks.Contains(drink);
 
 		private async Task Continue()
 		{
-			if (SelectedDrinks.Count > 0)
+			if (SelectedDrinks.Count > 0 || _nodrinks)
 			{
 				if (_mode)
 				{
@@ -93,17 +116,28 @@ namespace TruthOrDrink.ViewModels
 					await drinksinjson.AddDrinksToSession();
 					await _session.StartGame();
 					await App.Current.MainPage.Navigation.PushAsync(new HostControlsGamePage(_session));
-					
 				}
-				else 
+				else
 				{
-					await App.Current.MainPage.Navigation.PushAsync(new ControlOfflineGamePage(_session, _participants, SelectedDrinks.ToList()));
+					if (_nodrinks) 
+					{
+						await App.Current.MainPage.Navigation.PopToRootAsync();
+					}
+					else
+					{
+						await App.Current.MainPage.Navigation.PushAsync(new ControlOfflineGamePage(_session, _participants, SelectedDrinks.ToList()));
+					}
 				}
 			}
 			else
 			{
 				await App.Current.MainPage.DisplayAlert("Waarschuwing", "Je moet minstens één drankje selecteren.", "OK");
 			}
+		}
+
+		private async void OnBackToMainMenuClicked()
+		{
+			await App.Current.MainPage.Navigation.PushAsync(new OfflineMode());
 		}
 	}
 }

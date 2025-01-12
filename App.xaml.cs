@@ -11,36 +11,46 @@ namespace TruthOrDrink
 		public App()
 		{
 			InitializeComponent();
-
+			MainPage = new NavigationPage(new WelcomePage());
 			Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
 			
 			CreateLocalDatabase();
-			CheckInternetConnectionOnStart();
 
+			CheckInternetConnectionOnStart();
+			Console.WriteLine("after check conn");
 		}
 
 		private void Connectivity_ConnectivityChanged(object? sender, ConnectivityChangedEventArgs e)
 		{
-			if (e.NetworkAccess == NetworkAccess.None && MainPage != null && MainPage.Dispatcher != null)
+			if (e.NetworkAccess == NetworkAccess.None)
 			{
-				MainPage.Dispatcher.Dispatch(() =>
+				Console.WriteLine("Network lost. Switching to offline mode.");
+
+				if (MainPage != null && MainPage.Dispatcher != null)
 				{
+					MainPage.Dispatcher.Dispatch(() =>
+					{
+						MainPage = new NavigationPage(new OfflineMode());
+					});
+				}
+				else
+				{
+					Console.WriteLine("MainPage or Dispatcher not available. Setting MainPage directly.");
 					MainPage = new NavigationPage(new OfflineMode());
-				});
+				}
 			}
 		}
 
 		private void CheckInternetConnectionOnStart()
 		{
-			if (Connectivity.NetworkAccess == NetworkAccess.None && MainPage != null)
+			if (Connectivity.NetworkAccess == NetworkAccess.None)
 			{
-				MainPage.Dispatcher.Dispatch(() =>
-				{
-					MainPage = new NavigationPage(new OfflineMode());
-				});
+				Console.WriteLine("No internet detected. Navigating to offline mode.");
+				MainPage = new NavigationPage(new OfflineMode());
 			}
 			else
 			{
+				Console.WriteLine("Internet detected. Navigating to Welcome Page.");
 				MainPage = new NavigationPage(new WelcomePage());
 			}
 		}
@@ -51,7 +61,7 @@ namespace TruthOrDrink
 			{
 				if (Connectivity.NetworkAccess == NetworkAccess.None)
 				{
-					Console.WriteLine("Geen internetverbinding. Kan locatie niet ophalen.");
+					Console.WriteLine("No Connection. Location failed.");
 					return;
 				}
 
