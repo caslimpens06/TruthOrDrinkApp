@@ -126,8 +126,10 @@ namespace TruthOrDrink.DataAccessLayer
 			try
 			{
 				List<Drink> drinkdata = await GetDrinksFromLocalDatabase();
+				int retryCount = 0;
+				const int maxRetries = 4;
 
-				while (drinkdata == null || drinkdata.Count == 0)
+				while ((drinkdata == null || drinkdata.Count == 0) && retryCount < maxRetries)
 				{
 					try
 					{
@@ -136,16 +138,20 @@ namespace TruthOrDrink.DataAccessLayer
 						if (drinkdata == null || drinkdata.Count == 0)
 						{
 							Console.WriteLine("No drink data received. Retrying...");
+							retryCount++;
 							await Task.Delay(3000);
 						}
 					}
 					catch (Exception ex)
 					{
 						Console.WriteLine($"Error while fetching drink data: {ex.Message}");
+						retryCount++;
 						await Task.Delay(3000);
 					}
+				}
 
-
+				if (drinkdata != null && drinkdata.Count > 0)
+				{
 					try
 					{
 						foreach (var drink in drinkdata)
@@ -169,10 +175,17 @@ namespace TruthOrDrink.DataAccessLayer
 						Console.WriteLine($"Error loading/updating drinks: {ex.Message}");
 					}
 				}
-			
+				else
+				{
+					Console.WriteLine("Failed to fetch drink data after maximum retries.");
+				}
 			}
-			catch { }
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Unexpected error in PopulateDrinks: {ex.Message}");
+			}
 		}
+
 
 		public async Task<List<Drink>> GetDrinksFromLocalDatabase()
 		{

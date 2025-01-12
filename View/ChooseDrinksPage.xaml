@@ -42,11 +42,9 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-
-
             <Button 
-                Text="Ga verder" 
-                Style="{StaticResource SelectButtonStyle}"  
+                Text="{Binding ButtonText}"
+                Style="{StaticResource SelectButtonStyle}"
                 Command="{Binding ContinueCommand}" />
 
         </VerticalStackLayout>
