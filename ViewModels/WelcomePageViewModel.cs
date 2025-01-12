@@ -58,14 +58,12 @@ namespace TruthOrDrink.ViewModels
 
 		public WelcomePageViewModel()
 		{
-			Console.WriteLine("welcomepage");
 			NavigateToSignupCommand = new Command(async () => await NavigateToSignup());
 			NavigateToHostCommand = new Command(async () => await ExecuteNavigateToHostCommand(), CanExecuteNavigateToHost);
 			NavigateToParticipantCommand = new Command(async () => await NavigateToParticipant());
-			Console.WriteLine("welcomepage1");
 
 			CheckLoginStatus();
-			Console.WriteLine("welcomepage2");
+
 		}
 
 		public async void CheckLoginStatus()
@@ -97,7 +95,15 @@ namespace TruthOrDrink.ViewModels
 
 		private async Task GoToOfflineGame()
 		{
-			await App.Current.MainPage.Navigation.PushAsync(new OfflineGamePage());
+			if (App.Current?.MainPage?.Navigation == null)
+			{
+				Console.WriteLine("Navigation stack is not available. Setting OfflineGamePage as MainPage.");
+				App.Current.MainPage = new NavigationPage(new OfflineGamePage());
+			}
+			else
+			{
+				await App.Current.MainPage.Navigation.PushAsync(new OfflineGamePage());
+			}
 		}
 
 		private async Task ExecuteNavigateToHostCommand()
