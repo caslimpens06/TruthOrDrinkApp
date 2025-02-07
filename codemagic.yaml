@@ -19,11 +19,10 @@ workflows:
       - name: Restore dependencies
         script: |
           export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
-          dotnet restore TruthOrDrink.sln  # Restore dependencies for the solution
+          dotnet restore TruthOrDrink.sln  # No need for cd, it's in the root
       - name: Build for iOS (Generate IPA)
         script: |
           export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
-          cd TruthOrDrinkApp  # Navigate to the folder containing the solution file
           dotnet build TruthOrDrink.sln -f net8.0-ios -c Release /p:Configuration=Release /p:Platform=iPhone /p:BuildIpa=true
     artifacts:
-      - "TruthOrDrinkApp/bin/Release/net8.0-ios/**/*.ipa"  # Make sure IPA is saved as an artifact
+      - "bin/Release/net8.0-ios/**/*.ipa"  # Make sure the output folder matches the correct location
