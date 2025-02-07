@@ -19,7 +19,6 @@ workflows:
       - name: Restore dependencies
         script: |
           export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
-          cd TruthOrDrinkApp  # Navigate to the folder containing the solution file
           dotnet restore TruthOrDrink.sln  # Restore dependencies for the solution
       - name: Build for iOS (Generate IPA)
         script: |
