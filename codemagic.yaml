@@ -24,5 +24,7 @@ workflows:
         script: |
           export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
           dotnet build TruthOrDrink.sln -f net8.0-ios -c Release /p:Configuration=Release /p:Platform="Any CPU" /p:BuildIpa=true
+          echo "Build completed. Searching for IPA files..."
+          find $HOME -name "*.ipa"  # This will print out all IPA files and their locations
     artifacts:
-      - "bin/Release/net8.0-ios/**/*.ipa"  # Make sure the output folder matches the correct location
+      - "bin/Release/net8.0-ios/**/*.ipa"  # Ensure this path matches the actual IPA location
