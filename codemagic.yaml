@@ -1,0 +1,22 @@
+workflows:
+  maui-build:
+    name: .NET MAUI Build
+    max_build_duration: 60
+    instance_type: mac_mini_m1
+    environment:
+      vars:
+        DOTNET_VERSION: "8.0"
+    scripts:
+      - name: Install .NET and MAUI
+        script: |
+          dotnet --version
+          dotnet workload install maui
+      - name: Restore dependencies
+        script: dotnet restore TruthOrDrinkApp.sln
+      - name: Build for Android
+        script: dotnet build TruthOrDrinkApp.sln -f net8.0-android -c Release
+      - name: Build for iOS
+        script: dotnet build TruthOrDrinkApp.sln -f net8.0-ios -c Release
+    artifacts:
+      - "TruthOrDrinkApp/bin/Release/net8.0-android/*.apk"
+      - "TruthOrDrinkApp/bin/Release/net8.0-ios/*.ipa"
