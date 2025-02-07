@@ -23,6 +23,6 @@ workflows:
       - name: Build for iOS (Generate IPA)
         script: |
           export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
-          dotnet build TruthOrDrink.sln -f net8.0-ios -c Release /p:Configuration=Release /p:Platform=iPhone /p:BuildIpa=true
+          dotnet build TruthOrDrink.sln -f net8.0-ios -c Release /p:Configuration=Release /p:Platform="Any CPU" /p:BuildIpa=true
     artifacts:
       - "bin/Release/net8.0-ios/**/*.ipa"  # Make sure the output folder matches the correct location
