@@ -5,7 +5,7 @@ workflows:
     instance_type: mac_mini_m1
     environment:
       vars:
-        DOTNET_VERSION: "8.0.100"  # Specify the exact .NET version
+        DOTNET_VERSION: "8.0.100"
     scripts:
       - name: Install .NET SDK
         script: |
@@ -19,10 +19,12 @@ workflows:
       - name: Restore dependencies
         script: |
           export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
-          dotnet restore TruthOrDrinkApp.sln
+          cd TruthOrDrinkApp  # Navigate to the folder containing the solution file
+          dotnet restore TruthOrDrink.sln  # Restore dependencies for the solution
       - name: Build for iOS
         script: |
           export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
-          dotnet build TruthOrDrinkApp.sln -f net8.0-ios -c Release
+          cd TruthOrDrinkApp  # Navigate to the folder containing the solution file
+          dotnet build TruthOrDrink.sln -f net8.0-ios -c Release  # Build for iOS
     artifacts:
       - "TruthOrDrinkApp/bin/Release/net8.0-ios/**/*.ipa"
