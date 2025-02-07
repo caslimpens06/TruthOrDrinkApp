@@ -19,16 +19,14 @@ workflows:
       - name: Restore dependencies
         script: |
           export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
-          dotnet restore TruthOrDrink.sln  # No need for cd, it's in the root
-      - name: Check available build configurations
-        script: |
-          export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
-          dotnet msbuild TruthOrDrink.sln /t:ProjectConfiguration
-      - name: Publish for iOS (Generate IPA)
+          dotnet restore TruthOrDrink.sln
+      - name: Build for iOS (Generate IPA)
         script: |
           export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
           dotnet publish TruthOrDrink.sln -f net8.0-ios -c Release /p:Configuration=Release /p:Platform="Any CPU" /p:BuildIpa=true /p:RuntimeIdentifier=ios-arm64 /p:OutputPath=$HOME/build_output
-          echo "Build completed. Searching for IPA files..."
-          find $HOME -name "*.ipa"
+      - name: List all output files
+        script: |
+          echo "Listing all files in build output..."
+          ls -R $HOME/build_output || echo "Directory not found!"
     artifacts:
-      - "$HOME/build_output/**/*.ipa"
+      - "$HOME/build_output/**"  # Collects all files, including the .ipa
