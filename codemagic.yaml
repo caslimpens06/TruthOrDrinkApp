@@ -5,15 +5,24 @@ workflows:
     instance_type: mac_mini_m1
     environment:
       vars:
-        DOTNET_VERSION: "8.0"
+        DOTNET_VERSION: "8.0.100"  # Specify the exact .NET version
     scripts:
-      - name: Install .NET and MAUI
+      - name: Install .NET SDK
         script: |
+          curl -fsSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version $DOTNET_VERSION
+          export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
           dotnet --version
+      - name: Install MAUI Workload
+        script: |
+          export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
           dotnet workload install maui
       - name: Restore dependencies
-        script: dotnet restore TruthOrDrinkApp.sln
+        script: |
+          export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
+          dotnet restore TruthOrDrinkApp.sln
       - name: Build for iOS
-        script: dotnet build TruthOrDrinkApp.sln -f net8.0-ios -c Release
+        script: |
+          export PATH="$HOME/.dotnet:$HOME/.dotnet/tools:$PATH"
+          dotnet build TruthOrDrinkApp.sln -f net8.0-ios -c Release
     artifacts:
       - "TruthOrDrinkApp/bin/Release/net8.0-ios/**/*.ipa"
